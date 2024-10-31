@@ -89,6 +89,7 @@
         .source-BBC { background-color: #BB1919; color: white; }
         .source-Bloomberg { background-color: #291c91; color: white; }
         .source-SCMP { background-color: #1D4F91; color: white; }
+        .source-Tech { background-color: #830fc1; color: white; }
         .loading {
             text-align: center;
             padding: 40px;
@@ -143,6 +144,7 @@
         <button class="source-tag" onclick="toggleSource('BBC')">BBC</button>
         <button class="source-tag" onclick="toggleSource('Bloomberg')">Bloomberg</button>
         <button class="source-tag" onclick="toggleSource('SCMP')">SCMP</button>
+        <button class="source-tag" onclick="toggleSource('Tech')">Tech</button>
     </div>
     
     <button class="refresh-btn" onclick="fetchAllNews()">Refresh News</button>
@@ -203,6 +205,10 @@
             WSJ: {
                 url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',
                 color: '#0ba12e'
+            },
+            Tech: {
+                url: "https://rss.app/feeds/qq9JF9xEkna1trK0.xml",
+                color: '#830fc1'
             }
         };
 
