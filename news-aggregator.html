@@ -81,7 +81,14 @@
         .source-NBC { background-color: #4a148c; color: white; }
         .source-YahooFinance { background-color: #400090; color: white; }
         .source-NYTimes { background-color: #000000; color: white; }
-        .source-WSJ { background-color: #000000; color: white; }
+        .source-WSJ { background-color: #0ba12e; color: white; }
+        .source-CBS { background-color: #101010; color: white; }
+        .source-ESPN { background-color: #CC0000; color: white; }
+        .source-Forbes { background-color: #caca1a; color: white; }
+        .source-Reuters { background-color: #FF8000; color: white; }
+        .source-BBC { background-color: #BB1919; color: white; }
+        .source-Bloomberg { background-color: #291c91; color: white; }
+        .source-SCMP { background-color: #1D4F91; color: white; }
         .loading {
             text-align: center;
             padding: 40px;
@@ -127,9 +134,15 @@
         <button class="source-tag active" onclick="toggleSource('all')">All Sources</button>
         <button class="source-tag" onclick="toggleSource('CNBC')">CNBC</button>
         <button class="source-tag" onclick="toggleSource('NBC')">NBC</button>
-        <button class="source-tag" onclick="toggleSource('YahooFinance')">Yahoo Finance</button>
         <button class="source-tag" onclick="toggleSource('NYTimes')">NY Times</button>
         <button class="source-tag" onclick="toggleSource('WSJ')">WSJ</button>
+        <button class="source-tag" onclick="toggleSource('CBS')">CBS</button>
+        <button class="source-tag" onclick="toggleSource('ESPN')">ESPN</button>
+        <button class="source-tag" onclick="toggleSource('Forbes')">Forbes</button>
+        <button class="source-tag" onclick="toggleSource('Reuters')">Reuters</button>
+        <button class="source-tag" onclick="toggleSource('BBC')">BBC</button>
+        <button class="source-tag" onclick="toggleSource('Bloomberg')">Bloomberg</button>
+        <button class="source-tag" onclick="toggleSource('SCMP')">SCMP</button>
     </div>
     
     <button class="refresh-btn" onclick="fetchAllNews()">Refresh News</button>
@@ -147,9 +160,37 @@
                 url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html',
                 color: '#005594'
             },
-            YahooFinance: {
-                url: 'https://finance.yahoo.com/news/rssindex',
-                color: '#400090'
+            CBS: {
+                url: 'https://www.cbsnews.com/latest/rss/main',
+                color: '#101010'
+            },
+            ESPN: {
+                url: 'https://www.espn.com/espn/rss/news',
+                color: '#CC0000'
+            },
+            FOX: {
+                url: 'https://moxie.foxnews.com/google-publisher/latest.xml',
+                color: '#003366'
+            },
+            Forbes: {
+                url: 'https://www.forbes.com/real-time/feed2/',
+                color: '#caca1a'
+            },
+            Reuters: {
+                url: 'https://www.reutersagency.com/feed/',
+                color: '#FF8000'
+            },
+            BBC: {
+                url: 'http://feeds.bbci.co.uk/news/world/rss.xml',
+                color: '#BB1919'
+            },
+            Bloomberg: {
+                url: 'https://feeds.bloomberg.com/markets/news.rss',
+                color: '#291c91'
+            },
+            SCMP: {
+                url: 'https://www.scmp.com/rss/91/feed',
+                color: '#1D4F91'
             },
             NBC: {
                 url: 'https://feeds.nbcnews.com/nbcnews/public/news',
@@ -161,7 +202,7 @@
             },
             WSJ: {
                 url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml',
-                color: '#000000'
+                color: '#0ba12e'
             }
         };
 
