@@ -9,35 +9,62 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            text-align: center;
+            background-color: #f8f9fa;
+            color: #333;
         }
         header {
             background: #007bff;
             color: white;
             padding: 20px;
-            font-size: 24px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         section {
             padding: 20px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 2px solid #ddd;
+        }
+        section h2 {
+            color: #007bff;
+            border-left: 5px solid #007bff;
+            padding-left: 10px;
         }
         footer {
-            background: #f1f1f1;
-            padding: 10px;
+            text-align: center;
+            background: #343a40;
+            color: white;
+            padding: 15px;
             margin-top: 20px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Peilin Hao</h1>
+        Peilin Hao
     </header>
     
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Email: haopeilin dot seu at gmail dot com</p>
-    </section>
-    
+    <div class="container">
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Email: haopeilin dot seu at gmail dot com</p>
+        </section>
+        
     <section id="education">
         <h2>Education</h2>
         <p>M.S. Computer Science - Dartmouth College</p>
@@ -55,6 +82,7 @@
         <p>Daily run for 1 mile</p>
         <p>Quarterly read for 1 book</p>
     </section>
+    </div>
     
     <footer>
         <p>&copy; 2025 Peilin Hao. All Rights Reserved.</p>
