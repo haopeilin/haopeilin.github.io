@@ -9,79 +9,81 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
             background-color: #f8f9fa;
-            color: #333;
         }
-        header {
-            background: #007bff;
+        .sidebar {
+            width: 250px;
+            background: #343a40;
             color: white;
             padding: 20px;
-            text-align: center;
-            font-size: 28px;
-            font-weight: bold;
+            height: 100vh;
+            position: fixed;
         }
-        .container {
-            width: 80%;
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .sidebar h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 40px;
+            max-width: 800px;
         }
         section {
-            padding: 20px;
-            border-bottom: 2px solid #ddd;
+            margin-bottom: 40px;
         }
-        section h2 {
+        h2 {
             color: #007bff;
-            border-left: 5px solid #007bff;
+            border-left: 4px solid #007bff;
             padding-left: 10px;
         }
         footer {
             text-align: center;
-            background: #343a40;
-            color: white;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
+            padding: 20px;
+            background: #f1f1f1;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
-    <header>
-        Peilin Hao
-    </header>
+    <div class="sidebar">
+        <h1>Peilin Hao</h1>
+        <a href="#contact">Contact</a>
+        <a href="#education">Education</a>
+        <a href="#work-experience">Work Experience</a>
+        <a href="#recent-updates">Recent Updates</a>
+    </div>
     
-    <div class="container">
+    <div class="content">
         <section id="contact">
             <h2>Contact</h2>
             <p>Email: haopeilin dot seu at gmail dot com</p>
+            <p>LinkedIn: <a href="#">linkedin.com/in/peilinhao/</a></p>
         </section>
         
-    <section id="education">
-        <h2>Education</h2>
-        <p>M.S. Computer Science - Dartmouth College</p>
-        <p>B.Eng. Computer Science - Southeast University, CHINA</p>
-    </section>
-    
-    <section id="work-experience">
-        <h2>Work Experience</h2>
-        <p>Senior Software Engineer - Microsoft</p>
-        <p>Software Development Engineer - Amazon</p>
-    </section>
-    
-    <section id="recent-updates">
-        <h2>Recent Updates</h2>
-        <p>Daily run for 1 mile</p>
-        <p>Quarterly read for 1 book</p>
-    </section>
+        <section id="education">
+            <h2>Education</h2>
+            <p>M.S. Computer Science - Dartmouth College</p>
+        </section>
+        
+        <section id="work-experience">
+            <h2>Work Experience</h2>
+            <p>Senior Software Engineer - Microsoft</p>
+        </section>
+        
+        <section id="recent-updates">
+            <h2>Recent Updates</h2>
+            <p>1 mile daily run for 2025</p>
+        </section>
     </div>
     
     <footer>
