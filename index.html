@@ -3,36 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cai Danwei - Personal Website</title>
+    <title>Peilin Hao - Personal Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8f9fa;
+            --sidebar-color: #1f2937;
+            --text-color: #374151;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
+
         .sidebar {
             width: 250px;
-            background: #343a40;
+            background: var(--sidebar-color);
             color: white;
             padding: 20px;
             height: 100vh;
             position: fixed;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
+
         .sidebar h1 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
         }
+
         .sidebar a {
             color: white;
             text-decoration: none;
             display: block;
-            margin: 10px 0;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
+
         .sidebar a:hover {
-            text-decoration: underline;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
         }
+
         .content {
             margin-left: 270px;
             padding: 40px;
@@ -40,24 +62,77 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
+
         section {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             flex-grow: 1;
+            padding: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
         }
+
+        section:hover {
+            transform: none;
+        }
+
         h2 {
-            color: #007bff;
-            border-left: 4px solid #007bff;
-            padding-left: 10px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 600;
         }
-        footer {
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            margin-left: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .icon {
+            margin-right: 15px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            width: 24px;
             text-align: center;
-            padding: 20px;
-            background: #343a40;
-            color: white;
-            margin-left: 250px;
-            width: calc(100% - 250px);
+        }
+
+        p {
+            line-height: 1.8;
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        a:hover .icon {
+            transform: scale(1.1);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -73,28 +148,40 @@
     <div class="content">
         <section id="contact">
             <h2>Contact</h2>
-            <p>Email: haopeilin dot seu at gmail dot com</p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/peilinhao/">linkedin.com/in/peilinhao/</a></p>
+            <div class="contact-item">
+                <i class="fas fa-envelope icon"></i>
+                <p>haopeilin dot seu at gmail dot com</p>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-linkedin icon"></i>
+                <a href="https://www.linkedin.com/in/peilinhao/">linkedin.com/in/peilinhao/</a>
+            </div>
         </section>
         
         <section id="education">
             <h2>Education</h2>
-            <p>M.S. Computer Science - Dartmouth College</p>
+            <div class="contact-item">
+                <i class="fas fa-university icon"></i>
+                <p>M.S. Computer Science - Dartmouth College</p>
+            </div>
         </section>
         
         <section id="work-experience">
             <h2>Work Experience</h2>
-            <p>Senior Software Engineer - Microsoft</p>
+            <div class="contact-item">
+                <i class="fab fa-microsoft icon"></i>
+                <p>Senior Software Engineer - Microsoft</p>
+            </div>
         </section>
         
         <section id="recent-updates">
             <h2>Recent Updates</h2>
-            <p>1 mile daily run for 2025</p>
+            <div class="contact-item">
+                <i class="fas fa-running icon"></i>
+                <p>1 mile daily run for 2025</p>
+            </div>
+            <p class="copyright">&copy; 2025 Peilin Hao. All Rights Reserved.</p>
         </section>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 Peilin Hao. All Rights Reserved.</p>
-    </footer>
 </body>
 </html>
