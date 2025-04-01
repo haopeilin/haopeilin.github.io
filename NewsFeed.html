@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Design: Facebook News Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>System Design: Facebook News Feed</h1>
+        
+        <h2>Step 1: Understand the Requirements</h2>
+        <h3>Functional Requirements</h3>
+        <ul>
+            <li>Users can post updates (text, images, videos).</li>
+            <li>Users follow others and see their posts.</li>
+            <li>Posts are ranked by relevance.</li>
+            <li>Users can like, comment, and share.</li>
+        </ul>
+        <h3>Non-Functional Requirements</h3>
+        <ul>
+            <li>Handle billions of users and millions of requests per second.</li>
+            <li>Low latency, fault tolerance, and high availability.</li>
+        </ul>
+        
+        <h2>Step 2: High-Level Architecture</h2>
+        <p>System consists of Write Path (Post Creation) and Read Path (Fetching News Feed).</p>
+        
+        <h2>Step 3: Feed Generation Strategy</h2>
+        <h3>Pull-Based</h3>
+        <p>Fetch posts from followed users on request. Fresh but slow.</p>
+        <h3>Push-Based</h3>
+        <p>Precompute feeds in the background and store in cache. Fast but storage-heavy.</p>
+        
+        <h2>Step 4: Data Storage</h2>
+        <ul>
+            <li>NoSQL (Cassandra, DynamoDB) for post storage.</li>
+            <li>SQL (MySQL, PostgreSQL) for user relationships.</li>
+            <li>Redis/Memcached for caching feeds.</li>
+        </ul>
+        
+        <h2>Step 5: Scaling Strategies</h2>
+        <ul>
+            <li>Global Load Balancers</li>
+            <li>CDN for media content</li>
+            <li>Rate Limiting & Throttling</li>
+        </ul>
+        
+        <h2>Step 6: Handling Real-Time Updates</h2>
+        <p>WebSockets and Long Polling for real-time updates.</p>
+        
+        <h2>Step 7: Fault Tolerance</h2>
+        <ul>
+            <li>Multi-region replication.</li>
+            <li>Failover mechanisms for availability.</li>
+        </ul>
+        
+        <h2>Step 8: Trade-Offs</h2>
+        <table>
+            <tr>
+                <th>Decision</th>
+                <th>Pros</th>
+                <th>Cons</th>
+            </tr>
+            <tr>
+                <td>Push vs. Pull Feeds</td>
+                <td>Low latency</td>
+                <td>Storage overhead</td>
+            </tr>
+            <tr>
+                <td>SQL vs. NoSQL</td>
+                <td>Strong consistency (SQL)</td>
+                <td>High write performance (NoSQL)</td>
+            </tr>
+            <tr>
+                <td>Caching</td>
+                <td>Fast response</td>
+                <td>Stale data risk</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
