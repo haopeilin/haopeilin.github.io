@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Coding Interview Preparation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .problem {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .hint {
+            color: #555;
+        }
+        .tip {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Meta Coding Interview Preparation</h1>
+    <p>Here are a few coding problems that focus on various aspects of problem-solving, data structures, and algorithms, which are typically tested in a Meta interview for a college hire software engineer candidate. Let's go through them with hints and tips.</p>
+
+    <div class="problem">
+        <h2>Problem 1: Two Sum</h2>
+        <p><strong>Difficulty:</strong> Easy</p>
+        <p><strong>Problem:</strong> Given an array of integers <code>nums</code> and an integer <code>target</code>, return the indices of the two numbers that add up to <code>target</code>. You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: nums = [2, 7, 11, 15], target = 9</pre>
+        <pre>Output: [0, 1]</pre>
+        <p class="hint"><strong>Hint:</strong> Think of using a hash map to store the numbers you've already encountered. As you iterate through the list, check if the difference between the target and the current number is in the hash map.</p>
+        <p class="tip"><strong>Tip:</strong> This is a classic "hash map" problem. Keep track of the elements you've seen so far to find the complement of each element efficiently.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 2: Merge Intervals</h2>
+        <p><strong>Difficulty:</strong> Medium</p>
+        <p><strong>Problem:</strong> Given a collection of intervals, merge all overlapping intervals. For example, given <code>[1, 3], [2, 4], [5, 7], [6, 8]</code>, return <code>[1, 4], [5, 8]</code>.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: intervals = [[1,3],[2,6],[8,10],[15,18]]</pre>
+        <pre>Output: [[1,6],[8,10],[15,18]]</pre>
+        <p class="hint"><strong>Hint:</strong> First, sort the intervals based on the start time. Then, iterate through the intervals, merging them if they overlap (i.e., if the start of the current interval is less than or equal to the end of the previous interval).</p>
+        <p class="tip"><strong>Tip:</strong> Sorting first allows you to efficiently check for overlaps. This problem tests your ability to deal with sorting and merging intervals.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 3: Longest Substring Without Repeating Characters</h2>
+        <p><strong>Difficulty:</strong> Medium</p>
+        <p><strong>Problem:</strong> Given a string <code>s</code>, find the length of the longest substring without repeating characters.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: s = "abcabcbb"</pre>
+        <pre>Output: 3  # The answer is "abc", with the length of 3.</pre>
+        <p class="hint"><strong>Hint:</strong> Use the sliding window technique. Maintain a window of characters that you’ve seen so far and adjust the window as needed when you encounter a duplicate character.</p>
+        <p class="tip"><strong>Tip:</strong> This is a classic "sliding window" problem. As you iterate through the string, keep track of the longest valid substring without duplicates.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 4: Binary Search</h2>
+        <p><strong>Difficulty:</strong> Easy to Medium</p>
+        <p><strong>Problem:</strong> Implement binary search on a sorted array of integers <code>nums</code> to find the index of the target element. If the target is not found, return <code>-1</code>.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: nums = [-1, 0, 3, 5, 9, 12], target = 9</pre>
+        <pre>Output: 4</pre>
+        <p class="hint"><strong>Hint:</strong> Use the divide-and-conquer approach where you compare the middle element with the target and adjust the search range accordingly.</p>
+        <p class="tip"><strong>Tip:</strong> Binary search works only on sorted arrays, and it is an efficient way to search in O(log n) time. Make sure to handle the edge cases when the target is at the beginning, middle, or end of the array.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 5: Kth Smallest Element in a BST</h2>
+        <p><strong>Difficulty:</strong> Medium</p>
+        <p><strong>Problem:</strong> Given a binary search tree (BST), write a function to find the kth smallest element in it.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: root = [3,1,4,null,2], k = 1</pre>
+        <pre>Output: 1</pre>
+        <p class="hint"><strong>Hint:</strong> An inorder traversal of a BST visits the nodes in ascending order. Perform an inorder traversal and return the kth node visited.</p>
+        <p class="tip"><strong>Tip:</strong> This problem can be solved by an inorder traversal. Keep a count of the nodes as you traverse, and when you reach the kth node, return it.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 6: Valid Parentheses</h2>
+        <p><strong>Difficulty:</strong> Easy</p>
+        <p><strong>Problem:</strong> Given a string containing just the characters <code>'('</code>, <code>')'</code>, <code>'{'}</code>, <code>'}'</code>, <code>'['</code>, and <code>']'</code>, determine if the input string is valid. An input string is valid if:</p>
+        <ul>
+            <li>The brackets must close in the correct order.</li>
+            <li>Every opening bracket has a corresponding closing bracket.</li>
+        </ul>
+        <p><strong>Example:</strong></p>
+        <pre>Input: s = "()[]{}"</pre>
+        <pre>Output: true</pre>
+        <p class="hint"><strong>Hint:</strong> Use a stack to keep track of opening brackets. Whenever you encounter a closing bracket, check if it matches the top of the stack.</p>
+        <p class="tip"><strong>Tip:</strong> Stack-based problems are quite common for handling matching pairs of parentheses. This is a great exercise in understanding how stacks work.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 7: Find the Diameter of a Binary Tree</h2>
+        <p><strong>Difficulty:</strong> Medium</p>
+        <p><strong>Problem:</strong> Given a binary tree, return the length of the diameter of the tree. The diameter of a tree is the number of nodes on the longest path between two leaves in the tree.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: root = [1,2,3,4,5]</pre>
+        <pre>Output: 3</pre>
+        <p class="hint"><strong>Hint:</strong> The diameter of a tree is the maximum distance between any two leaf nodes. The diameter can be found by recursively calculating the depth of the left and right subtrees at each node.</p>
+        <p class="tip"><strong>Tip:</strong> This problem tests your ability to traverse a tree and calculate properties recursively.</p>
+    </div>
+
+    <div class="problem">
+        <h2>Problem 8: Top K Frequent Elements</h2>
+        <p><strong>Difficulty:</strong> Medium</p>
+        <p><strong>Problem:</strong> Given a non-empty array of integers, return the <code>k</code> most frequent elements.</p>
+        <p><strong>Example:</strong></p>
+        <pre>Input: nums = [1,1,1,2,2,3], k = 2</pre>
+        <pre>Output: [1, 2]</pre>
+        <p class="hint"><strong>Hint:</strong> Use a hash map to count the frequency of each element, and then use a heap or bucket sort to find the k most frequent elements.</p>
+        <p class="tip"><strong>Tip:</strong> This problem is often solved using a heap for efficient k-element extraction or by sorting the elements based on frequency.</p>
+    </div>
+
+    <h2>Tips for Tackling Coding Problems:</h2>
+    <ul>
+        <li><strong>Start with understanding the problem:</strong> Before jumping to the code, make sure you understand the problem requirements clearly. Think about corner cases, constraints, and edge cases.</li>
+        <li><strong>Break down the problem:</strong> Think about how you can break down the problem into smaller, manageable parts. Solving subproblems step-by-step is often the key to success.</li>
+        <li><strong>Choose the right data structure:</strong> Selecting the right data structure is crucial for solving problems efficiently. Be comfortable with lists, stacks, queues, heaps, hash maps, and trees.</li>
+        <li><strong>Think about time complexity:</strong> Always aim for the most efficient solution. Pay attention to the time and space complexity, especially for large input sizes.</li>
+        <li><strong>Practice, practice, practice:</strong> The more problems you solve, the better you’ll get at recognizing patterns and applying efficient techniques. Practice solving problems in an interview-like setting with time constraints.</li>
+    </ul>
+</body>
+</html>
