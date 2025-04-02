@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object-Oriented Design Interview Questions</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 { 
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        pre { 
+            background: #f4f4f4; 
+            padding: 15px; 
+            border-radius: 5px; 
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        code { 
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .principle {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Object-Oriented Design Interview Questions</h1>
+    
+    <div class="section">
+        <h2>Design Patterns</h2>
+        
+        <h3>Singleton Pattern</h3>
+        <pre><code>public class Singleton {
+    private static Singleton instance;
+    private Singleton() {}
+    
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}</code></pre>
+        
+        <h3>Factory Pattern</h3>
+        <pre><code>interface Animal {
+    void makeSound();
+}
+
+class Dog implements Animal {
+    public void makeSound() { System.out.println("Woof!"); }
+}
+
+class Cat implements Animal {
+    public void makeSound() { System.out.println("Meow!"); }
+}
+
+class AnimalFactory {
+    public static Animal createAnimal(String type) {
+        switch(type.toLowerCase()) {
+            case "dog": return new Dog();
+            case "cat": return new Cat();
+            default: throw new IllegalArgumentException("Unknown animal type");
+        }
+    }
+}</code></pre>
+        
+        <h3>Observer Pattern</h3>
+        <pre><code>interface Observer {
+    void update(String message);
+}
+
+class Subject {
+    private List<Observer> observers = new ArrayList<>();
+    
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+    
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update("New update!");
+        }
+    }
+}</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>Object-Oriented Design Principles (SOLID)</h2>
+        
+        <div class="principle">
+            <h3>Single Responsibility Principle (SRP)</h3>
+            <p>A class should have only one reason to change, meaning it should have only one job or responsibility.</p>
+            <pre><code>// Good example
+class UserService {
+    public void createUser() { /* ... */ }
+    public void deleteUser() { /* ... */ }
+}
+
+class EmailService {
+    public void sendEmail() { /* ... */ }
+    public void validateEmail() { /* ... */ }
+}</code></pre>
+        </div>
+
+        <div class="principle">
+            <h3>Open/Closed Principle (OCP)</h3>
+            <p>Software entities should be open for extension but closed for modification.</p>
+            <pre><code>abstract class Shape {
+    abstract double area();
+}
+
+class Circle extends Shape {
+    private double radius;
+    public double area() { return Math.PI * radius * radius; }
+}
+
+class Rectangle extends Shape {
+    private double width, height;
+    public double area() { return width * height; }
+}</code></pre>
+        </div>
+
+        <div class="principle">
+            <h3>Liskov Substitution Principle (LSP)</h3>
+            <p>Objects of a superclass should be replaceable with objects of its subclasses without breaking the application.</p>
+            <pre><code>class Bird {
+    public void fly() { /* ... */ }
+}
+
+class Sparrow extends Bird {
+    public void fly() { /* ... */ }
+}
+
+class Penguin extends Bird {
+    public void fly() {
+        throw new UnsupportedOperationException("Penguins can't fly!");
+    }
+}</code></pre>
+        </div>
+
+        <div class="principle">
+            <h3>Interface Segregation Principle (ISP)</h3>
+            <p>A client should not be forced to implement interfaces they don't use.</p>
+            <pre><code>interface Workable {
+    void work();
+}
+
+interface Eatable {
+    void eat();
+}
+
+class Human implements Workable, Eatable {
+    public void work() { /* ... */ }
+    public void eat() { /* ... */ }
+}
+
+class Robot implements Workable {
+    public void work() { /* ... */ }
+}</code></pre>
+        </div>
+
+        <div class="principle">
+            <h3>Dependency Inversion Principle (DIP)</h3>
+            <p>High-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
+            <pre><code>interface Database {
+    void connect();
+    void query();
+}
+
+class MySQLDatabase implements Database {
+    public void connect() { /* ... */ }
+    public void query() { /* ... */ }
+}
+
+class UserRepository {
+    private Database database;
+    public UserRepository(Database database) {
+        this.database = database;
+    }
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Practice Questions</h2>
+        
+        <h3>Design a Hash Map</h3>
+        <pre><code>class HashMap<K, V> {
+    private static class Node<K, V> {
+        K key;
+        V value;
+        Node<K, V> next;
+        Node(K key, V value) { this.key = key; this.value = value; }
+    }
+    private Node<K, V>[] buckets;
+    private int capacity = 16;
+    
+    public HashMap() { buckets = new Node[capacity]; }
+    
+    public void put(K key, V value) {
+        int index = key.hashCode() % capacity;
+        Node<K, V> node = new Node<>(key, value);
+        node.next = buckets[index];
+        buckets[index] = node;
+    }
+    
+    public V get(K key) {
+        int index = key.hashCode() % capacity;
+        Node<K, V> current = buckets[index];
+        while (current != null) {
+            if (current.key.equals(key)) return current.value;
+            current = current.next;
+        }
+        return null;
+    }
+}</code></pre>
+        
+        <h3>Design a Least Recently Used (LRU) Cache</h3>
+        <pre><code>import java.util.*;
+
+class LRUCache<K, V> {
+    private final int capacity;
+    private final Map<K, V> cache;
+    
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.cache = new LinkedHashMap<>(capacity, 0.75f, true) {
+            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+                return size() > capacity;
+            }
+        };
+    }
+    
+    public V get(K key) { return cache.getOrDefault(key, null); }
+    public void put(K key, V value) { cache.put(key, value); }
+}</code></pre>
+        
+        <h3>Design a Call Center</h3>
+        <pre><code>class Call {
+    private String id;
+    private String customer;
+    private long timestamp;
+    private CallStatus status;
+    
+    public Call(String id, String customer) {
+        this.id = id;
+        this.customer = customer;
+        this.timestamp = System.currentTimeMillis();
+        this.status = CallStatus.WAITING;
+    }
+}
+
+enum CallStatus {
+    WAITING, IN_PROGRESS, COMPLETED
+}
+
+class CallCenter {
+    private Queue<Call> callQueue = new LinkedList<>();
+    private List<Agent> agents = new ArrayList<>();
+    
+    public void receiveCall(Call call) {
+        callQueue.offer(call);
+        dispatchCall();
+    }
+    
+    private void dispatchCall() {
+        Agent availableAgent = findAvailableAgent();
+        if (availableAgent != null && !callQueue.isEmpty()) {
+            Call call = callQueue.poll();
+            availableAgent.handleCall(call);
+        }
+    }
+    
+    private Agent findAvailableAgent() {
+        return agents.stream()
+                    .filter(Agent::isAvailable)
+                    .findFirst()
+                    .orElse(null);
+    }
+}
+
+class Agent {
+    private String id;
+    private boolean available = true;
+    
+    public void handleCall(Call call) {
+        available = false;
+        // Handle call logic
+        available = true;
+    }
+    
+    public boolean isAvailable() { return available; }
+}</code></pre>
+
+        <h3>Design a Deck of Cards</h3>
+        <pre><code>enum Suit { HEARTS, DIAMONDS, CLUBS, SPADES; }
+
+class Card {
+    private int value;
+    private Suit suit;
+    
+    public Card(int value, Suit suit) {
+        this.value = value;
+        this.suit = suit;
+    }
+    
+    public int getValue() { return value; }
+    public Suit getSuit() { return suit; }
+    
+    @Override
+    public String toString() {
+        return value + " of " + suit;
+    }
+}
+
+class Deck {
+    private List<Card> cards = new ArrayList<>();
+    
+    public Deck() {
+        initializeDeck();
+        shuffle();
+    }
+    
+    private void initializeDeck() {
+        for (Suit suit : Suit.values()) {
+            for (int i = 1; i <= 13; i++) {
+                cards.add(new Card(i, suit));
+            }
+        }
+    }
+    
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+    
+    public Card drawCard() {
+        if (cards.isEmpty()) return null;
+        return cards.remove(cards.size() - 1);
+    }
+    
+    public void reset() {
+        cards.clear();
+        initializeDeck();
+        shuffle();
+    }
+}</code></pre>
+
+        <h3>Design a Parking Lot</h3>
+        <pre><code>enum VehicleType {
+    MOTORCYCLE, CAR, BUS
+}
+
+class Vehicle {
+    private String licensePlate;
+    private VehicleType type;
+    
+    public Vehicle(String licensePlate, VehicleType type) {
+        this.licensePlate = licensePlate;
+        this.type = type;
+    }
+}
+
+class ParkingSpot {
+    private int spotNumber;
+    private VehicleType type;
+    private boolean isOccupied;
+    private Vehicle parkedVehicle;
+    
+    public ParkingSpot(int spotNumber, VehicleType type) {
+        this.spotNumber = spotNumber;
+        this.type = type;
+        this.isOccupied = false;
+    }
+    
+    public boolean canPark(Vehicle vehicle) {
+        return !isOccupied && vehicle.getType() == type;
+    }
+    
+    public void park(Vehicle vehicle) {
+        parkedVehicle = vehicle;
+        isOccupied = true;
+    }
+    
+    public void removeVehicle() {
+        parkedVehicle = null;
+        isOccupied = false;
+    }
+}
+
+class ParkingLot {
+    private Map<Integer, ParkingSpot> spots = new HashMap<>();
+    private int capacity;
+    
+    public ParkingLot(int capacity) {
+        this.capacity = capacity;
+        initializeSpots();
+    }
+    
+    private void initializeSpots() {
+        // Initialize different types of spots
+        for (int i = 1; i <= capacity; i++) {
+            VehicleType type = determineSpotType(i);
+            spots.put(i, new ParkingSpot(i, type));
+        }
+    }
+    
+    public boolean parkVehicle(Vehicle vehicle) {
+        for (ParkingSpot spot : spots.values()) {
+            if (spot.canPark(vehicle)) {
+                spot.park(vehicle);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void removeVehicle(String licensePlate) {
+        for (ParkingSpot spot : spots.values()) {
+            if (spot.isOccupied() && 
+                spot.getParkedVehicle().getLicensePlate().equals(licensePlate)) {
+                spot.removeVehicle();
+                break;
+            }
+        }
+    }
+}</code></pre>
+
+        <h3>Design a Chat Server</h3>
+        <pre><code>class Message {
+    private String sender;
+    private String content;
+    private long timestamp;
+    
+    public Message(String sender, String content) {
+        this.sender = sender;
+        this.content = content;
+        this.timestamp = System.currentTimeMillis();
+    }
+}
+
+class ChatRoom {
+    private String name;
+    private List<User> users = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
+    
+    public void addUser(User user) {
+        users.add(user);
+    }
+    
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+    
+    public void broadcast(Message message) {
+        messages.add(message);
+        for (User user : users) {
+            user.receiveMessage(message);
+        }
+    }
+}
+
+class User {
+    private String username;
+    private List<ChatRoom> rooms = new ArrayList<>();
+    
+    public void joinRoom(ChatRoom room) {
+        rooms.add(room);
+        room.addUser(this);
+    }
+    
+    public void leaveRoom(ChatRoom room) {
+        rooms.remove(room);
+        room.removeUser(this);
+    }
+    
+    public void sendMessage(ChatRoom room, String content) {
+        Message message = new Message(username, content);
+        room.broadcast(message);
+    }
+    
+    public void receiveMessage(Message message) {
+        // Handle received message
+    }
+}
+
+class ChatServer {
+    private Map<String, ChatRoom> rooms = new HashMap<>();
+    private Map<String, User> users = new HashMap<>();
+    
+    public ChatRoom createRoom(String name) {
+        ChatRoom room = new ChatRoom(name);
+        rooms.put(name, room);
+        return room;
+    }
+    
+    public User createUser(String username) {
+        User user = new User(username);
+        users.put(username, user);
+        return user;
+    }
+}</code></pre>
+
+        <h3>Design a Circular Array</h3>
+        <pre><code>class CircularArray<T> {
+    private T[] array;
+    private int head = 0;
+    private int size = 0;
+    private int capacity;
+    
+    public CircularArray(int capacity) {
+        this.capacity = capacity;
+        array = (T[]) new Object[capacity];
+    }
+    
+    public void add(T item) {
+        if (size == capacity) {
+            // Shift head if array is full
+            head = (head + 1) % capacity;
+        } else {
+            size++;
+        }
+        array[(head + size - 1) % capacity] = item;
+    }
+    
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        return array[(head + index) % capacity];
+    }
+    
+    public void rotate(int shiftRight) {
+        head = (head - shiftRight + capacity) % capacity;
+    }
+    
+    public int size() { return size; }
+    
+    public boolean isEmpty() { return size == 0; }
+}</code></pre>
+    </div>
+</body>
+</html>
