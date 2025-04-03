@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Top 5 Meta System Design Interview Questions – Detailed Answers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    section {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    ul {
+      margin-left: 20px;
+    }
+    .subsection {
+      margin-top: 15px;
+    }
+    .note {
+      font-style: italic;
+      color: #555;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Top 5 Meta System Design Interview Questions – Detailed Answers</h1>
+  
+  <!-- Question 1: Design Instagram -->
+  <section id="design-instagram">
+    <h2>1. Design Instagram</h2>
+    <h3>Clarifying Questions & Requirements</h3>
+    <ul>
+      <li>Scope: Are we designing the entire Instagram app or a core feature (e.g., photo upload and feed display)?</li>
+      <li>Functional Requirements: User registration, photo/video upload, feed generation, likes, comments, and following/unfollowing.</li>
+      <li>Nonfunctional Requirements: Scalability (millions of users), low latency, high availability, and data consistency.</li>
+    </ul>
+    <h3>High-Level Design</h3>
+    <ul>
+      <li><strong>Client Layer:</strong> Mobile and web apps that interact with the backend via RESTful APIs or GraphQL.</li>
+      <li><strong>API Gateway & Load Balancer:</strong> Distribute requests and route them to application servers.</li>
+      <li><strong>Application Servers:</strong> Handle business logic such as user authentication, post processing, and feed generation.</li>
+      <li><strong>Storage:</strong>
+        <ul>
+          <li><em>Media Storage:</em> Use object storage (e.g., AWS S3) to store images/videos.</li>
+          <li><em>Metadata & User Data:</em> A NoSQL database (like Cassandra) for scalability and quick read/write operations; optionally an RDBMS for transactional data.</li>
+        </ul>
+      </li>
+      <li><strong>Cache Layer:</strong> Utilize caching (Redis/Memcached) to serve popular feeds and reduce database load.</li>
+      <li><strong>Feed Generation Service:</strong> Processes user posts and generates personalized feeds using ranking and recommendation algorithms.</li>
+    </ul>
+    <h3>Drill-Down & Trade-Offs</h3>
+    <ul>
+      <li><strong>Data Partitioning:</strong> Shard user data and posts to manage high throughput.</li>
+      <li><strong>Consistency vs. Latency:</strong> Use eventual consistency for feed data to allow faster updates.</li>
+      <li><strong>Media Delivery:</strong> Employ a CDN to serve images/videos efficiently worldwide.</li>
+    </ul>
+    <p class="note">Tip: Clarify assumptions with the interviewer regarding scale (e.g., daily active users) and feature set to tailor your design appropriately.</p>
+  </section>
+  
+  <!-- Question 2: Design Facebook News Feed -->
+  <section id="design-newsfeed">
+    <h2>2. Design Facebook News Feed</h2>
+    <h3>Clarifying Questions & Requirements</h3>
+    <ul>
+      <li>Scope: Are we generating the news feed for all users or focusing on personalized ranking?</li>
+      <li>Functional Requirements: Aggregation of posts from friends/pages, real-time updates, personalization, and engagement features (likes/comments).</li>
+      <li>Nonfunctional Requirements: Low latency, high throughput, scalability, and fault tolerance.</li>
+    </ul>
+    <h3>High-Level Design</h3>
+    <ul>
+      <li><strong>Client Layer:</strong> Mobile/web apps that request the feed.</li>
+      <li><strong>API Gateway & Load Balancer:</strong> Route incoming feed requests.</li>
+      <li><strong>Feed Generation Service:</strong> Aggregates posts, applies ranking algorithms (based on recency, relevance, and user interaction), and handles fan-out.</li>
+      <li><strong>Data Stores:</strong> 
+        <ul>
+          <li><em>Primary Storage:</em> NoSQL database for posts and user relationships.</li>
+          <li><em>Feed Cache:</em> In-memory store to quickly serve precomputed feeds.</li>
+        </ul>
+      </li>
+      <li><strong>Notification System:</strong> Triggers feed refresh when new content is posted.</li>
+    </ul>
+    <h3>Drill-Down & Trade-Offs</h3>
+    <ul>
+      <li><strong>Precomputation vs. Real-Time Generation:</strong> Trade-off between storing precomputed feeds for speed versus on-demand generation for freshness.</li>
+      <li><strong>Data Consistency:</strong> Use eventual consistency for scalability, while ensuring that major updates are propagated quickly.</li>
+      <li><strong>Handling Hotspots:</strong> Use sharding and load balancing to manage users with massive followings (e.g., celebrities).</li>
+    </ul>
+    <p class="note">Note: Emphasize how you would balance personalization with system performance.</p>
+  </section>
+  
+  <!-- Question 3: Design a Messaging App -->
+  <section id="design-messaging">
+    <h2>3. Design a Messaging App (e.g., Facebook Messenger or WhatsApp)</h2>
+    <h3>Clarifying Questions & Requirements</h3>
+    <ul>
+      <li>Scope: Are we building one-to-one, group chats, or both?</li>
+      <li>Functional Requirements: Real-time messaging, delivery receipts, media sharing, offline message storage, and notifications.</li>
+      <li>Nonfunctional Requirements: Low latency, high availability, scalability, and secure end-to-end encryption.</li>
+    </ul>
+    <h3>High-Level Design</h3>
+    <ul>
+      <li><strong>Client Layer:</strong> Mobile apps that establish persistent connections (e.g., WebSockets) to receive messages in real time.</li>
+      <li><strong>API Gateway & Load Balancer:</strong> Route messages to appropriate chat servers.</li>
+      <li><strong>Chat Servers:</strong> Handle real-time message delivery, maintain connections, and use pub/sub patterns to distribute messages.</li>
+      <li><strong>Message Queue:</strong> Buffer messages for offline users.</li>
+      <li><strong>Database:</strong> Store chat history and user data, potentially using a NoSQL store for scalability.</li>
+      <li><strong>Encryption Service:</strong> Ensure end-to-end encryption for message security.</li>
+    </ul>
+    <h3>Drill-Down & Trade-Offs</h3>
+    <ul>
+      <li><strong>Connection Management:</strong> Maintain persistent connections for real-time delivery; handle reconnections gracefully.</li>
+      <li><strong>Message Acknowledgment:</strong> Design a mechanism for sent, delivered, and read receipts.</li>
+      <li><strong>Offline Handling:</strong> Store messages temporarily if a user is offline, then push notifications upon reconnection.</li>
+    </ul>
+    <p class="note">Tip: Focus on how you would ensure low latency and reliability in a high-concurrency environment.</p>
+  </section>
+  
+  <!-- Question 4: Design a URL Shortening Service -->
+  <section id="design-url-shortener">
+    <h2>4. Design a URL Shortening Service (e.g., TinyURL or Bit.ly)</h2>
+    <h3>Clarifying Questions & Requirements</h3>
+    <ul>
+      <li>Scope: Should custom short URLs be supported?</li>
+      <li>Functional Requirements: Generate a unique short URL for a given long URL, store mappings, support redirection, and optionally allow custom aliases.</li>
+      <li>Nonfunctional Requirements: High availability, scalability, low latency, and collision resistance in URL generation.</li>
+    </ul>
+    <h3>High-Level Design</h3>
+    <ul>
+      <li><strong>Client Layer:</strong> Web interface/API that accepts URL shortening requests.</li>
+      <li><strong>API Gateway & Load Balancer:</strong> Distribute requests to application servers.</li>
+      <li><strong>Application Servers:</strong> Process requests, enforce rate limiting, and generate unique IDs.</li>
+      <li><strong>ID Encoder/Sequencer:</strong> Convert numeric IDs to alphanumeric strings.</li>
+      <li><strong>Database:</strong> Store URL mappings; use a NoSQL store for high scalability and fast lookups.</li>
+      <li><strong>Cache:</strong> Cache popular URL mappings to reduce database load.</li>
+    </ul>
+    <h3>Drill-Down & Trade-Offs</h3>
+    <ul>
+      <li><strong>Collision Handling:</strong> Ensure uniqueness by using techniques like hash functions combined with a counter.</li>
+      <li><strong>Custom URL Handling:</strong> Check for availability and manage conflicts if users request custom aliases.</li>
+      <li><strong>Scaling Storage:</strong> Use sharding if the number of URL mappings grows rapidly.</li>
+    </ul>
+    <p class="note">Note: Be prepared to discuss strategies for rate limiting and caching in a high-traffic scenario.</p>
+  </section>
+  
+  <!-- Question 5: Design a Ride-Sharing Service -->
+  <section id="design-ride-sharing">
+    <h2>5. Design a Ride-Sharing Service (e.g., Uber or Lyft)</h2>
+    <h3>Clarifying Questions & Requirements</h3>
+    <ul>
+      <li>Scope: Focus on core functionalities – ride request, driver matching, real-time tracking, and payment processing.</li>
+      <li>Functional Requirements: Allow users to request rides, show nearby drivers, real-time location updates, ETA calculation, trip status updates, and payment integration.</li>
+      <li>Nonfunctional Requirements: Scalability, high availability, low latency, fault tolerance, and security.</li>
+    </ul>
+    <h3>High-Level Design</h3>
+    <ul>
+      <li><strong>Client Layer:</strong> Mobile apps for riders and drivers.</li>
+      <li><strong>API Gateway & Load Balancer:</strong> Route ride requests and driver updates to backend services.</li>
+      <li><strong>Trip Service/Matching Engine:</strong> Match riders with the nearest available drivers using geospatial indexing (e.g., R-trees or geohashing).</li>
+      <li><strong>Real-Time Tracking:</strong> Use pub/sub or WebSocket connections to push location updates to clients.</li>
+      <li><strong>Database:</strong> Store user profiles, ride histories, and transaction records; may use a mix of SQL and NoSQL databases.</li>
+      <li><strong>Payment Service:</strong> Integrate with secure third-party payment gateways for processing transactions.</li>
+    </ul>
+    <h3>Drill-Down & Trade-Offs</h3>
+    <ul>
+      <li><strong>Matching Algorithm:</strong> Optimize matching to minimize wait times and travel distances.</li>
+      <li><strong>Scalability:</strong> Design distributed systems for handling peak loads and real-time updates.</li>
+      <li><strong>Fault Tolerance:</strong> Handle scenarios where drivers or riders lose connectivity and update ETAs dynamically.</li>
+    </ul>
+    <p class="note">Tip: Highlight your strategy for geo-distribution and real-time data processing, as these are crucial for a ride-sharing service.</p>
+  </section>
+
+  <footer style="text-align:center; margin-top:40px; font-size:0.9em; color:#777;">
+    <p>Meta System Design Interview – Detailed Answers &copy; 2025</p>
+  </footer>
+</body>
+</html>
