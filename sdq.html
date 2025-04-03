@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta System Design Interview</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        h1, h2, h3 { color: #2c3e50; }
+        .container { max-width: 900px; margin: auto; }
+        .diagram { border: 1px solid #ccc; padding: 10px; margin: 20px 0; background: #f9f9f9; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meta System Design Interview Questions</h1>
+
+        <h2>1. Design a URL Shortener</h2>
+        <h3>Define Requirements</h3>
+        <ul>
+            <li>Shorten a given URL</li>
+            <li>Redirect short URL to original URL</li>
+            <li>Handle billions of URLs efficiently</li>
+            <li>Prevent URL collisions</li>
+        </ul>
+
+        <h3>High-Level Design</h3>
+        <div class="diagram">
+            <svg width="400" height="200">
+                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+                <text x="20" y="55" fill="black">User</text>
+                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+                <text x="170" y="55" fill="black">Load Balancer</text>
+                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+                <text x="360" y="55" fill="black">URL Service</text>
+            </svg>
+        </div>
+
+        <h3>Core Components</h3>
+        <ul>
+            <li><strong>Database:</strong> NoSQL store (Cassandra) for quick lookups</li>
+            <li><strong>Cache:</strong> Redis to store frequently accessed URLs</li>
+            <li><strong>Load Balancer:</strong> Distributes requests across multiple URL servers</li>
+            <li><strong>Hashing Mechanism:</strong> Generates short unique URLs</li>
+        </ul>
+
+        <h3>Scalability Considerations</h3>
+        <ul>
+            <li>Use consistent hashing to balance URL storage</li>
+            <li>Sharding strategy to avoid single points of failure</li>
+            <li>Replication for high availability</li>
+        </ul>
+
+        <h2>2. Design a News Feed System</h2>
+        <h3>Define Requirements</h3>
+        <ul>
+            <li>Deliver personalized content efficiently</li>
+            <li>Support millions of users in real-time</li>
+            <li>Handle ranking algorithms dynamically</li>
+        </ul>
+
+        <h3>High-Level Design</h3>
+        <div class="diagram">
+            <svg width="400" height="200">
+                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+                <text x="20" y="55" fill="black">User</text>
+                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+                <text x="170" y="55" fill="black">Feed Aggregator</text>
+                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+                <text x="360" y="55" fill="black">Cache & Store</text>
+            </svg>
+        </div>
+
+        <h3>Core Components</h3>
+        <ul>
+            <li><strong>Storage:</strong> MySQL/PostgreSQL for structured feed data</li>
+            <li><strong>Caching:</strong> Memcached/Redis for frequently accessed feeds</li>
+            <li><strong>Fan-out Strategy:</strong> Push-based for active users, Pull-based for inactive users</li>
+        </ul>
+
+        <h3>Scalability Considerations</h3>
+        <ul>
+            <li>Use GraphQL for efficient data fetching</li>
+            <li>Implement user-based ranking with ML models</li>
+        </ul>
+
+        <h2>3. Design a Chat System</h2>
+        <h3>Define Requirements</h3>
+        <ul>
+            <li>Support one-on-one and group chats</li>
+            <li>Ensure low latency for message delivery</li>
+            <li>Persist chat history</li>
+        </ul>
+
+        <h3>High-Level Design</h3>
+        <div class="diagram">
+            <svg width="400" height="200">
+                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+                <text x="20" y="55" fill="black">User A</text>
+                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+                <text x="170" y="55" fill="black">Message Queue</text>
+                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+                <text x="360" y="55" fill="black">User B</text>
+            </svg>
+        </div>
+
+        <h3>Core Components</h3>
+        <ul>
+            <li><strong>Real-time Messaging:</strong> WebSockets for live communication</li>
+            <li><strong>Queue Processing:</strong> Kafka/RabbitMQ for async processing</li>
+            <li><strong>Storage:</strong> Distributed storage for chat history</li>
+        </ul>
+
+        <h3>Scalability Considerations</h3>
+        <ul>
+            <li>Shard messages based on user ID</li>
+            <li>Use read replicas to distribute query load</li>
+        </ul>
+
+        <!-- Add similar sections for more system designs -->
+    </div>
+</body>
+</html>
