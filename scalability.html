@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture 9: Scalability - CS75</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
+        h1, h2, h3 { color: #333; }
+        .section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Lecture 9: Scalability - CS75 (Summer 2012)</h1>
+    <h2>Instructor: David Malan</h2>
+    
+    <div class="section">
+        <h3>Introduction to Scalability</h3>
+        <p><strong>David Malan:</strong> Today, we'll dive into scalability—what it means, why it's crucial, and how we can design systems that handle growing demands efficiently. We'll explore concepts like load balancing, caching, database optimization, and distributed architectures.</p>
+    </div>
+    
+    <div class="section">
+        <h3>What is Scalability?</h3>
+        <p>Scalability refers to a system's ability to handle increased load gracefully. A well-designed system should be able to:</p>
+        <ul>
+            <li>Support more users without significant performance degradation.</li>
+            <li>Expand hardware resources (vertically or horizontally) effectively.</li>
+            <li>Optimize software and database efficiency for better response times.</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h3>Types of Scaling</h3>
+        <h4>1. Vertical Scaling (Scaling Up)</h4>
+        <ul>
+            <li>Adding more power (CPU, RAM) to a single machine.</li>
+            <li>Easier but has physical limitations.</li>
+        </ul>
+        
+        <h4>2. Horizontal Scaling (Scaling Out)</h4>
+        <ul>
+            <li>Adding more machines to distribute the load.</li>
+            <li>Requires efficient load balancing and data distribution strategies.</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h3>Key Techniques for Scalability</h3>
+        <h4>1. Load Balancing</h4>
+        <ul>
+            <li>Distributes requests across multiple servers to prevent overload.</li>
+            <li>Common load balancers: Nginx, HAProxy, AWS Elastic Load Balancer.</li>
+            <li>Strategies:
+                <ul>
+                    <li><strong>Round Robin:</strong> Requests are evenly distributed.</li>
+                    <li><strong>Least Connections:</strong> Directs traffic to the least busy server.</li>
+                    <li><strong>IP Hashing:</strong> Sends requests from the same user to the same server.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h4>2. Caching</h4>
+        <ul>
+            <li>Stores frequently accessed data to reduce load.</li>
+            <li>Types of caching:
+                <ul>
+                    <li><strong>Application-level caching:</strong> Storing computed results (e.g., Memcached, Redis).</li>
+                    <li><strong>Database caching:</strong> Indexing and query optimization.</li>
+                    <li><strong>CDN (Content Delivery Network):</strong> Distributing static assets (CSS, JavaScript, images) globally.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h3>Real-World Scalability Challenges</h3>
+        <ul>
+            <li><strong>Handling Spikes in Traffic:</strong> Use auto-scaling in cloud environments (AWS, GCP, Azure) and implement rate limiting.</li>
+            <li><strong>Database Bottlenecks:</strong> Optimize queries and reduce redundant queries with efficient schema design.</li>
+            <li><strong>Latency and Performance Issues:</strong> Minimize network round trips, compress and optimize assets (Gzip, minification).</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h3>Conclusion</h3>
+        <p>Scalability is a critical aspect of system design. By implementing load balancing, caching, database optimization, and asynchronous processing, we can build systems that efficiently handle growth. Next class, we will look at real-world case studies and analyze how large companies scale their services.</p>
+    </div>
+</body>
+</html>
+
