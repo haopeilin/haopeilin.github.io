@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About: Designing Data-Intensive Applications</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; }
+        h1, h2 { color: #333; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.3em; }
+        ul { margin-left: 1.5em; }
+        strong { color: #555; }
+        .source-ref { font-size: 0.8em; color: #777; } /* Simple style for source references */
+    </style>
+</head>
+<body>
+
+    <h1>Designing Data-Intensive Applications</h1>
+    <h2>The Big Ideas Behind Reliable, Scalable, and Maintainable Systems</h2>
+    <p><em>By Martin Kleppmann</em> <span class="source-ref"></span></p>
+
+    <h2>About the Book</h2>
+    <p>
+        Data is central to many system design challenges today, including scalability, consistency, reliability, efficiency, and maintainability <span class="source-ref"></span>. This book helps navigate the diverse landscape of technologies for processing and storing data by examining the pros and cons of various tools like relational databases, NoSQL datastores, stream/batch processors, and message brokers <span class="source-ref"></span>. It focuses on the fundamental principles that remain constant even as software changes, enabling software engineers and architects to apply these ideas effectively in modern applications <span class="source-ref"></span>.
+    </p>
+    <p>
+        The book aims to help you make informed decisions about system architecture, understand trade-offs, learn from major online services, and grasp the underlying distributed systems research <span class="source-ref"></span>. It delves into the internals of data systems, their key algorithms, principles, and trade-offs, providing intuition for their behavior and enabling better design decisions <span class="source-ref"></span>.
+    </p>
+
+    <h2>Who Should Read This Book? <span class="source-ref"></span></h2>
+    <p>
+        This book is for software engineers, software architects, and technical managers involved in developing applications with server-side data storage or processing <span class="source-ref"></span>. It's particularly relevant if you make architectural decisions, choose tools, or want a deeper understanding of the systems you use <span class="source-ref"></span>. Some familiarity with web applications, relational databases, and SQL is assumed <span class="source-ref"></span>.
+    </p>
+    <p>This book is valuable if you want to:</p>
+    <ul>
+        <li>Learn how to build scalable, highly available, and robust data systems <span class="source-ref"></span>.</li>
+        <li>Make systems easier to maintain long-term <span class="source-ref"></span>.</li>
+        <li>Understand the internals of major online services and database technologies <span class="source-ref"></span>.</li>
+    </ul>
+
+    <h2>Key Concepts Covered</h2>
+    <p>The book focuses on three core concerns for data systems <span class="source-ref"></span>:</p>
+    <ul>
+        <li><strong>Reliability:</strong> Systems should work correctly even in the face of hardware faults, software errors, and human mistakes <span class="source-ref"></span>. Topics include fault tolerance and resilience <span class="source-ref"></span>.</li>
+        <li><strong>Scalability:</strong> Systems should have reasonable ways to deal with growth in data volume, traffic, or complexity <span class="source-ref"></span>. This involves describing load and performance, including concepts like latency percentiles and throughput <span class="source-ref"></span>.</li>
+        <li><strong>Maintainability:</strong> Systems should be easy for different people to work on productively over time <span class="source-ref"></span>. This includes operability, simplicity (managing complexity), and evolvability (ease of making changes) <span class="source-ref"></span>.</li>
+    </ul>
+
+    <h2>Book Structure <span class="source-ref"></span></h2>
+    <p>The book is divided into three parts:</p>
+    <ol>
+        <li>
+            <strong>Part I: Foundations of Data Systems <span class="source-ref"></span></strong>
+            <ul>
+                <li>Chapter 1: Reliable, Scalable, and Maintainable Applications <span class="source-ref"></span></li>
+                <li>Chapter 2: Data Models and Query Languages <span class="source-ref"></span></li>
+                <li>Chapter 3: Storage and Retrieval <span class="source-ref"></span></li>
+                <li>Chapter 4: Encoding and Evolution <span class="source-ref"></span></li>
+            </ul>
+        </li>
+        <li>
+            <strong>Part II: Distributed Data <span class="source-ref"></span></strong>
+            <ul>
+                <li>Chapter 5: Replication <span class="source-ref"></span></li>
+                <li>Chapter 6: Partitioning <span class="source-ref"></span></li>
+                <li>Chapter 7: Transactions <span class="source-ref"></span></li>
+                <li>Chapter 8: The Trouble with Distributed Systems <span class="source-ref"></span></li>
+                <li>Chapter 9: Consistency and Consensus <span class="source-ref"></span></li>
+            </ul>
+        </li>
+        <li>
+            <strong>Part III: Derived Data <span class="source-ref"></span></strong>
+            <ul>
+                <li>Chapter 10: Batch Processing <span class="source-ref"></span></li>
+                <li>Chapter 11: Stream Processing <span class="source-ref"></span></li>
+                <li>Chapter 12: The Future of Data Systems <span class="source-ref"></span></li>
+            </ul>
+        </li>
+    </ol>
+
+    <h2>Example Topics Explored</h2>
+    <ul>
+        <li>Data models: Relational vs Document vs Graph <span class="source-ref"></span></li>
+        <li>Storage engines: B-Trees vs LSM-Trees <span class="source-ref"></span></li>
+        <li>Data encoding: JSON, XML, Avro, Thrift, Protocol Buffers <span class="source-ref"></span></li>
+        <li>Replication strategies: Single-Leader, Multi-Leader, Leaderless <span class="source-ref"></span></li>
+        <li>Partitioning (Sharding): Key Range vs Hashing <span class="source-ref"></span></li>
+        <li>Transactions: ACID properties, isolation levels, distributed transactions <span class="source-ref"></span></li>
+        <li>Distributed system challenges: Network faults, clocks, consensus <span class="source-ref"></span></li>
+        <li>Batch vs Stream processing <span class="source-ref"></span></li>
+    </ul>
+
+</body>
+</html>
