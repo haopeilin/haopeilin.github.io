@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Patterns: Elements of Reusable Object-Oriented Software</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+        }
+        .container {
+            max-width: 960px;
+            margin: auto;
+        }
+        .chapter {
+            margin-bottom: 40px;
+        }
+        .summary {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .toc {
+            border: 1px solid #ccc;
+            padding: 10px 20px;
+            margin-bottom: 30px;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .toc ul li a {
+            text-decoration: none;
+            color: #0366d6;
+        }
+        .toc ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Design Patterns: Elements of Reusable Object-Oriented Software</h1>
+
+        <div class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#preface-cd">Preface to CD</a></li>
+                <li><a href="#preface-book">Preface to Book</a></li>
+                <li><a href="#foreword">Foreword</a></li>
+                <li><a href="#guide-to-readers">Guide to Readers</a></li>
+                <li><a href="#chapter1">Chapter 1: Introduction</a></li>
+                <li><a href="#chapter2">Chapter 2: A Case Study: Designing a Document Editor</a></li>
+                <li><a href="#chapter3">Chapter 3: Creational Patterns</a></li>
+                <li><a href="#chapter4">Chapter 4: Structural Patterns</a></li>
+                <li><a href="#chapter5">Chapter 5: Behavioral Patterns</a></li>
+                <li><a href="#chapter6">Chapter 6: Conclusion</a></li>
+            </ul>
+        </div>
+
+        <div id="preface-cd" class="chapter">
+            <h2>Preface to CD</h2>
+            <div class="summary">
+                <p>The preface to the CD-ROM edition of the book, written in August 1997, reflects on the book's impact three years after its initial publication.  The authors express their gratitude for the positive reception of the book and how it has helped engineers design and build better systems. </p>
+                <p>A key theme is the suitability of the book's content for a hypertext format, like a CD-ROM.  The authors note the numerous cross-references in the book make it a natural fit for an electronic medium, allowing for easy searching and navigation.  The CD-ROM version is presented as a convenient and portable alternative to the physical book.  The preface also provides contact information for feedback and questions, including an email address and a mailing list for the "Gang of Four" (the authors' nickname). </p>
+            </div>
+        </div>
+
+        <div id="preface-book" class="chapter">
+            <h2>Preface to Book</h2>
+            <div class="summary">
+                <p>The original preface to the book, from August 1994, sets the stage for the reader.  It clarifies that this book is not an introduction to object-oriented programming but is intended for those who are already proficient in at least one object-oriented language and have some design experience.  The book's focus is on "design patterns," which are described as simple and elegant solutions to common problems in object-oriented software design. </p>
+                <p>The authors emphasize that design patterns are not novel inventions but are proven solutions that have evolved over time through redesign and recoding.  They are not complex or esoteric tricks but can be implemented in standard object-oriented languages.  The preface encourages readers to see the book as a reference to be consulted repeatedly for design insights and inspiration.  It also gives a glimpse into the collaborative and international effort that went into writing the book. </p>
+            </div>
+        </div>
+
+        <div id="foreword" class="chapter">
+            <h2>Foreword</h2>
+            <div class="summary">
+                <p>The foreword, written by Grady Booch, a prominent figure in software engineering, praises "Design Patterns" as a seminal contribution to the field.  Booch uses the analogy of a software archaeologist to describe how the book marks a significant shift in the practice of computing.  He highlights the book's importance in providing a common language for developers to discuss and apply proven design solutions. </p>
+                <p>Booch emphasizes the practical impact of the book, noting that he rarely encounters developers who haven't heard of the patterns movement, and that successful projects often use these design patterns.  He concludes by stating that the "Gang of Four" have made a major contribution to software engineering and that there is much to be learned and applied from their work. </p>
+            </div>
+        </div>
+
+        <div id="guide-to-readers" class="chapter">
+            <h2>Guide to Readers</h2>
+            <div class="summary">
+                <p>This section provides a roadmap for navigating the book.  The book is divided into two main parts. The first part (Chapters 1 and 2) introduces design patterns and demonstrates their application through a case study. The second part (Chapters 3, 4, and 5) is the catalog of design patterns, which makes up the bulk of the book. </p>
+                <p>The guide suggests several ways to read the catalog of patterns:</p>
+                <ul>
+                    <li>Read it from start to finish. </li>
+                    <li>Browse from pattern to pattern. </li>
+                    <li>Study one chapter at a time to see how related patterns are distinguished. </li>
+                    <li>Follow the cross-references between patterns to understand their relationships. </li>
+                    <li>Use a problem-directed approach by starting with Section 1.6, which discusses common design problems, and then reading the patterns that address those problems. </li>
+                </ul>
+                <p>For those new to object-oriented design, the guide recommends starting with a subset of the simplest and most common patterns: Abstract Factory, Adapter, Composite, Decorator, Factory Method, Observer, Strategy, and Template Method. </p>
+            </div>
+        </div>
+
+        <div id="chapter1" class="chapter">
+            <h2>Chapter 1: Introduction</h2>
+            <div class="summary">
+                <p>This chapter provides a comprehensive introduction to design patterns. It explains what they are, how they are described, and how they can be used to design better object-oriented software. The chapter also introduces the catalog of design patterns that will be presented in the rest of the book.</p>
+            </div>
+
+            <h3>1.1 What Is a Design Pattern? </h3>
+            <p>A design pattern is a general reusable solution to a commonly occurring problem within a given context in software design. It's not a finished design that can be transformed directly into code. Rather, it is a description or template for how to solve a problem that can be used in many different situations. </p>
+            <p>Christopher Alexander, an architect who first introduced the idea of patterns, says, "Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can use this solution a million times over, without ever doing it the same way twice."  This concept is applied to object-oriented design, where solutions are expressed in terms of objects and interfaces. </p>
+            <p>A pattern has four essential elements: </p>
+            <ul>
+                <li><strong>Pattern name:</strong> A handle to describe a design problem, its solutions, and consequences. </li>
+                <li><strong>Problem:</strong> Describes when to apply the pattern. </li>
+                <li><strong>Solution:</strong> Describes the elements that make up the design, their relationships, responsibilities, and collaborations. </li>
+                <li><strong>Consequences:</strong> The results and trade-offs of applying the pattern. </li>
+            </ul>
+
+            <h3>1.2 Design Patterns in Smalltalk MVC </h3>
+            <p>The Model-View-Controller (MVC) paradigm, used in Smalltalk-80 for building user interfaces, is a great example of using design patterns.  MVC consists of three kinds of objects:</p>
+            <ul>
+                <li><strong>Model:</strong> The application object. </li>
+                <li><strong>View:</strong> Its screen presentation. </li>
+                <li><strong>Controller:</strong> Defines the way the user interface reacts to user input. </li>
+            </ul>
+            <p>MVC uses several design patterns to decouple these objects, increasing flexibility and reuse.  For example:</p>
+            <ul>
+                <li><strong>Observer:</strong> The model notifies its views whenever its data changes. This decouples views from models. </li>
+                <li><strong>Composite:</strong> Views can be nested, and a composite view can be treated the same as a simple view. </li>
+                <li><strong>Strategy:</strong> The view uses a controller to implement a particular response strategy. The controller can be changed to alter the view's response to user input. </li>
+                <li><strong>Factory Method:</strong> A view can specify the default controller class for it to use. </li>
+                <li><strong>Decorator:</strong> Can be used to add scrolling to a view. </li>
+            </ul>
+
+            <h3>1.3 Describing Design Patterns </h3>
+            <p>Design patterns are described in a consistent format to make them easier to learn, compare, and use.  The template used in the book includes the following sections: </p>
+            <ul>
+                <li><strong>Pattern Name and Classification:</strong> The pattern's name and its classification (creational, structural, or behavioral). </li>
+                <li><strong>Intent:</strong> A short statement of what the pattern does. </li>
+                <li><strong>Also Known As:</strong> Other names for the pattern. </li>
+                <li><strong>Motivation:</strong> A scenario that illustrates a design problem and how the pattern solves it. </li>
+                <li><strong>Applicability:</strong> Situations in which the pattern can be applied. </li>
+                <li><strong>Structure:</strong> A graphical representation of the classes in the pattern. </li>
+                <li><strong>Participants:</strong> The classes and/or objects participating in the pattern. </li>
+                <li><strong>Collaborations:</strong> How the participants collaborate. </li>
+                <li><strong>Consequences:</strong> The trade-offs and results of using the pattern. </li>
+                <li><strong>Implementation:</strong> Hints and techniques for implementing the pattern. </li>
+                <li><strong>Sample Code:</strong> Code fragments that illustrate how to implement the pattern. </li>
+                <li><strong>Known Uses:</strong> Examples of the pattern in real systems. </li>
+                <li><strong>Related Patterns:</strong> How the pattern relates to other patterns. </li>
+            </ul>
+
+            <h3>1.4 The Catalog of Design Patterns </h3>
+            <p>The book presents a catalog of 23 design patterns.  These patterns are briefly introduced with their intents. Here's a list of the patterns and their intents:</p>
+            <ul>
+                <li><strong>Abstract Factory:</strong> Provide an interface for creating families of related or dependent objects without specifying their concrete classes. </li>
+                <li><strong>Adapter:</strong> Convert the interface of a class into another interface clients expect. </li>
+                <li><strong>Bridge:</strong> Decouple an abstraction from its implementation so that the two can vary independently. </li>
+                <li><strong>Builder:</strong> Separate the construction of a complex object from its representation so that the same construction process can create different representations. </li>
+                <li><strong>Chain of Responsibility:</strong> Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. </li>
+                <li><strong>Command:</strong> Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations. </li>
+                <li><strong>Composite:</strong> Compose objects into tree structures to represent part-whole hierarchies. </li>
+                <li><strong>Decorator:</strong> Attach additional responsibilities to an object dynamically. </li>
+                <li><strong>Facade:</strong> Provide a unified interface to a set of interfaces in a subsystem. </li>
+                <li><strong>Factory Method:</strong> Define an interface for creating an object, but let subclasses decide which class to instantiate. </li>
+                <li><strong>Flyweight:</strong> Use sharing to support large numbers of fine-grained objects efficiently. </li>
+                <li><strong>Interpreter:</strong> Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language. </li>
+                <li><strong>Iterator:</strong> Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation. </li>
+                <li><strong>Mediator:</strong> Define an object that encapsulates how a set of objects interact. </li>
+                <li><strong>Memento:</strong> Without violating encapsulation, capture and externalize an object's internal state so that the object can be restored to this state later. </li>
+                <li><strong>Observer:</strong> Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically. </li>
+                <li><strong>Prototype:</strong> Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype. </li>
+                <li><strong>Proxy:</strong> Provide a surrogate or placeholder for another object to control access to it. </li>
+                <li><strong>Singleton:</strong> Ensure a class only has one instance, and provide a global point of access to it. </li>
+                <li><strong>State:</strong> Allow an object to alter its behavior when its internal state changes. The object will appear to change its class. </li>
+                <li><strong>Strategy:</strong> Define a family of algorithms, encapsulate each one, and make them interchangeable. </li>
+                <li><strong>Template Method:</strong> Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. </li>
+                <li><strong>Visitor:</strong> Represent an operation to be performed on the elements of an object structure. </li>
+            </ul>
+
+            <h3>1.5 Organizing the Catalog </h3>
+            <p>Design patterns are organized using two criteria: </p>
+            <ol>
+                <li><strong>Purpose:</strong> Reflects what a pattern does. Patterns can have creational, structural, or behavioral purpose.
+                    <ul>
+                        <li><strong>Creational patterns</strong> concern the process of object creation. </li>
+                        <li><strong>Structural patterns</strong> deal with the composition of classes or objects. </li>
+                        <li><strong>Behavioral patterns</strong> characterize the ways in which classes or objects interact and distribute responsibility. </li>
+                    </ul>
+                </li>
+                <li><strong>Scope:</strong> Specifies whether the pattern applies primarily to classes or to objects.
+                    <ul>
+                        <li><strong>Class patterns</strong> deal with relationships between classes and their subclasses, established through inheritance and are static. </li>
+                        <li><strong>Object patterns</strong> deal with object relationships, which can be changed at run-time and are more dynamic. </li>
+                    </ul>
+                </li>
+            </ol>
+            <p>The book provides a table (Table 1.1) that classifies the 23 design patterns based on these two criteria.  This classification helps in learning the patterns and finding new ones. </p>
+
+            <h3>1.6 How Design Patterns Solve Design Problems </h3>
+            <p>This section discusses several common problems in object-oriented design and how design patterns can help solve them. These problems include:</p>
+            <ul>
+                <li><strong>Finding Appropriate Objects:</strong> Design patterns help identify less-obvious abstractions and the objects that can capture them.  For example, the Strategy pattern describes how to implement interchangeable families of algorithms as objects, and the State pattern represents each state of an entity as an object. </li>
+                <li><strong>Determining Object Granularity:</strong> Design patterns help with deciding what should be an object. The Facade pattern describes how to represent complete subsystems as objects, while the Flyweight pattern describes how to support huge numbers of fine-grained objects. </li>
+                <li><strong>Specifying Object Interfaces:</strong> Design patterns help define interfaces by identifying their key elements and the kinds of data that get sent across an interface.  For instance, the Memento pattern describes how to define two interfaces for an object: a restricted one for clients and a privileged one for the original object. </li>
+                <li><strong>Specifying Object Implementations:</strong> Design patterns provide guidance on implementing objects, including the use of abstract classes, mixin classes, and class versus interface inheritance. </li>
+                <li><strong>Putting Reuse Mechanisms to Work:</strong> The book discusses two common techniques for reusing functionality: class inheritance (white-box reuse) and object composition (black-box reuse).  It introduces the principle of "favoring object composition over class inheritance," as it leads to more flexible and reusable designs. </li>
+                <li><strong>Relating Run-Time and Compile-Time Structures:</strong> Design patterns help understand the relationship between the static code structure and the dynamic run-time structure of a program, which can be quite different. </li>
+                <li><strong>Designing for Change:</strong> Design patterns help create designs that are robust to changes.  The book lists several common causes of redesign and the patterns that address them, such as creating objects by specifying a class explicitly, dependence on specific operations, and tight coupling. </li>
+            </ul>
+            <p>This section concludes with a discussion of how design patterns are relevant to different kinds of software, including application programs, toolkits, and frameworks. </p>
+
+            <h3>1.7 How to Select a Design Pattern </h3>
+            <p>This section provides a guide for choosing the right design pattern for a particular problem. It suggests several approaches:</p>
+            <ol>
+                <li>Consider how design patterns solve design problems (referring to Section 1.6). </li>
+                <li>Scan the Intent sections of the patterns. </li>
+                <li>Study how patterns interrelate. </li>
+                <li>Study patterns of like purpose. </li>
+                <li>Examine a cause of redesign and look at the patterns that address it. </li>
+                <li>Consider what should be variable in your design and look at the patterns that allow for that variability. </li>
+            </ol>
+            <p>The book provides a table (Table 1.2) that lists the design aspect(s) that each design pattern lets you vary independently. </p>
+
+            <h3>1.8 How to Use a Design Pattern </h3>
+            <p>Once a design pattern is chosen, this section provides a step-by-step guide on how to apply it effectively:</p>
+            <ol>
+                <li>Read the pattern for an overview. </li>
+                <li>Study the Structure, Participants, and Collaborations sections. </li>
+                <li>Look at the Sample Code to see a concrete example. </li>
+                <li>Choose meaningful names for pattern participants in your application context. </li>
+                <li>Define the classes, their interfaces, inheritance relationships, and instance variables. </li>
+                <li>Define application-specific names for operations in the pattern. </li>
+                <li>Implement the operations to carry out the responsibilities and collaborations. </li>
+            </ol>
+            <p>The section also warns against applying design patterns indiscriminately, as they can add complexity to a design.  It's important to evaluate a pattern's benefits and liabilities before using it. </p>
+        </div>
+
+        <div id="chapter2" class="chapter">
+            <h2>Chapter 2: A Case Study: Designing a Document Editor</h2>
+            <p>This chapter presents a case study in the design of a "What-You-See-Is-What-You-Get" (WYSIWYG) document editor called Lexi.  The purpose of this case study is to demonstrate how design patterns are applied in practice. By the end of the chapter, the reader will have gained experience with eight design patterns.  The chapter examines seven design problems in Lexi's design and shows how design patterns can be used to solve them. </p>
+
+            <div class="summary">
+                <p>This case study is a great way to see design patterns in action. I will summarize the key design problems and the patterns used to solve them. The eight patterns used in this chapter are: Composite, Strategy, Decorator, Abstract Factory, Bridge, Command, Iterator, and Visitor. </p>
+            </div>
+
+            <h3>Design Problems and Solutions</h3>
+            <p>Lexi's design is driven by seven key problems: </p>
+            <ol>
+                <li><strong>Document Structure:</strong> How to represent the document's physical structure (characters, lines, columns, etc.). The solution uses the <strong>Composite</strong> pattern to create a hierarchical structure of graphical elements (glyphs) that can be treated uniformly. </li>
+                <li><strong>Formatting:</strong> How to arrange text and graphics into lines and columns. The solution uses the <strong>Strategy</strong> pattern to encapsulate different formatting algorithms in separate objects (Compositors), allowing them to be interchangeable. </li>
+                <li><strong>Embellishing the User Interface:</strong> How to add embellishments like borders and scroll bars to the user interface. The solution uses the <strong>Decorator</strong> pattern to attach these embellishments to user interface components transparently. </li>
+                <li><strong>Supporting Multiple Look-and-Feel Standards:</strong> How to make Lexi adapt to different look-and-feel standards (e.g., Motif, Presentation Manager). The solution uses the <strong>Abstract Factory</strong> pattern to provide an interface for creating families of widget objects for a specific look-and-feel. </li>
+                <li><strong>Supporting Multiple Window Systems:</strong> How to make Lexi portable across different window systems. The solution uses the <strong>Bridge</strong> pattern to decouple the windowing abstraction from its platform-specific implementation. </li>
+                <li><strong>User Operations:</strong> How to handle user operations like creating a new document, cutting and pasting text, and supporting undo. The solution uses the <strong>Command</strong> pattern to encapsulate each user operation as an object, which allows for undoable operations and a consistent way to access functionality. </li>
+                <li><strong>Spelling Checking and Hyphenation:</strong> How to support analytical operations like spelling checking and hyphenation. The solution uses the <strong>Iterator</strong> pattern to traverse the document's internal structure and the <strong>Visitor</strong> pattern to perform the analysis without "polluting" the glyph classes with analysis-specific code. </li>
+            </ol>
+            <p>The chapter concludes by summarizing the eight design patterns applied in Lexi's design and noting that these patterns are applicable to a wide range of non-trivial applications. </p>
+        </div>
+
+        <div id="chapter3" class="chapter">
+            <h2>Chapter 3: Creational Patterns</h2>
+            <div class="summary">
+                <p>Creational design patterns abstract the instantiation process.  They help make a system independent of how its objects are created, composed, and represented. They encapsulate knowledge about which concrete classes the system uses and hide how instances of these classes are created and put together.  This chapter presents five creational patterns: Abstract Factory, Builder, Factory Method, Prototype, and Singleton. </p>
+            </div>
+            
+            <h3>Abstract Factory </h3>
+            <p><strong>Intent:</strong> Provide an interface for creating families of related or dependent objects without specifying their concrete classes. </p>
+            <p><strong>Motivation:</strong> Consider a user interface toolkit that supports multiple look-and-feel standards (e.g., Motif, Presentation Manager). To be portable, an application should not hard-code its widgets for a particular look and feel. The Abstract Factory pattern solves this by defining an abstract `WidgetFactory` class that declares an interface for creating each basic kind of widget. Concrete subclasses of `WidgetFactory` (e.g., `MotifWidgetFactory`, `PMWidgetFactory`) implement the operations to create widgets for a specific look-and-feel. </p>
+            
+            <h3>Builder </h3>
+            <p><strong>Intent:</strong> Separate the construction of a complex object from its representation so that the same construction process can create different representations. </p>
+            <p><strong>Motivation:</strong> A reader for the RTF (Rich Text Format) document exchange format should be able to convert RTF to many text formats (e.g., plain ASCII, a text widget). The Builder pattern solves this by configuring the RTF reader with a `TextConverter` object (a "builder"). The reader (the "director") parses the RTF document and uses the builder to create the target text representation. Different subclasses of `TextConverter` can be used to create different representations. </p>
+
+            <h3>Factory Method </h3>
+            <p><strong>Intent:</strong> Define an interface for creating an object, but let subclasses decide which class to instantiate. Factory Method lets a class defer instantiation to subclasses. </p>
+            <p><strong>Motivation:</strong> In a framework for applications that can present multiple documents, the abstract `Application` class knows when a new document should be created, but not what kind of `Document` to create. The Factory Method pattern solves this by defining a `CreateDocument` factory method in the `Application` class. Subclasses of `Application` (e.g., `DrawingApplication`) override this method to return an instance of the appropriate `Document` subclass (e.g., `DrawingDocument`). </p>
+
+            <h3>Prototype </h3>
+            <p><strong>Intent:</strong> Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype. </p>
+            <p><strong>Motivation:</strong> In a graphical editor framework, a `GraphicTool` class needs to create instances of various graphical objects (e.g., notes, staves). Instead of subclassing `GraphicTool` for each kind of object, the Prototype pattern allows `GraphicTool` to be parameterized with a prototypical `Graphic` object. When a new graphic is needed, the tool simply clones its prototype. </p>
+
+            <h3>Singleton </h3>
+            <p><strong>Intent:</strong> Ensure a class only has one instance, and provide a global point of access to it. </p>
+            <p><strong>Motivation:</strong> For some classes, it's important to have exactly one instance, such as a printer spooler or a file system. The Singleton pattern solves this by making the class itself responsible for keeping track of its sole instance. The class provides a way to access the instance and ensures that no other instance can be created. </p>
+
+            <h3>Discussion of Creational Patterns </h3>
+            <p>This section compares the five creational patterns. Factory Method, Abstract Factory, and Prototype can be used to parameterize a system by the classes of objects it creates. Abstract Factory, Builder, and Prototype involve creating a new "factory object" whose responsibility is to create product objects. Abstract Factory's factory object produces objects of several classes, while Builder's factory object builds a complex product incrementally. In the Prototype pattern, the factory object and the prototype are the same.  Designs often start with Factory Method and evolve toward other creational patterns as more flexibility is needed. </p>
+        </div>
+        
+        <div id="chapter4" class="chapter">
+            <h2>Chapter 4: Structural Patterns</h2>
+            <div class="summary">
+                <p>Structural patterns are concerned with how classes and objects are composed to form larger structures.  They use inheritance to compose interfaces or implementations, and object composition to describe ways to compose objects to realize new functionality.  This chapter presents seven structural patterns: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.</p>
+            </div>
+
+            <h3>Adapter </h3>
+            <p><strong>Intent:</strong> Convert the interface of a class into another interface clients expect. Adapter lets classes work together that couldn't otherwise because of incompatible interfaces. </p>
+
+            <h3>Bridge </h3>
+            <p><strong>Intent:</strong> Decouple an abstraction from its implementation so that the two can vary independently. </p>
+
+            <h3>Composite </h3>
+            <p><strong>Intent:</strong> Compose objects into tree structures to represent part-whole hierarchies. Composite lets clients treat individual objects and compositions of objects uniformly. </p>
+
+            <h3>Decorator </h3>
+            <p><strong>Intent:</strong> Attach additional responsibilities to an object dynamically. Decorators provide a flexible alternative to subclassing for extending functionality. </p>
+
+            <h3>Facade </h3>
+            <p><strong>Intent:</strong> Provide a unified interface to a set of interfaces in a subsystem. Facade defines a higher-level interface that makes the subsystem easier to use. </p>
+
+            <h3>Flyweight </h3>
+            <p><strong>Intent:</strong> Use sharing to support large numbers of fine-grained objects efficiently. </p>
+
+            <h3>Proxy </h3>
+            <p><strong>Intent:</strong> Provide a surrogate or placeholder for another object to control access to it. </p>
+
+            <h3>Discussion of Structural Patterns </h3>
+            <p>This section compares and contrasts several structural patterns. For instance, it discusses the differences between Adapter and Bridge, and between Composite, Decorator, and Proxy, highlighting their different intents despite their structural similarities. </p>
+        </div>
+
+        <div id="chapter5" class="chapter">
+            <h2>Chapter 5: Behavioral Patterns</h2>
+            <div class="summary">
+                <p>Behavioral patterns are concerned with algorithms and the assignment of responsibilities between objects. They describe patterns of communication between objects and characterize complex control flow.  This chapter presents eleven behavioral patterns: Chain of Responsibility, Command, Interpreter, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.</p>
+            </div>
+            
+            <h3>Chain of Responsibility </h3>
+            <p><strong>Intent:</strong> Avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request. Chain the receiving objects and pass the request along the chain until an object handles it. </p>
+            
+            <h3>Command </h3>
+            <p><strong>Intent:</strong> Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations. </p>
+            
+            <h3>Interpreter </h3>
+            <p><strong>Intent:</strong> Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language. </p>
+
+            <h3>Iterator </h3>
+            <p><strong>Intent:</strong> Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation. </p>
+            
+            <h3>Mediator </h3>
+            <p><strong>Intent:</strong> Define an object that encapsulates how a set of objects interact. Mediator promotes loose coupling by keeping objects from referring to each other explicitly, and it lets you vary their interaction independently. </p>
+
+            <h3>Memento </h3>
+            <p><strong>Intent:</strong> Without violating encapsulation, capture and externalize an object's internal state so that the object can be restored to this state later. </p>
+            
+            <h3>Observer </h3>
+            <p><strong>Intent:</strong> Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically. </p>
+
+            <h3>State </h3>
+            <p><strong>Intent:</strong> Allow an object to alter its behavior when its internal state changes. The object will appear to change its class. </p>
+            
+            <h3>Strategy </h3>
+            <p><strong>Intent:</strong> Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it. </p>
+
+            <h3>Template Method </h3>
+            <p><strong>Intent:</strong> Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. Template Method lets subclasses redefine certain steps of an algorithm without changing the algorithm's structure. </p>
+            
+            <h3>Visitor </h3>
+            <p><strong>Intent:</strong> Represent an operation to be performed on the elements of an object structure. Visitor lets you define a new operation without changing the classes of the elements on which it operates. </p>
+
+            <h3>Discussion of Behavioral Patterns </h3>
+            <p>This section discusses the themes and variations among the behavioral patterns. It covers topics like encapsulating variation, objects as arguments, and the trade-offs between centralized and distributed communication (e.g., Mediator vs. Observer).  It also explores how patterns like Command, Observer, Mediator, and Chain of Responsibility help in decoupling senders and receivers of requests. </p>
+        </div>
+        
+        <div id="chapter6" class="chapter">
+            <h2>Chapter 6: Conclusion</h2>
+            <div class="summary">
+                <p>The concluding chapter reflects on the importance of cataloging design patterns.  It argues that design patterns provide a common vocabulary for designers, serve as a documentation and learning aid, and are an important adjunct to existing design methods.  The chapter also discusses the history of the design patterns catalog and its connection to the broader pattern community, particularly the work of Christopher Alexander.  The authors invite readers to participate in the pattern community by using, critiquing, and documenting patterns.  The chapter ends with a "parting thought" from Christopher Alexander about creating profound designs by intertwining patterns. </p>
+            </div>
+            
+            <h3>What to Expect from Design Patterns </h3>
+            <ul>
+                <li><strong>A Common Design Vocabulary:</strong> Design patterns provide standard names and definitions for design techniques, which helps in communication and documentation. </li>
+                <li><strong>A Documentation and Learning Aid:</strong> Knowing design patterns makes it easier to understand existing systems and helps novices learn from experts. </li>
+                <li><strong>An Adjunct to Existing Methods:</strong> Design patterns complement existing design methods by showing how to apply primitive object-oriented techniques to solve common problems. </li>
+                <li><strong>A Target for Refactoring:</strong> Design patterns can guide the process of reorganizing or "refactoring" a design to make it more flexible and reusable. </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
