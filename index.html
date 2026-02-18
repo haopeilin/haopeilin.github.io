@@ -6,191 +6,478 @@
     <title>Peilin Hao - Personal Website</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --bg-color: #f8f9fa;
-            --sidebar-color: #1f2937;
-            --text-color: #374151;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f7f8;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .sidebar {
-            width: 250px;
-            background: var(--sidebar-color);
-            color: white;
-            padding: 20px;
-            height: 100vh;
-            position: fixed;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-        }
-
-        .sidebar h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-
-        .content {
-            margin-left: 270px;
-            padding: 40px;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        section {
-            margin-bottom: 50px;
-            flex-grow: 1;
-            padding: 0;
-            border-radius: 0;
-            background: transparent;
-            box-shadow: none;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
         }
 
-        section:hover {
-            transform: none;
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
         }
 
-        h2 {
-            color: var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-            padding-left: 15px;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-            font-weight: 600;
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
-        .contact-item {
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-contact {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-contact a {
+            color: var(--text-secondary);
+            text-decoration: none;
             display: flex;
             align-items: center;
-            padding: 12px 0;
-            margin-left: 20px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            gap: 0.5rem;
+            transition: color 0.2s;
         }
 
-        .contact-item:last-child {
+        .hero-contact a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Section Cards */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .section-title i {
+            color: var(--accent-color);
+            font-size: 1.25rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Grid for Resource Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .resource-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .resource-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .resource-content {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .resource-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Info Items */
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item:last-child {
             border-bottom: none;
         }
 
-        .icon {
-            margin-right: 15px;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            width: 24px;
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .info-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
             text-align: center;
-        }
-
-        p {
-            line-height: 1.8;
-            margin: 0;
-            font-size: 1.05rem;
-        }
-
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--secondary-color);
-        }
-
-        a:hover .icon {
-            transform: scale(1.1);
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h1>Peilin Hao</h1>
-        <a href="#contact">Contact</a>
-        <a href="#education">Education</a>
-        <a href="#work-experience">Work Experience</a>
-        <a href="#ood-interview">Object Oriented Interview</a>
-        <a href="#recent-updates">Recent Updates</a>
-    </div>
-    
-    <div class="content">
-        <section id="contact">
-            <h2>Contact</h2>
-            <div class="contact-item">
-                <i class="fas fa-envelope icon"></i>
-                <p>haopeilin dot seu at gmail dot com</p>
-            </div>
-            <div class="contact-item">
-                <i class="fab fa-linkedin icon"></i>
-                <a href="https://www.linkedin.com/in/peilinhao/">linkedin.com/in/peilinhao/</a>
-            </div>
-        </section>
-        
-        <section id="education">
-            <h2>Education</h2>
-            <div class="contact-item">
-                <i class="fas fa-university icon"></i>
-                <p>M.S. Computer Science - Dartmouth College</p>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">Peilin Hao</a>
+            <nav class="nav-links">
+                <a href="#about">About</a>
+                <a href="#resources">Resources</a>
+                <a href="https://www.linkedin.com/in/peilinhao/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero" id="about">
+            <h1>Peilin Hao</h1>
+            <p class="subtitle">Senior Software Engineer at Microsoft</p>
+            <div class="hero-contact">
+                <a href="mailto:haopeilin.seu@gmail.com">
+                    <i class="fas fa-envelope"></i>
+                    haopeilin.seu@gmail.com
+                </a>
+                <a href="https://www.linkedin.com/in/peilinhao/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                    LinkedIn
+                </a>
             </div>
         </section>
-        
-        <section id="work-experience">
-            <h2>Work Experience</h2>
-            <div class="contact-item">
-                <i class="fab fa-microsoft icon"></i>
-                <p>Senior Software Engineer - Microsoft</p>
+
+        <!-- Education & Work -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-user"></i> About Me</h2>
+            <div class="card">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="info-content">
+                        <h3>Education</h3>
+                        <p>M.S. Computer Science - Dartmouth College</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fab fa-microsoft"></i></div>
+                    <div class="info-content">
+                        <h3>Current Role</h3>
+                        <p>Senior Software Engineer - Microsoft</p>
+                    </div>
+                </div>
             </div>
         </section>
-        
-        <section id="ood-interview">
-            <h2>Object Oriented Interview</h2>
-            <div class="contact-item">
-                <i class="fas fa-code icon"></i>
-                <a href="OODDesign.html">Object Oriented Design Interview Questions and Solutions</a>
+
+        <!-- Interview Resources -->
+        <section class="section" id="resources">
+            <h2 class="section-title"><i class="fas fa-code"></i> Interview Preparation</h2>
+            <div class="grid">
+                <a href="OODDesign.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Object Oriented Design</div>
+                        <div class="resource-desc">OOD interview questions and solutions</div>
+                    </div>
+                </a>
+
+                <a href="systemdesign.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-sitemap"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">System Design</div>
+                        <div class="resource-desc">System design fundamentals and patterns</div>
+                    </div>
+                </a>
+
+                <a href="metaTop5SystemDesign.html" class="resource-card">
+                    <div class="resource-icon"><i class="fab fa-meta"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Meta System Design</div>
+                        <div class="resource-desc">Top 5 Meta system design questions</div>
+                    </div>
+                </a>
+
+                <a href="meta_coding_interview_preparation.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-laptop-code"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Meta Coding Prep</div>
+                        <div class="resource-desc">Meta coding interview preparation guide</div>
+                    </div>
+                </a>
+
+                <a href="leetcode.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-terminal"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">LeetCode</div>
+                        <div class="resource-desc">LeetCode practice problems and solutions</div>
+                    </div>
+                </a>
+
+                <a href="designpatterns.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-puzzle-piece"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Design Patterns</div>
+                        <div class="resource-desc">Software design patterns reference</div>
+                    </div>
+                </a>
+
+                <a href="ddia.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-database"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">DDIA Notes</div>
+                        <div class="resource-desc">Designing Data-Intensive Applications</div>
+                    </div>
+                </a>
+
+                <a href="sdq.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-question-circle"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">System Design Questions</div>
+                        <div class="resource-desc">Common SD interview questions</div>
+                    </div>
+                </a>
+
+                <a href="scalability.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Scalability</div>
+                        <div class="resource-desc">Scalability concepts and techniques</div>
+                    </div>
+                </a>
             </div>
         </section>
-        
-        <section id="recent-updates">
-            <h2>Recent Updates</h2>
-            <div class="contact-item">
-                <i class="fas fa-running icon"></i>
-                <p>1 mile daily run for 2025</p>
+
+        <!-- News Feeds -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-newspaper"></i> News & Feeds</h2>
+            <div class="grid">
+                <a href="news-aggregator.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-rss"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">News Aggregator</div>
+                        <div class="resource-desc">Aggregated news feed</div>
+                    </div>
+                </a>
+
+                <a href="NewsFeed.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-feed"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">News Feed</div>
+                        <div class="resource-desc">General news feed</div>
+                    </div>
+                </a>
+
+                <a href="CNBCFeed.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-tv"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">CNBC Feed</div>
+                        <div class="resource-desc">CNBC news feed</div>
+                    </div>
+                </a>
+
+                <a href="cnbc.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">CNBC HTML</div>
+                        <div class="resource-desc">CNBC news HTML version</div>
+                    </div>
+                </a>
             </div>
-            <p class="copyright">&copy; 2025 Peilin Hao. All Rights Reserved.</p>
         </section>
-    </div>
+
+        <!-- Recent Updates -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-running"></i> Recent Updates</h2>
+            <div class="card">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="info-content">
+                        <h3>1 Mile Daily Run</h3>
+                        <p>Committed to running 1 mile every day for 2025</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Peilin Hao. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
