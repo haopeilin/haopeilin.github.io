@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw: Complete Guide to Your Personal AI Agent</title>
+    <meta name="description"
+        content="A comprehensive tutorial on OpenClaw — an open-source, autonomous AI agent framework for personal productivity and automation.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f1117;
+            --bg-card: #1a1d27;
+            --bg-card2: #1e2130;
+            --border: #2a2d3e;
+            --accent: #7c6af7;
+            --accent2: #56cfb2;
+            --accent3: #f7a046;
+            --text: #e8eaf0;
+            --text-muted: #8b8fa8;
+            --code-bg: #13151f;
+            --radius: 12px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: rgba(15, 17, 23, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #7c6af7 0%, #56cfb2 100%);
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            background: radial-gradient(ellipse at 50% 0%, rgba(124, 106, 247, 0.15) 0%, transparent 70%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #7c6af7, #56cfb2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Layout ── */
+        .layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            padding: 2rem 2rem 4rem;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── TOC Sidebar ── */
+        .toc {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .toc {
+                position: static;
+            }
+        }
+
+        .toc h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: block;
+            padding: 0.3rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .toc-list a:hover {
+            background: rgba(124, 106, 247, 0.1);
+            color: var(--accent);
+        }
+
+        .toc-list .toc-sub a {
+            padding-left: 1.25rem;
+            font-size: 0.8rem;
+        }
+
+        /* ── Content ── */
+        .content {
+            min-width: 0;
+        }
+
+        /* Chapter */
+        .chapter {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chapter-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chapter h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.75rem 0 0.75rem;
+            color: var(--accent2);
+        }
+
+        .chapter h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.5rem;
+            color: var(--accent3);
+        }
+
+        .chapter p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .chapter ul,
+        .chapter ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chapter li {
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+
+        .chapter strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #a8b5ff;
+        }
+
+        p code,
+        li code {
+            background: var(--code-bg);
+            padding: 0.15em 0.45em;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #a8b5ff;
+            border: 1px solid var(--border);
+        }
+
+        .code-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: -0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: rgba(124, 106, 247, 0.15);
+            text-align: left;
+            padding: 0.65rem 1rem;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Info boxes */
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background: rgba(124, 106, 247, 0.08);
+            border: 1px solid rgba(124, 106, 247, 0.3);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .info-box i {
+            color: var(--accent);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .info-box p {
+            margin-bottom: 0;
+        }
+
+        /* Callouts */
+        .callout {
+            border-left: 3px solid var(--accent);
+            background: rgba(124, 106, 247, 0.06);
+            padding: 0.75rem 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .callout p {
+            color: var(--text);
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .feature-card .icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Steps */
+        .steps {
+            list-style: none;
+            counter-reset: step;
+        }
+
+        .steps li {
+            counter-increment: step;
+            position: relative;
+            padding: 1rem 1rem 1rem 3.5rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            line-height: 28px;
+            text-align: center;
+        }
+
+        /* Comparison table highlight */
+        .good {
+            color: #56cfb2;
+        }
+
+        .bad {
+            color: #f87171;
+        }
+
+        /* Tier badges */
+        .tier-1 {
+            background: linear-gradient(135deg, #f7a046, #ef4444);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tier-2 {
+            background: linear-gradient(135deg, #a3a3a3, #737373);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tier-3 {
+            background: linear-gradient(135deg, #92400e, #78350f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Conclusion cards */
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .key-point {
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .key-point .checkmark {
+            color: var(--accent2);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-point p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Scroll reveal */
+        .chapter {
+            animation: fadeUp 0.4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .chapter:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .chapter:nth-child(3) {
+            animation-delay: 0.10s;
+        }
+
+        .chapter:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+
+        .chapter:nth-child(5) {
+            animation-delay: 0.20s;
+        }
+
+        .chapter:nth-child(6) {
+            animation-delay: 0.25s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <div class="header-badge">🦞 OpenClaw Tutorial</div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <div class="hero">
+        <span class="hero-emoji">🦞</span>
+        <h1>OpenClaw: Complete Guide to Your Personal AI Agent</h1>
+        <p class="hero-sub">
+            A Stanford CS–style lecture on Autonomous AI, Local-First Architecture,
+            and the Future of Human-Computer Interaction.
+        </p>
+        <div class="hero-tags">
+            <span class="tag">🤖 Agentic AI</span>
+            <span class="tag">🔒 Local-First</span>
+            <span class="tag">🔓 Open Source</span>
+            <span class="tag">⚡ MIT License</span>
+            <span class="tag">💬 Multi-Channel</span>
+            <span class="tag">🛠️ Extensible</span>
+        </div>
+    </div>
+
+    <div class="layout">
+
+        <!-- Sidebar TOC -->
+        <aside class="toc">
+            <h2>Table of Contents</h2>
+            <ul class="toc-list">
+                <li><a href="#intro"><i class="fas fa-door-open fa-sm"></i> 1. Introduction</a></li>
+                <li class="toc-sub"><a href="#what-is">What Is OpenClaw?</a></li>
+                <li class="toc-sub"><a href="#why-viral">Why It Went Viral</a></li>
+                <li class="toc-sub"><a href="#theory">Core Theory</a></li>
+                <li><a href="#architecture"><i class="fas fa-sitemap fa-sm"></i> 2. Architecture</a></li>
+                <li class="toc-sub"><a href="#gateway">The Gateway</a></li>
+                <li class="toc-sub"><a href="#pi-agent">Pi Agent Runtime</a></li>
+                <li class="toc-sub"><a href="#memory">Memory System</a></li>
+                <li class="toc-sub"><a href="#tools">Tool Layer</a></li>
+                <li><a href="#getting-started"><i class="fas fa-rocket fa-sm"></i> 3. Getting Started</a></li>
+                <li class="toc-sub"><a href="#install">Installation</a></li>
+                <li class="toc-sub"><a href="#config">Configuration</a></li>
+                <li class="toc-sub"><a href="#models">Model Providers</a></li>
+                <li class="toc-sub"><a href="#skills">Skills</a></li>
+                <li><a href="#productivity"><i class="fas fa-briefcase fa-sm"></i> 4. Practical Applications</a></li>
+                <li class="toc-sub"><a href="#use-cases">Best Use Cases</a></li>
+                <li class="toc-sub"><a href="#workflows">Workflows</a></li>
+                <li><a href="#security"><i class="fas fa-shield-alt fa-sm"></i> 5. Security</a></li>
+                <li><a href="#conclusion"><i class="fas fa-flag-checkered fa-sm"></i> Conclusion</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+
+            <!-- Chapter 1 -->
+            <section class="chapter" id="intro">
+                <div class="chapter-label">Chapter 1</div>
+                <h2>Introduction &amp; Context</h2>
+
+                <div class="callout">
+                    <p>Welcome! This guide walks you through everything you need to know about OpenClaw — from theory to
+                        hands-on deployment of your own autonomous AI assistant. 🚀</p>
+                </div>
+
+                <h3 id="what-is">What Exactly Is OpenClaw?</h3>
+                <p>
+                    <strong>OpenClaw is a personal AI assistant that runs on your own devices</strong> — your laptop,
+                    your phone, your home server — and connects to the messaging platforms you already use every day.
+                </p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="icon">🎮</div>
+                        <h4>Universal Remote</h4>
+                        <p>One interface for your entire digital life</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">👔</div>
+                        <h4>AI Intern</h4>
+                        <p>Never sleeps, always ready to execute tasks</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔒</div>
+                        <h4>Privacy-First</h4>
+                        <p>Data stays on your devices, not vendor servers</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🔌</div>
+                        <h4>Extensible</h4>
+                        <p>Skills marketplace for infinite capabilities</p>
+                    </div>
+                </div>
+
+                <h3>Supported Channels</h3>
+                <p>OpenClaw connects to virtually every major messaging platform:</p>
+                <ul>
+                    <li>WhatsApp, Telegram, Signal, iMessage</li>
+                    <li>Slack, Discord, Microsoft Teams</li>
+                    <li>Google Chat, Matrix, Zalo</li>
+                    <li>Built-in WebChat UI</li>
+                </ul>
+
+                <h3 id="what-is">The "Aha!" Moment</h3>
+                <p>Send a message on WhatsApp: <em>"Summarize my unread emails and schedule a meeting with Sarah for
+                        Thursday afternoon."</em></p>
+                <ol class="steps">
+                    <li><strong>Understands</strong> your intent via natural language processing</li>
+                    <li><strong>Accesses</strong> your Gmail via secure API</li>
+                    <li><strong>Reads</strong> your calendar and checks availability</li>
+                    <li><strong>Generates</strong> a summary using an LLM</li>
+                    <li><strong>Creates</strong> a calendar event via Google Calendar API</li>
+                    <li><strong>Replies</strong> back to you on WhatsApp with confirmation</li>
+                </ol>
+                <p>All of this happens <strong>on your machine</strong>, with your API keys, following your rules.</p>
+
+                <h3 id="why-viral">Why OpenClaw Went Viral</h3>
+                <h4>🏠 1. The Local-First Movement</h4>
+                <p>People are waking up to privacy implications of cloud-only AI. With OpenClaw, your data stays YOUR
+                    data — no vendor lock-in, no training on your private information, no internet required for local
+                    operations.</p>
+
+                <h4>🔓 2. Open Source = Trust + Innovation</h4>
+                <p>OpenClaw is fully open source (MIT License), meaning the community can audit, fix, extend, and
+                    customize it without restrictions.</p>
+
+                <h4>🌉 3. The "Chat-First" Interface Revolution</h4>
+                <p>Instead of opening 10 different apps (email, calendar, browser, notes…), <strong>you just send a
+                        message</strong>. One interface to rule them all.</p>
+
+                <h4>🧩 4. The Plugin/Skill Architecture</h4>
+                <p>OpenClaw's "Skills" system creates a flywheel effect: more users → more skills → more value → more
+                    users.</p>
+
+                <h3>Evolution Timeline</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Milestone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023</td>
+                                <td>Peter Steinberger begins experimenting with personal automation scripts</td>
+                            </tr>
+                            <tr>
+                                <td>2024</td>
+                                <td>Warelay prototype — private beta with friends</td>
+                            </tr>
+                            <tr>
+                                <td>Early 2025</td>
+                                <td>Clawdbot emerges — iMessage integration, viral on Twitter</td>
+                            </tr>
+                            <tr>
+                                <td>Mid 2025</td>
+                                <td>Moltbot rebrand — expanded channel support</td>
+                            </tr>
+                            <tr>
+                                <td>Late 2025</td>
+                                <td>Open-sourced as OpenClaw (MIT License) — explosive GitHub growth</td>
+                            </tr>
+                            <tr>
+                                <td>2026</td>
+                                <td>AI Foundation established — enterprise features, mobile apps, ClawHub marketplace
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 id="theory">Core Theory: Why It Works</h3>
+                <h4>🎯 Concept 1: Autonomous Agents</h4>
+                <p>Traditional software is <strong>reactive</strong>; AI agents are <strong>proactive</strong>. Instead
+                    of just showing your calendar, an agent reads it, checks email, reviews your todo list, prioritizes
+                    by deadline, suggests schedule blocks, asks for approval, then creates events — all in one go.</p>
+
+                <h4>🔄 Concept 2: LLM Routing</h4>
+                <p>OpenClaw routes tasks to the best model for each job:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task Type</th>
+                                <th>Routed Model</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Coding</td>
+                                <td>Claude Opus 4.6</td>
+                                <td>Best code quality</td>
+                            </tr>
+                            <tr>
+                                <td>Quick questions</td>
+                                <td>Gemini Flash</td>
+                                <td>Speed &amp; cost</td>
+                            </tr>
+                            <tr>
+                                <td>Creative writing</td>
+                                <td>GPT-5.2</td>
+                                <td>Creativity</td>
+                            </tr>
+                            <tr>
+                                <td>Local/Sensitive</td>
+                                <td>Local Llama</td>
+                                <td>Privacy</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>🧠 Concept 3: The ReAct Pattern</h4>
+                <p>OpenClaw uses the industry-standard <strong>ReAct</strong> (Reasoning + Acting) loop:</p>
+                <div style="display:flex; gap:0.5rem; justify-content:center; margin:1.25rem 0; flex-wrap:wrap;">
+                    <div
+                        style="background:rgba(124,106,247,0.15);border:1px solid var(--accent);border-radius:8px;padding:0.6rem 1.2rem;font-weight:600;color:var(--accent);">
+                        👁️ Observe</div>
+                    <div style="color:var(--text-muted);line-height:2.5;">→</div>
+                    <div
+                        style="background:rgba(86,207,178,0.15);border:1px solid var(--accent2);border-radius:8px;padding:0.6rem 1.2rem;font-weight:600;color:var(--accent2);">
+                        🧠 Think</div>
+                    <div style="color:var(--text-muted);line-height:2.5;">→</div>
+                    <div
+                        style="background:rgba(247,160,70,0.15);border:1px solid var(--accent3);border-radius:8px;padding:0.6rem 1.2rem;font-weight:600;color:var(--accent3);">
+                        ⚡ Act</div>
+                    <div style="color:var(--text-muted);line-height:2.5;">→ (repeat)</div>
+                </div>
+
+                <h4>💾 Concept 4: Persistent Memory</h4>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Memory Type</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Short-term</strong></td>
+                                <td>Current conversation context</td>
+                                <td>"What was I asking about again?"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Long-term</strong></td>
+                                <td>Curated knowledge (MEMORY.md)</td>
+                                <td>"User prefers dark mode"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Session History</strong></td>
+                                <td>Past conversations</td>
+                                <td>"Yesterday we discussed Python"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>External</strong></td>
+                                <td>Files, databases, APIs</td>
+                                <td>Calendar events, emails</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Cloud AI vs. OpenClaw Comparison</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Cloud AI</th>
+                                <th>OpenClaw</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Privacy</td>
+                                <td class="bad">Data on vendor servers</td>
+                                <td class="good">Data stays on your devices</td>
+                            </tr>
+                            <tr>
+                                <td>Customization</td>
+                                <td class="bad">Limited to vendor features</td>
+                                <td class="good">Fully customizable</td>
+                            </tr>
+                            <tr>
+                                <td>Cost</td>
+                                <td class="bad">Subscription fees</td>
+                                <td class="good">Pay-per-API-usage only</td>
+                            </tr>
+                            <tr>
+                                <td>Offline</td>
+                                <td class="bad">❌ Requires internet</td>
+                                <td class="good">✅ Many features work offline</td>
+                            </tr>
+                            <tr>
+                                <td>Model Choice</td>
+                                <td class="bad">Vendor's choice only</td>
+                                <td class="good">Any model you choose</td>
+                            </tr>
+                            <tr>
+                                <td>Control</td>
+                                <td class="bad">Terms of service restrictions</td>
+                                <td class="good">You make the rules</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Chapter 2 -->
+            <section class="chapter" id="architecture">
+                <div class="chapter-label">Chapter 2</div>
+                <h2>Architecture &amp; High-Level Design</h2>
+
+                <h3 id="gateway">🏛️ Component 1: The Gateway</h3>
+                <p>The <strong>Gateway</strong> is the heart of OpenClaw — think of it as an air traffic control tower.
+                    It's a WebSocket control plane running on port <code>18789</code> by default.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="icon">🔗</div>
+                        <h4>Connection Hub</h4>
+                        <p>Maintains WebSocket connections to all channels and routes messages</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📋</div>
+                        <h4>Session Management</h4>
+                        <p>Creates isolated sessions per conversation with full history</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">⚙️</div>
+                        <h4>Configuration</h4>
+                        <p>Reads <code>~/.openclaw/openclaw.json</code>, hot-reloads changes</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🌐</div>
+                        <h4>Web Interface</h4>
+                        <p>Serves Control UI at <code>/__openclaw__/</code></p>
+                    </div>
+                </div>
+
+                <div class="code-label">bash — key gateway commands</div>
+                <pre><code>openclaw gateway --port 18789   # Start the gateway
+openclaw gateway status          # Check status
+openclaw logs --follow           # View logs in real-time
+openclaw config apply            # Hot-reload config</code></pre>
+
+                <h3 id="pi-agent">🧠 Component 2: The Pi Agent Runtime</h3>
+                <p><strong>Pi</strong> is OpenClaw's embedded agent runtime (RPC mode). This is where the "intelligence"
+                    lives. It handles prompt building, LLM invocation, response parsing, and tool orchestration in a
+                    streaming loop.</p>
+                <ul>
+                    <li>Streaming responses (real-time output)</li>
+                    <li>Block streaming (structured content like code, tables)</li>
+                    <li>Tool orchestration (chain multiple tools together)</li>
+                    <li>Multi-turn reasoning (complex problem solving)</li>
+                </ul>
+
+                <h3 id="memory">💾 Component 3: Persistent Memory System</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Purpose</th>
+                                <th>When It Loads</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>SOUL.md</code></td>
+                                <td>Agent personality &amp; voice</td>
+                                <td>Every session</td>
+                            </tr>
+                            <tr>
+                                <td><code>USER.md</code></td>
+                                <td>User preferences &amp; context</td>
+                                <td>Main sessions only</td>
+                            </tr>
+                            <tr>
+                                <td><code>MEMORY.md</code></td>
+                                <td>Technical notes, lessons, todos</td>
+                                <td>Main sessions only</td>
+                            </tr>
+                            <tr>
+                                <td><code>AGENTS.md</code></td>
+                                <td>Multi-agent rules, skill notes</td>
+                                <td>All sessions</td>
+                            </tr>
+                            <tr>
+                                <td><code>TOOLS.md</code></td>
+                                <td>Environment-specific tool configs</td>
+                                <td>All sessions</td>
+                            </tr>
+                            <tr>
+                                <td><code>memory/*.md</code></td>
+                                <td>Daily raw logs</td>
+                                <td>Review only</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-label">markdown — example SOUL.md</div>
+                <pre><code># SOUL.md - Who You Are
+
+You are OpenClaw, a helpful AI assistant. Your traits:
+- Professional yet approachable
+- Security-conscious and careful
+- Always verify before destructive actions
+- Prefer writing tools over deleting</code></pre>
+
+                <div class="code-label">markdown — example MEMORY.md</div>
+                <pre><code># MEMORY.md - Long-Term Technical Notes
+
+## Git/GitHub
+### Git Push Hanging (HTTPS Auth Issue)
+**Pattern:** `git push` hangs indefinitely
+**Fix:** Switch to SSH: `git remote set-url origin git@github.com:...`
+
+## Preferences
+- Preferred editor: VS Code
+- Shell: zsh
+- Git workflow: rebase preferred</code></pre>
+
+                <h3 id="tools">🔧 Component 4: Tool / Skill Execution Layer</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Tools</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Core</strong></td>
+                                <td>Shell exec, file read/write/edit, browser control, Canvas UI</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Platform</strong></td>
+                                <td>iOS/Android camera, screen record, GPS location, push notifications</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Automation</strong></td>
+                                <td>Cron jobs, webhooks, session spawn (sub-agents), message send</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Channel</strong></td>
+                                <td>Discord reactions/roles, Slack threads/reactions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>The Skill System</h4>
+                <p>Skills are <strong>AgentSkills-compatible</strong> folders that teach OpenClaw how to use tools:</p>
+                <div class="code-label">directory structure</div>
+                <pre><code>skills/
+├── weather/           # Bundled skill
+│   └── SKILL.md       # Instructions + metadata
+├── github/            # Community skill
+│   └── SKILL.md
+└── my-custom-skill/   # Your custom skill
+    ├── SKILL.md
+    └── helpers.js     # Optional code</code></pre>
+            </section>
+
+            <!-- Chapter 3 -->
+            <section class="chapter" id="getting-started">
+                <div class="chapter-label">Chapter 3</div>
+                <h2>Getting Started (Step-by-Step Guide)</h2>
+
+                <h3 id="install">3.1 Installation</h3>
+                <h4>Prerequisites</h4>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Requirement</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Node.js</strong></td>
+                                <td>≥ 22.12.0</td>
+                                <td>Runtime environment</td>
+                            </tr>
+                            <tr>
+                                <td><strong>npm / pnpm</strong></td>
+                                <td>Latest</td>
+                                <td>Package manager</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Git</strong></td>
+                                <td>Any</td>
+                                <td>For skills/plugins</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Terminal</strong></td>
+                                <td>Bash/Zsh/PowerShell</td>
+                                <td>CLI interaction</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Step 1: Install Node.js</h4>
+                <div class="code-label">bash — macOS/Linux</div>
+                <pre><code>brew install node        # macOS via Homebrew
+node --version           # Verify: v22.x.x or higher
+npm --version            # Verify: 10.x.x or higher</code></pre>
+
+                <h4>Step 2: Install OpenClaw</h4>
+                <div class="code-label">bash</div>
+                <pre><code>npm install -g openclaw@latest    # via npm
+pnpm add -g openclaw@latest      # via pnpm (faster)
+bun add -g openclaw@latest       # via bun</code></pre>
+
+                <h4>Step 3: Run the Onboarding Wizard</h4>
+                <div class="code-label">bash</div>
+                <pre><code>openclaw onboard                   # Interactive setup
+openclaw onboard --install-daemon  # With always-on daemon</code></pre>
+                <p>The wizard will: verify prerequisites, create <code>~/.openclaw/</code>, set up initial config,
+                    install system service, and generate security tokens.</p>
+
+                <h4>Step 4: Verify Installation</h4>
+                <div class="code-label">bash</div>
+                <pre><code>openclaw --version
+openclaw doctor
+# Expected:
+# ✅ Node.js version: v22.x.x
+# ✅ Gateway binary: found
+# ✅ Config file: ~/.openclaw/openclaw.json</code></pre>
+
+                <h3 id="config">3.2 Configuration</h3>
+                <div class="code-label">json — ~/.openclaw/openclaw.json</div>
+                <pre><code>{
+  "gateway": {
+    "port": 18789,
+    "bind": "loopback",
+    "auth": { "token": "your-secure-token-here" }
+  },
+  "models": {
+    "default": "anthropic/claude-4-opus",
+    "thinking": "medium"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "${TELEGRAM_BOT_TOKEN}",
+      "dmPolicy": "pairing"
+    }
+  }
+}</code></pre>
+
+                <h4>Setting Up Telegram</h4>
+                <ol class="steps">
+                    <li>Message <strong>@BotFather</strong> on Telegram, send <code>/newbot</code>, copy the token</li>
+                    <li>Run <code>openclaw config set channels.telegram.botToken "YOUR_TOKEN"</code></li>
+                    <li>Start the gateway: <code>openclaw gateway --port 18789 --verbose</code></li>
+                    <li>Approve the first contact: <code>openclaw pairing approve telegram &lt;code&gt;</code></li>
+                </ol>
+
+                <div class="info-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <p><strong>Security:</strong> OpenClaw uses <em>pairing</em> by default. Unknown users must be
+                        explicitly approved before receiving responses.</p>
+                </div>
+
+                <h3 id="models">3.3 Model Providers</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Provider</th>
+                                <th>Command</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Anthropic (Claude)</strong> ★</td>
+                                <td><code>openclaw login anthropic</code></td>
+                                <td>Complex reasoning, code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>OpenAI (GPT-5)</strong></td>
+                                <td>Set <code>OPENAI_API_KEY</code></td>
+                                <td>Creative writing, vision</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Google Gemini</strong></td>
+                                <td>Set <code>GEMINI_API_KEY</code></td>
+                                <td>Fast, cheap queries</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ollama (local)</strong></td>
+                                <td>Configure <code>localhost:11434</code></td>
+                                <td>Sensitive/offline data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-label">json — model failover config</div>
+                <pre><code>{
+  "models": {
+    "default": "anthropic/claude-4-opus",
+    "fallbacks": [
+      "openai/gpt-5",
+      "google/gemini-3-pro-preview",
+      "ollama/llama3.3"
+    ]
+  }
+}</code></pre>
+
+                <h3 id="skills">3.4 Skills</h3>
+                <p>Skills are <strong>Markdown teaching documents</strong> with YAML frontmatter that tell OpenClaw how
+                    to use tools.</p>
+
+                <h4>Bundled Skills</h4>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Skill</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>weather</code></td>
+                                <td>Get weather forecasts</td>
+                            </tr>
+                            <tr>
+                                <td><code>github</code></td>
+                                <td>Interact with GitHub repos</td>
+                            </tr>
+                            <tr>
+                                <td><code>browser</code></td>
+                                <td>Control web browser</td>
+                            </tr>
+                            <tr>
+                                <td><code>canvas</code></td>
+                                <td>Render visual UIs</td>
+                            </tr>
+                            <tr>
+                                <td><code>cron</code></td>
+                                <td>Schedule recurring tasks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Installing from ClawHub</h4>
+                <div class="code-label">bash</div>
+                <pre><code>openclaw hub             # Open ClawHub in browser
+clawhub install todoist  # Install a skill
+clawhub update --all     # Update all skills</code></pre>
+
+                <h4>Creating Your First Skill</h4>
+                <div class="code-label">bash</div>
+                <pre><code>mkdir -p ~/.openclaw/workspace/skills/greeting
+cat > ~/.openclaw/workspace/skills/greeting/SKILL.md << 'EOF'
+---
+name: greeting
+description: Generate personalized greetings
+---
+
+# Greeting Skill
+
+Generate warm, personalized greetings for users.
+
+## Guidelines
+- Use the user's preferred name from USER.md
+- Match time of day (morning/afternoon/evening)
+- Keep it friendly but professional
+
+## Example Output
+"Good morning, Alex! ☀️ Ready to tackle the day?"
+EOF</code></pre>
+            </section>
+
+            <!-- Chapter 4 -->
+            <section class="chapter" id="productivity">
+                <div class="chapter-label">Chapter 4</div>
+                <h2>Practical Applications &amp; Productivity</h2>
+
+                <h3 id="use-cases">Best Use Cases</h3>
+
+                <h4 class="tier-1">🏆 Tier 1: Absolute Game-Changers</h4>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Why It Works</th>
+                                <th>Example Command</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Daily Standups</strong></td>
+                                <td>Auto-generate from calendar + commits</td>
+                                <td>"Generate my standup for today"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email Triage</strong></td>
+                                <td>Summarize, prioritize, draft responses</td>
+                                <td>"Summarize unread emails, flag urgent"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Research</strong></td>
+                                <td>Web search + synthesis</td>
+                                <td>"Research React 19 features and summarize"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Code Review</strong></td>
+                                <td>Explain PRs, suggest improvements</td>
+                                <td>"Review this PR: github.com/…"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentation</strong></td>
+                                <td>Generate docs from code</td>
+                                <td>"Document the functions in this file"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>🥈 Tier 2: Excellent Productivity Boosts</h4>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Use Case</th>
+                                <th>Why It Works</th>
+                                <th>Example Command</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Meeting Prep</strong></td>
+                                <td>Context from emails + calendar</td>
+                                <td>"Prep me for my 2pm meeting with Sarah"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Travel Planning</strong></td>
+                                <td>Multi-source research</td>
+                                <td>"Plan a 3-day trip to Tokyo"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Content Creation</strong></td>
+                                <td>Drafts, outlines, editing</td>
+                                <td>"Write a blog outline about AI agents"</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bug Analysis</strong></td>
+                                <td>Parse logs, suggest fixes</td>
+                                <td>"This error keeps happening, analyze the logs"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 id="workflows">Daily Productivity Workflows</h3>
+                <h4>Workflow 1: Morning Routine</h4>
+                <div class="code-label">conversation example</div>
+                <pre><code>You: "Good morning!"
+
+OpenClaw:
+→ Weather: 72°F sunny
+→ Calendar: 3 meetings today (10am, 2pm, 4pm)
+→ Emails: 12 new, 2 flagged as urgent
+→ Reminder: Submit expense report by EOD
+
+You: "Block 2 hours for deep work between meetings"
+OpenClaw: Created: Focus Time, 12:00-2:00 PM ✅
+
+You: "Summarize those urgent emails and draft responses"
+OpenClaw: [Short summaries with reply drafts attached]</code></pre>
+
+                <h4>Workflow 2: Research &amp; Analysis</h4>
+                <div class="code-label">conversation example</div>
+                <pre><code>You: "Research latest developments in LLM efficiency.
+      Find 3 papers from 2025, summarize their approaches."
+
+OpenClaw:
+1. Opens browser
+2. Searches "LLM efficiency 2025 research papers"
+3. Navigates to arXiv, finds relevant papers
+4. Reads abstracts and key sections
+5. Synthesizes findings
+
+→ Response: [Detailed comparison with links]</code></pre>
+
+                <h3>Building Your Personal Assistant</h3>
+                <div class="code-label">markdown — SOUL.md</div>
+                <pre><code># SOUL.md - Who You Are
+You are my personal productivity assistant.
+
+## Communication Style
+- Concise but warm
+- Use bullet points for clarity
+- Lead with key information
+
+## Proactive Behaviors
+- Remind me of deadlines 24h in advance
+- Suggest calendar optimizations weekly</code></pre>
+
+                <div class="code-label">markdown — USER.md</div>
+                <pre><code># USER.md - About Your Human
+- **Name:** Alex
+- **Timezone:** America/Los_Angeles
+- **Occupation:** Software Engineer
+
+## Preferences
+- Prefer 25min or 50min meeting slots
+- No meetings before 9:30am</code></pre>
+
+                <h3>Automation with Cron Jobs</h3>
+                <div class="code-label">bash</div>
+                <pre><code># Daily news briefing at 8am
+openclaw cron add --name "morning-briefing" \
+  --schedule "0 8 * * *" \
+  --message "Generate morning briefing with weather and calendar"
+
+# Weekly review every Friday 4pm
+openclaw cron add --name "weekly-review" \
+  --schedule "0 16 * * 5" \
+  --message "Weekly review: What did we accomplish?"</code></pre>
+            </section>
+
+            <!-- Chapter 5 -->
+            <section class="chapter" id="security">
+                <div class="chapter-label">Chapter 5</div>
+                <h2>Optimization, Security &amp; Challenges</h2>
+
+                <h3>Performance: Model Selection Strategy</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task Type</th>
+                                <th>Recommended Model</th>
+                                <th>Why</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Quick questions</td>
+                                <td>gemini-flash, gpt-4o-mini</td>
+                                <td>Fast, cheap</td>
+                            </tr>
+                            <tr>
+                                <td>Complex reasoning</td>
+                                <td>claude-4-opus, gpt-5</td>
+                                <td>Deep thinking</td>
+                            </tr>
+                            <tr>
+                                <td>Code generation</td>
+                                <td>claude-4-opus</td>
+                                <td>Best code quality</td>
+                            </tr>
+                            <tr>
+                                <td>Image analysis</td>
+                                <td>claude-3.5-sonnet, gpt-5</td>
+                                <td>Visual strength</td>
+                            </tr>
+                            <tr>
+                                <td>Sensitive data</td>
+                                <td>local llama3, qwen2.5</td>
+                                <td>Privacy</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Security: Threat Model</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk</th>
+                                <th>Severity</th>
+                                <th>Mitigation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prompt Injection</td>
+                                <td class="bad">🔴 Critical</td>
+                                <td>Use resistant models (Claude), scan patterns</td>
+                            </tr>
+                            <tr>
+                                <td>Malicious Skills</td>
+                                <td class="bad">🔴 Critical</td>
+                                <td>Review code, use allowlists</td>
+                            </tr>
+                            <tr>
+                                <td>Dangerous Tools</td>
+                                <td class="bad">🔴 Critical</td>
+                                <td>BlockList, require confirmation</td>
+                            </tr>
+                            <tr>
+                                <td>Untrusted DMs</td>
+                                <td class="bad">🔴 Critical</td>
+                                <td>Always use <code>dmPolicy: "pairing"</code></td>
+                            </tr>
+                            <tr>
+                                <td>Gateway Exposure</td>
+                                <td class="bad">🔴 Critical</td>
+                                <td>Bind to loopback, never <code>0.0.0.0</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-label">json — critical security settings</div>
+                <pre><code>{
+  "channels": {
+    "telegram": {
+      "dmPolicy": "pairing",
+      "allowFrom": []
+    }
+  },
+  "tools": {
+    "exec": {
+      "blockList": ["rm -rf", "sudo", "dd"],
+      "requireConfirmation": true
+    }
+  },
+  "gateway": {
+    "bind": "loopback"
+  }
+}</code></pre>
+
+                <h3>Known Challenges</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Challenge</th>
+                                <th>Current Mitigation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Hallucination</td>
+                                <td>Tool verification, confidence scoring</td>
+                            </tr>
+                            <tr>
+                                <td>Context Limits</td>
+                                <td>Session pruning, RAG</td>
+                            </tr>
+                            <tr>
+                                <td>Cost Management</td>
+                                <td>Model routing, usage tracking</td>
+                            </tr>
+                            <tr>
+                                <td>Reliability</td>
+                                <td>Retry policies, fallbacks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="chapter" id="conclusion">
+                <div class="chapter-label">🎓 Conclusion</div>
+                <h2>Your Journey with Agentic AI</h2>
+                <p>Congratulations on completing this comprehensive guide! Here are your key takeaways:</p>
+
+                <div class="key-points">
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>Local-First</strong> open-source AI that runs on your own devices</p>
+                    </div>
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>Architecture:</strong> Gateway → Pi Runtime → Tools → Skills</p>
+                    </div>
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>Memory matters:</strong> SOUL.md, USER.md, MEMORY.md</p>
+                    </div>
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>Skills extend</strong> capabilities via ClawHub marketplace</p>
+                    </div>
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>Security is paramount:</strong> pairing mode, loopback binding</p>
+                    </div>
+                    <div class="key-point">
+                        <div class="checkmark">✅</div>
+                        <p><strong>ReAct loop:</strong> Observe → Think → Act → repeat</p>
+                    </div>
+                </div>
+
+                <h3>Your Next Steps</h3>
+                <ol class="steps">
+                    <li>Install OpenClaw: <code>npm install -g openclaw@latest</code></li>
+                    <li>Configure ONE channel (Telegram recommended for beginners)</li>
+                    <li>Set up your personality files (SOUL.md, USER.md)</li>
+                    <li>Try basic commands and get comfortable</li>
+                    <li>Install 2-3 skills from ClawHub</li>
+                    <li>Build ONE automation (morning briefing is a great start)</li>
+                </ol>
+
+                <h3>Resources</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>URL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>📖 Documentation</td>
+                                <td><a href="https://docs.openclaw.ai" target="_blank"
+                                        style="color:var(--accent);">docs.openclaw.ai</a></td>
+                            </tr>
+                            <tr>
+                                <td>💻 GitHub</td>
+                                <td><a href="https://github.com/openclaw/openclaw" target="_blank"
+                                        style="color:var(--accent);">github.com/openclaw/openclaw</a></td>
+                            </tr>
+                            <tr>
+                                <td>💬 Discord Community</td>
+                                <td><a href="https://discord.gg/clawd" target="_blank"
+                                        style="color:var(--accent);">discord.gg/clawd</a></td>
+                            </tr>
+                            <tr>
+                                <td>🛍️ ClawHub Marketplace</td>
+                                <td><a href="https://clawhub.com" target="_blank"
+                                        style="color:var(--accent);">clawhub.com</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout" style="margin-top:1.5rem;">
+                    <p>"The best way to predict the future is to build it." — Now go build something amazing with
+                        OpenClaw! 🚀</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer>
+        <p>
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            &nbsp;·&nbsp;
+            Tutorial based on <strong>openclaw-tutorial.md</strong>
+            &nbsp;·&nbsp;
+            Last Updated: 2026
+        </p>
+    </footer>
+
+</body>
+
+</html>
