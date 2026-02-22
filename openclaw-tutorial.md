@@ -147,22 +147,19 @@ OpenClaw's evolution tells a fascinating story:
 ```mermaid
 timeline
     title OpenClaw Evolution Timeline
-    2023 : "Peter Steinberger starts experimenting"
-         : "Personal automation scripts"
-    2024 : "Warelay prototype"
-         : "Private beta with friends"
-    Early 2025 : "Clawdbot emerges"
-               : "iMessage integration"
-               : "Viral on Twitter/Tech Twitter"
-    Mid 2025 : "Moltbot rebrand"
-             : "Expanded channel support"
-    Late 2025 : "Open-sourced as OpenClaw"
-              : "MIT License"
-              : "Explosive GitHub growth"
-    2026 : "AI Foundation established"
-         : "Enterprise features"
-         : "Mobile apps released"
-         : "ClawHub marketplace launches"
+    Nov 2025 : "Peter Steinberger publishes Clawdbot"
+             : "Derived from Clawd (now Molty), named after Anthropic's Claude"
+             : "Austrian vibe coder's open-source debut"
+    Jan 27, 2026 : "Renamed Moltbot after Anthropic trademark complaints"
+                 : "Matt Schlicht launches Moltbook — a social network for AI agents"
+                 : "Viral interest begins"
+    Jan 30, 2026 : "Renamed OpenClaw — Moltbot 'never quite rolled off the tongue'"
+                 : "140,000 GitHub stars, 20,000 forks by Feb 2"
+    Feb 4, 2026 : "ClawCon conference in San Francisco"
+                : "Adopted by companies in Silicon Valley and China"
+                : "DeepSeek model integration"
+    Feb 14, 2026 : "Steinberger announces joining OpenAI"
+                 : "Project moves to open-source foundation"
 ```
 
 ## 1.4 Theory: Why Does It Work?
