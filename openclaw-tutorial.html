@@ -707,10 +707,15 @@
     <nav>
         <div class="nav-inner">
             <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> Home</a>
-            <a href="openclaw-tutorial.md" class="nav-back" style="font-size:.8rem;opacity:.75;"
-                title="View raw Markdown source">
-                <i class="fas fa-file-alt"></i> Markdown Source
-            </a>
+            <div style="display:flex;gap:16px;align-items:center;">
+                <a href="/#coding" class="nav-back" style="font-size:.85rem;">Coding</a>
+                <a href="/#sysdesign" class="nav-back" style="font-size:.85rem;">System Design</a>
+                <a href="/#writing" class="nav-back" style="font-size:.85rem;">Writing</a>
+                <a href="openclaw-tutorial.md" class="nav-back" style="font-size:.8rem;opacity:.75;"
+                    title="View raw Markdown source">
+                    <i class="fas fa-file-alt"></i> Markdown
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -1655,6 +1660,9 @@ openclaw cron add --name "weekly-review" \
         </p>
     </footer>
 
+<style>.review-footer{text-align:center;padding:2rem 1rem 1rem;margin-top:1rem;border-top:1px solid #e5e7eb;}.review-footer button{background:#1a365d;color:#fff;border:none;padding:10px 24px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;}.review-footer button.reviewed{background:#065f46;}#reviewStatus{margin-top:8px;font-size:13px;color:#6b7280;}</style>
+<div class="review-footer"><button id="reviewBtn" onclick="toggleReviewed('openclaw')">Mark as Reviewed</button><p id="reviewStatus"></p></div>
+<script>(function(){const key='reviewed_openclaw';const btn=document.getElementById('reviewBtn');const st=document.getElementById('reviewStatus');function upd(){const ts=localStorage.getItem(key);if(ts){btn.textContent='Reviewed ✓';btn.classList.add('reviewed');st.textContent='Last reviewed: '+new Date(parseInt(ts)).toLocaleDateString();}else{btn.textContent='Mark as Reviewed';btn.classList.remove('reviewed');st.textContent='';}}window.toggleReviewed=window.toggleReviewed||function(id){const k='reviewed_'+id;if(localStorage.getItem(k))localStorage.removeItem(k);else localStorage.setItem(k,Date.now());upd();};upd();})();</script>
 </body>
 
 </html>

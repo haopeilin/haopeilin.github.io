@@ -282,6 +282,60 @@
             margin-top: 2rem;
         }
 
+        /* Search */
+        .search-wrap { position: relative; }
+        .search-input {
+            padding: 6px 14px 6px 34px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            width: 200px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+            transition: width .2s, border-color .2s;
+        }
+        .search-input:focus { width: 260px; border-color: var(--accent-color); }
+        .search-icon {
+            position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+            color: var(--text-secondary); font-size: 13px; pointer-events: none;
+        }
+        .search-results {
+            position: absolute; top: calc(100% + 6px); right: 0;
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 10px; box-shadow: var(--shadow-lg);
+            width: 320px; max-height: 380px; overflow-y: auto; z-index: 200;
+            display: none;
+        }
+        .search-results.open { display: block; }
+        .search-result-item {
+            display: block; padding: 10px 14px; text-decoration: none;
+            color: var(--text-primary); border-bottom: 1px solid var(--border-color);
+            transition: background .15s;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: var(--bg-secondary); }
+        .sr-title { font-weight: 600; font-size: .9rem; }
+        .sr-desc { font-size: .8rem; color: var(--text-secondary); margin-top: 2px; }
+        .sr-tag { font-size: .72rem; background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 999px; margin-left: 6px; }
+        .no-results { padding: 14px; text-align: center; color: var(--text-secondary); font-size:.875rem; }
+
+        /* Progress Dashboard */
+        .progress-section { margin-bottom: 3rem; }
+        .progress-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .75rem; }
+        .progress-card {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 1rem; box-shadow: var(--shadow);
+            text-decoration: none; color: inherit; transition: all .2s;
+        }
+        .progress-card:hover { border-color: var(--accent-color); transform: translateY(-1px); }
+        .progress-card-title { font-size: .88rem; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .progress-check { color: #065f46; font-size: 1rem; }
+        .progress-date { font-size: .75rem; color: var(--text-secondary); }
+        .progress-bar-wrap { background: #e5e7eb; border-radius: 999px; height: 5px; margin-top: 8px; }
+        .progress-bar-fill { background: var(--accent-color); height: 5px; border-radius: 999px; transition: width .4s; }
+        .progress-summary { font-size: .85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -318,6 +372,12 @@
                 <a href="#news">News</a>
                 <a href="https://github.com/haopeilin" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/peilinhao/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <div class="search-wrap">
+                    <i class="fas fa-search search-icon"></i>
+                    <input class="search-input" type="text" id="siteSearch" placeholder="Search..." autocomplete="off"
+                        oninput="onSearch(this.value)" onblur="setTimeout(()=>closeSearch(),150)">
+                    <div class="search-results" id="searchResults"></div>
+                </div>
             </nav>
         </div>
     </header>
@@ -363,6 +423,13 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Study Progress Dashboard -->
+        <section class="section progress-section" id="progress">
+            <h2 class="section-title"><i class="fas fa-chart-bar"></i> Study Progress</h2>
+            <p class="section-desc progress-summary" id="progressSummary">Loading progress...</p>
+            <div class="progress-grid" id="progressGrid"></div>
         </section>
 
         <!-- Coding Interview -->
@@ -515,6 +582,94 @@
     <footer class="footer">
         <p>&copy; 2025 Peilin Hao. All Rights Reserved.</p>
     </footer>
+
+<script>
+// ── SEARCH ──────────────────────────────────────────────────────────────────
+const SEARCH_INDEX = [
+    { title: 'LeetCode Roadmap',           url: 'leetcode.html',                         desc: 'Arrays, trees, DP, graphs study path',                  tag: 'Coding' },
+    { title: 'Meta Coding Prep',           url: 'meta_coding_interview_preparation.html', desc: 'Two Sum, Merge Intervals, Binary Search',               tag: 'Coding' },
+    { title: 'Object-Oriented Design',     url: 'OODDesign.html',                        desc: 'Singleton, Factory, Observer, SOLID principles',        tag: 'Coding' },
+    { title: 'Design Patterns',            url: 'designpatterns.html',                   desc: 'Creational, Structural, Behavioral patterns (GoF)',      tag: 'Coding' },
+    { title: 'System Design Fundamentals', url: 'systemdesign.html',                     desc: 'CAP theorem, load balancing, caching, databases',       tag: 'System Design' },
+    { title: 'Meta System Design',         url: 'metaTop5SystemDesign.html',             desc: 'Instagram, News Feed, Messenger, URL Shortener, Uber',  tag: 'System Design' },
+    { title: 'System Design Q&A',          url: 'sdq.html',                              desc: 'URL shortener, chat system, news feed walkthroughs',    tag: 'System Design' },
+    { title: 'DDIA Notes',                 url: 'ddia.html',                             desc: 'Replication, partitioning, transactions, CAP, ACID',    tag: 'System Design' },
+    { title: 'Scalability',                url: 'scalability.html',                      desc: 'Vertical/horizontal scaling, CDN, load balancers',      tag: 'System Design' },
+    { title: 'News Feed System Design',    url: 'NewsFeed.html',                         desc: 'Facebook News Feed architecture, fan-out, ranking',     tag: 'System Design' },
+    { title: 'OpenClaw Tutorial',          url: 'openclaw-tutorial.html',                desc: 'AI agent framework, autonomous agents, MCP',            tag: 'Writing' },
+    { title: 'PI_MONO Explained',          url: 'PI_MONO_EXPLAINED.html',                desc: 'Monorepo architecture for agentic AI systems',          tag: 'Writing' },
+    { title: 'News Aggregator',            url: 'news-aggregator.html',                  desc: 'RSS feeds from Reuters, BBC, NBC, WSJ, Forbes',         tag: 'News' },
+];
+
+function onSearch(q) {
+    const box = document.getElementById('searchResults');
+    q = q.trim().toLowerCase();
+    if (!q) { box.classList.remove('open'); box.innerHTML = ''; return; }
+    const hits = SEARCH_INDEX.filter(item =>
+        item.title.toLowerCase().includes(q) ||
+        item.desc.toLowerCase().includes(q) ||
+        item.tag.toLowerCase().includes(q)
+    );
+    if (hits.length === 0) {
+        box.innerHTML = '<div class="no-results">No results found</div>';
+    } else {
+        box.innerHTML = hits.map(h => `
+            <a class="search-result-item" href="${h.url}">
+                <div class="sr-title">${h.title}<span class="sr-tag">${h.tag}</span></div>
+                <div class="sr-desc">${h.desc}</div>
+            </a>`).join('');
+    }
+    box.classList.add('open');
+}
+
+function closeSearch() {
+    document.getElementById('searchResults').classList.remove('open');
+}
+
+// ── PROGRESS DASHBOARD ───────────────────────────────────────────────────────
+const TRACKED_PAGES = [
+    { id: 'systemdesign', title: 'System Design Fundamentals', url: 'systemdesign.html' },
+    { id: 'meta_sd',      title: 'Meta System Design',         url: 'metaTop5SystemDesign.html' },
+    { id: 'sdq',          title: 'System Design Q&A',          url: 'sdq.html' },
+    { id: 'ddia',         title: 'DDIA Notes',                 url: 'ddia.html' },
+    { id: 'scalability',  title: 'Scalability',                url: 'scalability.html' },
+    { id: 'newsfeed',     title: 'News Feed SD',               url: 'NewsFeed.html' },
+    { id: 'metacoding',   title: 'Meta Coding Prep',           url: 'meta_coding_interview_preparation.html' },
+    { id: 'ood',          title: 'OOD Interview',              url: 'OODDesign.html' },
+    { id: 'patterns',     title: 'Design Patterns',            url: 'designpatterns.html' },
+    { id: 'openclaw',     title: 'OpenClaw Tutorial',          url: 'openclaw-tutorial.html' },
+    { id: 'pimono',       title: 'PI_MONO Explained',          url: 'PI_MONO_EXPLAINED.html' },
+];
+
+function renderProgress() {
+    const grid = document.getElementById('progressGrid');
+    const summary = document.getElementById('progressSummary');
+    let reviewed = 0;
+    grid.innerHTML = TRACKED_PAGES.map(p => {
+        const ts = localStorage.getItem('reviewed_' + p.id);
+        const done = !!ts;
+        if (done) reviewed++;
+        const dateStr = done ? new Date(parseInt(ts)).toLocaleDateString() : 'Not reviewed yet';
+        return `<a class="progress-card" href="${p.url}">
+            <div class="progress-card-title">
+                <span>${p.title}</span>
+                ${done ? '<span class="progress-check">✓</span>' : ''}
+            </div>
+            <div class="progress-date">${dateStr}</div>
+        </a>`;
+    }).join('');
+    const pct = Math.round(reviewed / TRACKED_PAGES.length * 100);
+    summary.innerHTML = `${reviewed} of ${TRACKED_PAGES.length} topics reviewed &nbsp;
+        <span style="font-weight:600;color:var(--accent-color)">${pct}%</span>
+        <div class="progress-bar-wrap" style="max-width:300px;margin-top:6px;">
+            <div class="progress-bar-fill" style="width:${pct}%"></div>
+        </div>`;
+}
+
+renderProgress();
+// Re-render if user navigates back after reviewing a page
+window.addEventListener('focus', renderProgress);
+</script>
 </body>
 
 </html>
