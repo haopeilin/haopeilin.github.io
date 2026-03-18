@@ -199,18 +199,18 @@
         let allNews = [];
 
         const NEWS_SOURCES = {
-            CNBC: { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', color: '#005594' },
+            Guardian: { url: 'https://www.theguardian.com/us/business/rss', color: '#005594' },
             CBS:  { url: 'https://www.cbsnews.com/latest/rss/main', color: '#101010' },
-            GoogleNews: { url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', color: '#CC0000' },
+            NPR:  { url: 'https://feeds.npr.org/1001/rss.xml', color: '#CC0000' },
             FOX:  { url: 'https://moxie.foxnews.com/google-publisher/latest.xml', color: '#003366' },
             Forbes: { url: 'https://www.forbes.com/real-time/feed2/', color: '#caca1a' },
-            Reuters: { url: 'https://www.reutersagency.com/feed/', color: '#FF8000' },
+            SkyNews: { url: 'https://feeds.skynews.com/feeds/rss/world.xml', color: '#FF8000' },
             BBC:  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', color: '#BB1919' },
             SCMP: { url: 'https://www.scmp.com/rss/91/feed', color: '#1D4F91' },
             NBC:  { url: 'https://feeds.nbcnews.com/nbcnews/public/news', color: '#4a148c' },
-            NYTimes: { url: 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml', color: '#000000' },
+            GuardianUS: { url: 'https://www.theguardian.com/us-news/rss', color: '#000000' },
             WSJ:  { url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', color: '#0ba12e' },
-            Tech: { url: 'https://rss.app/feeds/qq9JF9xEkna1trK0.xml', color: '#830fc1' }
+            TechCrunch: { url: 'https://feeds.feedburner.com/TechCrunch', color: '#830fc1' }
         };
 
         // Try all proxies in parallel — take whichever responds first
