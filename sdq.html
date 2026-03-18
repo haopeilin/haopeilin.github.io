@@ -3,127 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meta System Design Interview</title>
+    <title>System Design Q&amp;A</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; background: #f9f9f9; }
         h1, h2, h3 { color: #2c3e50; }
-        .container { max-width: 900px; margin: auto; }
+        .container { max-width: 900px; margin: auto; padding: 40px 20px; }
         .diagram { border: 1px solid #ccc; padding: 10px; margin: 20px 0; background: #f9f9f9; text-align: center; }
+
+        /* Nav */
+        .site-nav{background:#1a365d;padding:10px 24px;display:flex;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 2px 6px rgba(0,0,0,.25);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;}
+        .site-nav .nav-brand{color:#fff;text-decoration:none;font-weight:700;font-size:15px;margin-right:auto;}
+        .site-nav .nav-links{display:flex;gap:20px;align-items:center;}
+        .site-nav .nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:13px;font-weight:500;}
+        .site-nav .nav-links a:hover{color:#fff;}
+        .mode-btn{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);padding:5px 14px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:500;transition:background .2s;}
+        .mode-btn:hover{background:rgba(255,255,255,.25);}
+        .mode-btn.active{background:#fff;color:#1a365d;}
+
+        /* Flashcard styles */
+        .fc-wrapper{display:none;max-width:720px;margin:40px auto;padding:0 20px;}
+        .fc-wrapper.visible{display:block;}
+        .fc-progress{text-align:center;font-size:14px;color:#666;margin-bottom:16px;}
+        .fc-card{perspective:1000px;width:100%;height:380px;cursor:pointer;margin-bottom:24px;}
+        .fc-inner{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d;}
+        .fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+        .fc-front,.fc-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;padding:32px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.12);}
+        .fc-front{background:#1a365d;color:#fff;align-items:center;text-align:center;}
+        .fc-back{background:#fff;color:#333;border:2px solid #1a365d;transform:rotateY(180deg);overflow-y:auto;justify-content:flex-start;}
+        .fc-question{font-size:1.6rem;font-weight:700;margin-bottom:12px;}
+        .fc-hint{font-size:.88rem;opacity:.65;}
+        .fc-back h3{color:#1a365d;margin:0 0 8px;font-size:1rem;}
+        .fc-back ul{margin:0 0 12px 18px;font-size:.92rem;}
+        .fc-nav{display:flex;justify-content:center;gap:16px;}
+        .fc-nav button{background:#1a365d;color:#fff;border:none;padding:10px 24px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;}
+        .fc-nav button:hover{background:#2c5282;}
+        .fc-nav button:disabled{opacity:.4;cursor:default;}
+        .fc-flip-hint{font-size:13px;color:#888;text-align:center;margin-bottom:8px;}
+
+        /* Review footer */
+        .review-footer{text-align:center;padding:2rem 1rem 1rem;margin-top:2rem;border-top:1px solid #e5e7eb;}
+        .review-footer button{background:#1a365d;color:#fff;border:none;padding:10px 24px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;}
+        .review-footer button.reviewed{background:#065f46;}
+        #reviewStatus{margin-top:8px;font-size:13px;color:#6b7280;}
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Meta System Design Interview Questions</h1>
 
-        <h2>1. Design a URL Shortener</h2>
-        <h3>Define Requirements</h3>
-        <ul>
-            <li>Shorten a given URL</li>
-            <li>Redirect short URL to original URL</li>
-            <li>Handle billions of URLs efficiently</li>
-            <li>Prevent URL collisions</li>
-        </ul>
-
-        <h3>High-Level Design</h3>
-        <div class="diagram">
-            <svg width="400" height="200">
-                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
-                <text x="20" y="55" fill="black">User</text>
-                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
-                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
-                <text x="170" y="55" fill="black">Load Balancer</text>
-                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
-                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
-                <text x="360" y="55" fill="black">URL Service</text>
-            </svg>
-        </div>
-
-        <h3>Core Components</h3>
-        <ul>
-            <li><strong>Database:</strong> NoSQL store (Cassandra) for quick lookups</li>
-            <li><strong>Cache:</strong> Redis to store frequently accessed URLs</li>
-            <li><strong>Load Balancer:</strong> Distributes requests across multiple URL servers</li>
-            <li><strong>Hashing Mechanism:</strong> Generates short unique URLs</li>
-        </ul>
-
-        <h3>Scalability Considerations</h3>
-        <ul>
-            <li>Use consistent hashing to balance URL storage</li>
-            <li>Sharding strategy to avoid single points of failure</li>
-            <li>Replication for high availability</li>
-        </ul>
-
-        <h2>2. Design a News Feed System</h2>
-        <h3>Define Requirements</h3>
-        <ul>
-            <li>Deliver personalized content efficiently</li>
-            <li>Support millions of users in real-time</li>
-            <li>Handle ranking algorithms dynamically</li>
-        </ul>
-
-        <h3>High-Level Design</h3>
-        <div class="diagram">
-            <svg width="400" height="200">
-                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
-                <text x="20" y="55" fill="black">User</text>
-                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
-                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
-                <text x="170" y="55" fill="black">Feed Aggregator</text>
-                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
-                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
-                <text x="360" y="55" fill="black">Cache & Store</text>
-            </svg>
-        </div>
-
-        <h3>Core Components</h3>
-        <ul>
-            <li><strong>Storage:</strong> MySQL/PostgreSQL for structured feed data</li>
-            <li><strong>Caching:</strong> Memcached/Redis for frequently accessed feeds</li>
-            <li><strong>Fan-out Strategy:</strong> Push-based for active users, Pull-based for inactive users</li>
-        </ul>
-
-        <h3>Scalability Considerations</h3>
-        <ul>
-            <li>Use GraphQL for efficient data fetching</li>
-            <li>Implement user-based ranking with ML models</li>
-        </ul>
-
-        <h2>3. Design a Chat System</h2>
-        <h3>Define Requirements</h3>
-        <ul>
-            <li>Support one-on-one and group chats</li>
-            <li>Ensure low latency for message delivery</li>
-            <li>Persist chat history</li>
-        </ul>
-
-        <h3>High-Level Design</h3>
-        <div class="diagram">
-            <svg width="400" height="200">
-                <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
-                <text x="20" y="55" fill="black">User A</text>
-                <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
-                <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
-                <text x="170" y="55" fill="black">Message Queue</text>
-                <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
-                <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
-                <text x="360" y="55" fill="black">User B</text>
-            </svg>
-        </div>
-
-        <h3>Core Components</h3>
-        <ul>
-            <li><strong>Real-time Messaging:</strong> WebSockets for live communication</li>
-            <li><strong>Queue Processing:</strong> Kafka/RabbitMQ for async processing</li>
-            <li><strong>Storage:</strong> Distributed storage for chat history</li>
-        </ul>
-
-        <h3>Scalability Considerations</h3>
-        <ul>
-            <li>Shard messages based on user ID</li>
-            <li>Use read replicas to distribute query load</li>
-        </ul>
-
-        <!-- Add similar sections for more system designs -->
+<nav class="site-nav">
+    <a href="/" class="nav-brand">Peilin Hao</a>
+    <div class="nav-links">
+        <a href="/#coding">Coding</a>
+        <a href="/#sysdesign">System Design</a>
+        <a href="/#writing">Writing</a>
+        <a href="/#news">News</a>
+        <button class="mode-btn" id="modeToggle" onclick="toggleMode()">Flashcard Mode</button>
     </div>
+</nav>
+
+<!-- Flashcard view -->
+<div class="fc-wrapper" id="fcWrapper">
+    <p class="fc-progress" id="fcProgress">Card 1 of 3</p>
+    <p class="fc-flip-hint">Click the card to reveal the answer</p>
+    <div class="fc-card" id="fcCard" onclick="flipCard()">
+        <div class="fc-inner">
+            <div class="fc-front">
+                <div class="fc-question" id="fcQuestion"></div>
+                <div class="fc-hint">Tap to reveal answer</div>
+            </div>
+            <div class="fc-back" id="fcAnswer"></div>
+        </div>
+    </div>
+    <div class="fc-nav">
+        <button onclick="prevCard()" id="btnPrev">← Prev</button>
+        <button onclick="nextCard()" id="btnNext">Next →</button>
+    </div>
+</div>
+
+<!-- Reading view -->
+<div class="container" id="readingView">
+    <h1>System Design Interview Q&amp;A</h1>
+
+    <h2>1. Design a URL Shortener</h2>
+    <h3>Define Requirements</h3>
+    <ul>
+        <li>Shorten a given URL</li>
+        <li>Redirect short URL to original URL</li>
+        <li>Handle billions of URLs efficiently</li>
+        <li>Prevent URL collisions</li>
+    </ul>
+
+    <h3>High-Level Design</h3>
+    <div class="diagram">
+        <svg width="400" height="200">
+            <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+            <text x="20" y="55" fill="black">User</text>
+            <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+            <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+            <text x="170" y="55" fill="black">Load Balancer</text>
+            <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+            <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+            <text x="360" y="55" fill="black">URL Service</text>
+        </svg>
+    </div>
+
+    <h3>Core Components</h3>
+    <ul>
+        <li><strong>Database:</strong> NoSQL store (Cassandra) for quick lookups</li>
+        <li><strong>Cache:</strong> Redis to store frequently accessed URLs</li>
+        <li><strong>Load Balancer:</strong> Distributes requests across multiple URL servers</li>
+        <li><strong>Hashing Mechanism:</strong> Generates short unique URLs</li>
+    </ul>
+
+    <h3>Scalability Considerations</h3>
+    <ul>
+        <li>Use consistent hashing to balance URL storage</li>
+        <li>Sharding strategy to avoid single points of failure</li>
+        <li>Replication for high availability</li>
+    </ul>
+
+    <h2>2. Design a News Feed System</h2>
+    <h3>Define Requirements</h3>
+    <ul>
+        <li>Deliver personalized content efficiently</li>
+        <li>Support millions of users in real-time</li>
+        <li>Handle ranking algorithms dynamically</li>
+    </ul>
+
+    <h3>High-Level Design</h3>
+    <div class="diagram">
+        <svg width="400" height="200">
+            <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+            <text x="20" y="55" fill="black">User</text>
+            <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+            <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+            <text x="170" y="55" fill="black">Feed Aggregator</text>
+            <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+            <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+            <text x="360" y="55" fill="black">Cache &amp; Store</text>
+        </svg>
+    </div>
+
+    <h3>Core Components</h3>
+    <ul>
+        <li><strong>Storage:</strong> MySQL/PostgreSQL for structured feed data</li>
+        <li><strong>Caching:</strong> Memcached/Redis for frequently accessed feeds</li>
+        <li><strong>Fan-out Strategy:</strong> Push-based for active users, Pull-based for inactive users</li>
+    </ul>
+
+    <h3>Scalability Considerations</h3>
+    <ul>
+        <li>Use GraphQL for efficient data fetching</li>
+        <li>Implement user-based ranking with ML models</li>
+    </ul>
+
+    <h2>3. Design a Chat System</h2>
+    <h3>Define Requirements</h3>
+    <ul>
+        <li>Support one-on-one and group chats</li>
+        <li>Ensure low latency for message delivery</li>
+        <li>Persist chat history</li>
+    </ul>
+
+    <h3>High-Level Design</h3>
+    <div class="diagram">
+        <svg width="400" height="200">
+            <rect x="10" y="30" width="80" height="40" fill="lightblue" stroke="black"/>
+            <text x="20" y="55" fill="black">User A</text>
+            <line x1="90" y1="50" x2="160" y2="50" stroke="black" />
+            <rect x="160" y="30" width="120" height="40" fill="lightgreen" stroke="black"/>
+            <text x="170" y="55" fill="black">Message Queue</text>
+            <line x1="280" y1="50" x2="350" y2="50" stroke="black" />
+            <rect x="350" y="30" width="120" height="40" fill="lightcoral" stroke="black"/>
+            <text x="360" y="55" fill="black">User B</text>
+        </svg>
+    </div>
+
+    <h3>Core Components</h3>
+    <ul>
+        <li><strong>Real-time Messaging:</strong> WebSockets for live communication</li>
+        <li><strong>Queue Processing:</strong> Kafka/RabbitMQ for async processing</li>
+        <li><strong>Storage:</strong> Distributed storage for chat history</li>
+    </ul>
+
+    <h3>Scalability Considerations</h3>
+    <ul>
+        <li>Shard messages based on user ID</li>
+        <li>Use read replicas to distribute query load</li>
+    </ul>
+
+    <div class="review-footer">
+        <button id="reviewBtn" onclick="toggleReviewed('sdq')">Mark as Reviewed</button>
+        <p id="reviewStatus"></p>
+    </div>
+</div>
+
+<script>
+const CARDS = [
+    {
+        question: 'Design a URL Shortener',
+        answer: `<h3>Requirements</h3><ul><li>Shorten a URL &amp; redirect</li><li>Handle billions of URLs</li><li>Prevent collisions</li></ul>
+                 <h3>Core Components</h3><ul><li><strong>DB:</strong> NoSQL (Cassandra) for quick lookups</li><li><strong>Cache:</strong> Redis for hot URLs</li><li><strong>Hashing:</strong> Generates short unique IDs</li><li><strong>Load Balancer</strong></li></ul>
+                 <h3>Scalability</h3><ul><li>Consistent hashing</li><li>Sharding by URL hash</li><li>Replication for HA</li></ul>`
+    },
+    {
+        question: 'Design a News Feed System',
+        answer: `<h3>Requirements</h3><ul><li>Personalized content at scale</li><li>Millions of concurrent users</li><li>Dynamic ranking</li></ul>
+                 <h3>Core Components</h3><ul><li><strong>DB:</strong> MySQL/PostgreSQL for feed data</li><li><strong>Cache:</strong> Memcached/Redis for hot feeds</li><li><strong>Fan-out:</strong> Push for active users, pull for inactive</li></ul>
+                 <h3>Scalability</h3><ul><li>GraphQL for efficient fetching</li><li>ML-based ranking models</li></ul>`
+    },
+    {
+        question: 'Design a Chat System',
+        answer: `<h3>Requirements</h3><ul><li>1-on-1 and group chats</li><li>Low latency delivery</li><li>Persistent history</li></ul>
+                 <h3>Core Components</h3><ul><li><strong>Transport:</strong> WebSockets for real-time</li><li><strong>Queue:</strong> Kafka/RabbitMQ for async</li><li><strong>Storage:</strong> Distributed DB for history</li></ul>
+                 <h3>Scalability</h3><ul><li>Shard by user ID</li><li>Read replicas for query load</li></ul>`
+    }
+];
+
+let currentCard = 0;
+let isFlashcardMode = false;
+
+function toggleMode() {
+    isFlashcardMode = !isFlashcardMode;
+    document.getElementById('readingView').style.display = isFlashcardMode ? 'none' : 'block';
+    document.getElementById('fcWrapper').classList.toggle('visible', isFlashcardMode);
+    const btn = document.getElementById('modeToggle');
+    btn.textContent = isFlashcardMode ? 'Reading Mode' : 'Flashcard Mode';
+    btn.classList.toggle('active', isFlashcardMode);
+    if (isFlashcardMode) renderCard();
+}
+
+function renderCard() {
+    const card = CARDS[currentCard];
+    document.getElementById('fcQuestion').textContent = card.question;
+    document.getElementById('fcAnswer').innerHTML = card.answer;
+    document.getElementById('fcProgress').textContent = `Card ${currentCard + 1} of ${CARDS.length}`;
+    document.getElementById('fcCard').classList.remove('flipped');
+    document.getElementById('btnPrev').disabled = currentCard === 0;
+    document.getElementById('btnNext').disabled = currentCard === CARDS.length - 1;
+}
+
+function flipCard() {
+    document.getElementById('fcCard').classList.toggle('flipped');
+}
+
+function prevCard() {
+    if (currentCard > 0) { currentCard--; renderCard(); }
+}
+
+function nextCard() {
+    if (currentCard < CARDS.length - 1) { currentCard++; renderCard(); }
+}
+
+// Review button
+(function(){
+    const key='reviewed_sdq';
+    const btn=document.getElementById('reviewBtn');
+    const st=document.getElementById('reviewStatus');
+    function upd(){const ts=localStorage.getItem(key);if(ts){btn.textContent='Reviewed ✓';btn.classList.add('reviewed');st.textContent='Last reviewed: '+new Date(parseInt(ts)).toLocaleDateString();}else{btn.textContent='Mark as Reviewed';btn.classList.remove('reviewed');st.textContent='';}}
+    window.toggleReviewed=window.toggleReviewed||function(id){const k='reviewed_'+id;if(localStorage.getItem(k))localStorage.removeItem(k);else localStorage.setItem(k,Date.now());upd();};
+    upd();
+})();
+</script>
 </body>
 </html>
