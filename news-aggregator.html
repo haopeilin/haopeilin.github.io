@@ -214,11 +214,12 @@
         };
 
         // Try all proxies in parallel — take whichever responds first
+        // YOUR_WORKER_URL: replace with your deployed Cloudflare Worker URL
+        // e.g. https://rss-proxy.yourname.workers.dev
         const CORS_PROXIES = [
-            { name: 'codetabs',     url: 'https://api.codetabs.com/v1/proxy/?quest=', encode: false },
-            { name: 'allorigins',   url: 'https://api.allorigins.win/raw?url=', encode: true },
-            { name: 'cors-anywhere', url: 'https://cors-anywhere.herokuapp.com/', encode: false,
-              headers: { 'X-Requested-With': 'XMLHttpRequest' } }
+            { name: 'worker',   url: 'YOUR_WORKER_URL/?url=', encode: true },
+            { name: 'codetabs', url: 'https://api.codetabs.com/v1/proxy/?quest=', encode: false },
+            { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=', encode: true },
         ];
 
         const CACHE_KEY = 'news_aggregator_v2';
