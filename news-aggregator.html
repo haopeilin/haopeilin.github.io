@@ -94,7 +94,6 @@
         }
         .source-CNBC { background-color: #005594; color: white; }
         .source-NBC { background-color: #4a148c; color: white; }
-        .source-YahooFinance { background-color: #400090; color: white; }
         .source-NYTimes { background-color: #000000; color: white; }
         .source-WSJ { background-color: #0ba12e; color: white; }
         .source-CBS { background-color: #101010; color: white; }
@@ -105,6 +104,16 @@
         .source-SCMP { background-color: #1D4F91; color: white; }
         .source-Tech { background-color: #830fc1; color: white; }
         .source-FOX { background-color: #003366; color: white; }
+        .source-AP { background-color: #c8102e; color: white; }
+        .source-AlJazeera { background-color: #c8a951; color: white; }
+        .source-MarketWatch { background-color: #004f59; color: white; }
+        .source-Investing { background-color: #e84142; color: white; }
+        .source-Economist { background-color: #e3120b; color: white; }
+        .source-Politico { background-color: #1a1a2e; color: white; }
+        .source-Atlantic { background-color: #1a7fc1; color: white; }
+        .source-WashPost { background-color: #231f20; color: white; }
+        .source-Bloomberg { background-color: #000000; color: #f5821f; }
+        .source-YahooFinance { background-color: #6001d2; color: white; }
         .loading {
             text-align: center;
             padding: 40px;
@@ -186,6 +195,16 @@
         <button class="source-tag" onclick="toggleSource('SCMP')">SCMP</button>
         <button class="source-tag" onclick="toggleSource('FOX')">FOX</button>
         <button class="source-tag" onclick="toggleSource('Tech')">Tech</button>
+        <button class="source-tag" onclick="toggleSource('AP')">AP</button>
+        <button class="source-tag" onclick="toggleSource('AlJazeera')">Al Jazeera</button>
+        <button class="source-tag" onclick="toggleSource('WashPost')">Wash. Post</button>
+        <button class="source-tag" onclick="toggleSource('Politico')">Politico</button>
+        <button class="source-tag" onclick="toggleSource('Bloomberg')">Bloomberg</button>
+        <button class="source-tag" onclick="toggleSource('MarketWatch')">MarketWatch</button>
+        <button class="source-tag" onclick="toggleSource('YahooFinance')">Yahoo Finance</button>
+        <button class="source-tag" onclick="toggleSource('Investing')">Investing.com</button>
+        <button class="source-tag" onclick="toggleSource('Economist')">Economist</button>
+        <button class="source-tag" onclick="toggleSource('Atlantic')">The Atlantic</button>
     </div>
 
     <button class="refresh-btn" onclick="fetchAllNews(true)">Refresh News</button>
@@ -199,18 +218,28 @@
         let allNews = [];
 
         const NEWS_SOURCES = {
-            CNBC: { url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114', color: '#0088cc' },
-            NBC:  { url: 'https://feeds.nbcnews.com/nbcnews/public/news', color: '#4a148c' },
-            NYTimes: { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', color: '#000000' },
-            WSJ:  { url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', color: '#0ba12e' },
-            CBS:  { url: 'https://www.cbsnews.com/latest/rss/main', color: '#101010' },
-            GoogleNews: { url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', color: '#CC0000' },
-            Forbes: { url: 'https://www.forbes.com/real-time/feed2/', color: '#caca1a' },
-            Reuters: { url: 'https://feeds.reuters.com/reuters/businessNews', color: '#FF8000' },
-            BBC:  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', color: '#BB1919' },
-            SCMP: { url: 'https://www.scmp.com/rss/91/feed', color: '#1D4F91' },
-            FOX:  { url: 'https://moxie.foxnews.com/google-publisher/latest.xml', color: '#003366' },
-            Tech: { url: 'https://techcrunch.com/feed/', color: '#830fc1' }
+            CNBC:        { url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114', color: '#0088cc' },
+            NBC:         { url: 'https://feeds.nbcnews.com/nbcnews/public/news', color: '#4a148c' },
+            NYTimes:     { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', color: '#000000' },
+            WSJ:         { url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', color: '#0ba12e' },
+            CBS:         { url: 'https://www.cbsnews.com/latest/rss/main', color: '#101010' },
+            GoogleNews:  { url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', color: '#CC0000' },
+            Forbes:      { url: 'https://www.forbes.com/real-time/feed2/', color: '#caca1a' },
+            Reuters:     { url: 'https://feeds.reuters.com/reuters/businessNews', color: '#FF8000' },
+            BBC:         { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', color: '#BB1919' },
+            SCMP:        { url: 'https://www.scmp.com/rss/91/feed', color: '#1D4F91' },
+            FOX:         { url: 'https://moxie.foxnews.com/google-publisher/latest.xml', color: '#003366' },
+            Tech:        { url: 'https://techcrunch.com/feed/', color: '#830fc1' },
+            AP:          { url: 'https://apnews.com/hub/ap-top-news.rss', color: '#c8102e' },
+            AlJazeera:   { url: 'https://www.aljazeera.com/xml/rss/all.xml', color: '#c8a951' },
+            WashPost:    { url: 'https://feeds.washingtonpost.com/rss/national', color: '#231f20' },
+            Politico:    { url: 'https://rss.politico.com/politics-news.xml', color: '#1a1a2e' },
+            Bloomberg:   { url: 'https://feeds.bloomberg.com/markets/news.rss', color: '#000000' },
+            MarketWatch: { url: 'https://feeds.marketwatch.com/marketwatch/topstories/', color: '#004f59' },
+            YahooFinance:{ url: 'https://finance.yahoo.com/news/rssindex', color: '#6001d2' },
+            Investing:   { url: 'https://www.investing.com/rss/news_25.rss', color: '#e84142' },
+            Economist:   { url: 'https://www.economist.com/finance-and-economics/rss.xml', color: '#e3120b' },
+            Atlantic:    { url: 'https://www.theatlantic.com/feed/all', color: '#1a7fc1' },
         };
 
         // Try all proxies in parallel — take whichever responds first
