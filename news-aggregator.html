@@ -199,18 +199,18 @@
         let allNews = [];
 
         const NEWS_SOURCES = {
-            Guardian: { url: 'https://www.theguardian.com/us/business/rss', color: '#005594' },
+            CNBC: { url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114', color: '#0088cc' },
+            NBC:  { url: 'https://feeds.nbcnews.com/nbcnews/public/news', color: '#4a148c' },
+            NYTimes: { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', color: '#000000' },
+            WSJ:  { url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', color: '#0ba12e' },
             CBS:  { url: 'https://www.cbsnews.com/latest/rss/main', color: '#101010' },
-            NPR:  { url: 'https://feeds.npr.org/1001/rss.xml', color: '#CC0000' },
-            FOX:  { url: 'https://moxie.foxnews.com/google-publisher/latest.xml', color: '#003366' },
+            GoogleNews: { url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', color: '#CC0000' },
             Forbes: { url: 'https://www.forbes.com/real-time/feed2/', color: '#caca1a' },
-            SkyNews: { url: 'https://feeds.skynews.com/feeds/rss/world.xml', color: '#FF8000' },
+            Reuters: { url: 'https://feeds.reuters.com/reuters/businessNews', color: '#FF8000' },
             BBC:  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', color: '#BB1919' },
             SCMP: { url: 'https://www.scmp.com/rss/91/feed', color: '#1D4F91' },
-            NBC:  { url: 'https://feeds.nbcnews.com/nbcnews/public/news', color: '#4a148c' },
-            GuardianUS: { url: 'https://www.theguardian.com/us-news/rss', color: '#000000' },
-            WSJ:  { url: 'https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml', color: '#0ba12e' },
-            TechCrunch: { url: 'https://feeds.feedburner.com/TechCrunch', color: '#830fc1' }
+            FOX:  { url: 'https://moxie.foxnews.com/google-publisher/latest.xml', color: '#003366' },
+            Tech: { url: 'https://techcrunch.com/feed/', color: '#830fc1' }
         };
 
         // Try all proxies in parallel — take whichever responds first
