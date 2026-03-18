@@ -214,10 +214,8 @@
         };
 
         // Try all proxies in parallel — take whichever responds first
-        // YOUR_WORKER_URL: replace with your deployed Cloudflare Worker URL
-        // e.g. https://rss-proxy.yourname.workers.dev
         const CORS_PROXIES = [
-            { name: 'worker',   url: 'YOUR_WORKER_URL/?url=', encode: true },
+            { name: 'worker',   url: 'https://damp-king-93ad.newsllm.workers.dev/?url=', encode: true },
             { name: 'codetabs', url: 'https://api.codetabs.com/v1/proxy/?quest=', encode: false },
             { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=', encode: true },
         ];
