@@ -215,8 +215,8 @@
 
         // Try all proxies in parallel — take whichever responds first
         const CORS_PROXIES = [
-            { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=', encode: true },
-            { name: 'corsproxy',  url: 'https://corsproxy.io/?', encode: true },
+            { name: 'codetabs',     url: 'https://api.codetabs.com/v1/proxy/?quest=', encode: false },
+            { name: 'allorigins',   url: 'https://api.allorigins.win/raw?url=', encode: true },
             { name: 'cors-anywhere', url: 'https://cors-anywhere.herokuapp.com/', encode: false,
               headers: { 'X-Requested-With': 'XMLHttpRequest' } }
         ];
