@@ -596,10 +596,16 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2025 Peilin Hao. All Rights Reserved.</p>
+        <p>&copy; <span id="year"></span> Peilin Hao. All Rights Reserved.</p>
     </footer>
 
 <script>
+// Auto-update footer year
+document.addEventListener("DOMContentLoaded", function () {
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+});
+
 // ── SEARCH ──────────────────────────────────────────────────────────────────
 const SEARCH_INDEX = [
     { title: 'LeetCode Roadmap',           url: 'leetcode.html',                         desc: 'Arrays, trees, DP, graphs study path',                  tag: 'Coding' },
