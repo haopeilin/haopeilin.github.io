@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Design 学习指南</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a26;--accent:#6c5ce7;--accent2:#a29bfe;--accent3:#fd79a8;--green:#00cec9;--orange:#fdcb6e;--text:#e8e8f0;--text2:#9898b0;--text3:#6868a0;--border:#2a2a3e;--glow:rgba(108,92,231,0.15);--radius:16px}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 600px 400px at 30% 20%,rgba(108,92,231,.12) 0%,transparent 70%),radial-gradient(ellipse 500px 500px at 70% 70%,rgba(253,121,168,.08) 0%,transparent 70%),radial-gradient(ellipse 400px 300px at 50% 50%,rgba(0,206,201,.06) 0%,transparent 70%)}
+.hero-label{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent2);letter-spacing:4px;text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .2s forwards}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;line-height:1.15;margin-bottom:1rem;opacity:0;animation:fadeUp .8s .4s forwards}
+.hero h1 .en{color:var(--accent2);display:block;font-size:.55em;font-family:'JetBrains Mono',monospace;font-weight:600;margin-top:.3em}
+.hero p{font-size:1.15rem;color:var(--text2);max-width:600px;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .6s forwards}
+.hero-cta{display:inline-flex;align-items:center;gap:.5rem;padding:1rem 2.5rem;background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;border-radius:60px;font-size:1.05rem;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s;opacity:0;animation:fadeUp .8s .8s forwards}
+.hero-cta:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(108,92,231,.4)}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3),var(--green));z-index:1000;transition:width .15s}
+.side-nav{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:10px}
+.side-nav a{display:block;width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .3s;position:relative}
+.side-nav a.active{background:var(--accent);box-shadow:0 0 12px var(--accent);transform:scale(1.3)}
+.side-nav a .tooltip{position:absolute;right:22px;top:50%;transform:translateY(-50%);background:var(--surface2);color:var(--text);padding:4px 12px;border-radius:8px;font-size:.75rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.side-nav a:hover .tooltip{opacity:1}
+.chapter{max-width:900px;margin:0 auto;padding:5rem 2rem}
+.chapter-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);letter-spacing:3px;margin-bottom:.5rem}
+.chapter h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:.3rem;line-height:1.3}
+.chapter h2 .en{display:block;font-family:'JetBrains Mono',monospace;font-size:.4em;color:var(--accent2);font-weight:600;margin-top:.3em}
+.chapter>p{color:var(--text2);font-size:1.05rem;margin-top:1.5rem}
+.sh{margin-top:2.5rem;font-size:1.2rem;font-weight:700;color:var(--text)}.sh .et{font-family:'JetBrains Mono',monospace;font-size:.7em;color:var(--accent2);font-weight:600}
+.hl{color:var(--accent2);font-weight:600}.hg{color:var(--green);font-weight:600}.ho{color:var(--orange);font-weight:600}.hp{color:var(--accent3);font-weight:600}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-top:1.5rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;transition:transform .3s,border-color .3s,box-shadow .3s;cursor:default}
+.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 32px var(--glow)}
+.card-icon{font-size:2rem;margin-bottom:.8rem}.card h3{font-size:1.1rem;font-weight:700;margin-bottom:.3rem}
+.card .es{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent2);margin-bottom:.6rem}.card p{color:var(--text2);font-size:.92rem;line-height:1.7}
+.dbox{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin:2rem 0;overflow-x:auto}
+.dbox svg{width:100%;height:auto;display:block}.dlabel{text-align:center;color:var(--text3);font-size:.85rem;margin-top:1rem;font-family:'JetBrains Mono',monospace}
+.tg{margin:2rem 0}.tbtns{display:flex;gap:4px;flex-wrap:wrap}
+.tbtn{padding:.7rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-bottom:none;border-radius:12px 12px 0 0;color:var(--text2);font-size:.9rem;cursor:pointer;transition:all .2s;font-family:'Noto Sans SC',sans-serif}
+.tbtn.active{background:var(--surface2);color:var(--accent2);border-color:var(--accent)}
+.tc{background:var(--surface2);border:1px solid var(--border);border-radius:0 var(--radius) var(--radius) var(--radius);padding:2rem;display:none}.tc.active{display:block}
+.tc h4{margin-bottom:.8rem}.tc p{color:var(--text2);font-size:.95rem}
+table.ct{width:100%;border-collapse:separate;border-spacing:0;margin:1.5rem 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+table.ct th{background:var(--surface2);padding:1rem;font-weight:700;text-align:left;font-size:.95rem;border-bottom:1px solid var(--border)}
+table.ct td{padding:1rem;font-size:.92rem;color:var(--text2);border-bottom:1px solid var(--border);background:var(--surface)}table.ct tr:last-child td{border-bottom:none}
+.acc{margin:1.5rem 0}.ai{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.6rem;overflow:hidden}
+.ah{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.5rem;background:var(--surface);cursor:pointer;transition:background .2s;font-weight:600;font-size:1rem}
+.ah:hover{background:var(--surface2)}.ah .aw{transition:transform .3s;color:var(--accent2)}.ai.open .ah .aw{transform:rotate(180deg)}
+.ab{max-height:0;overflow:hidden;transition:max-height .4s ease;background:var(--surface2)}.abi{padding:1.5rem;color:var(--text2);font-size:.95rem;line-height:1.8}
+.cb{background:linear-gradient(135deg,rgba(108,92,231,.08),rgba(253,121,168,.05));border:1px solid rgba(108,92,231,.2);border-radius:var(--radius);padding:2rem;margin:2rem 0}
+.cb .cl{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent3);letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem}
+.cb h4{font-size:1.15rem;margin-bottom:.8rem}.cb p{color:var(--text2);font-size:.95rem}
+.cbg{background:linear-gradient(135deg,rgba(0,206,201,.08),rgba(253,203,110,.05));border-color:rgba(0,206,201,.2)}
+.cbo{background:linear-gradient(135deg,rgba(253,203,110,.08),rgba(253,121,168,.05));border-color:rgba(253,203,110,.2)}
+.cbp{background:linear-gradient(135deg,rgba(253,121,168,.08),rgba(253,203,110,.05));border-color:rgba(253,121,168,.2)}
+code{font-family:'JetBrains Mono',monospace;color:var(--green);font-size:.9em}
+.qb{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin:2rem 0}.qb h4{margin-bottom:1rem;color:var(--orange)}
+.qo{display:block;width:100%;text-align:left;padding:.9rem 1.2rem;margin-bottom:.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:.95rem;cursor:pointer;transition:all .2s;font-family:'Noto Sans SC',sans-serif}
+.qo:hover{border-color:var(--accent)}.qo.correct{background:rgba(0,206,201,.15);border-color:var(--green);color:var(--green)}.qo.wrong{background:rgba(253,121,168,.15);border-color:var(--accent3);color:var(--accent3)}
+.qfb{margin-top:1rem;padding:1rem;border-radius:12px;display:none;font-size:.92rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:2.5rem 0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fi{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s}.fi.visible{opacity:1;transform:translateY(0)}
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}.particle{position:absolute;width:4px;height:4px;background:var(--accent);border-radius:50%;opacity:.3;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}20%{opacity:.4}80%{opacity:.2}100%{transform:translateY(-20vh) scale(1);opacity:0}}
+.footer{text-align:center;padding:4rem 2rem;color:var(--text3);font-size:.85rem}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s 1.2s forwards,bounce 2s 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(10px)}}
+.scroll-hint svg{width:28px;height:28px;stroke:var(--text3);fill:none;stroke-width:2}
+@media(max-width:768px){.side-nav{display:none}.chapter{padding:3rem 1.2rem}.card-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<nav class="side-nav" id="sideNav">
+<a href="#hero"><span class="tooltip">首页</span></a><a href="#ch1"><span class="tooltip">分布式特性</span></a><a href="#ch2"><span class="tooltip">负载均衡</span></a><a href="#ch3"><span class="tooltip">缓存</span></a><a href="#ch4"><span class="tooltip">数据分区</span></a><a href="#ch5"><span class="tooltip">索引</span></a><a href="#ch6"><span class="tooltip">代理</span></a><a href="#ch7"><span class="tooltip">冗余与复制</span></a><a href="#ch8"><span class="tooltip">SQL vs NoSQL</span></a><a href="#ch9"><span class="tooltip">CAP 定理</span></a><a href="#ch10"><span class="tooltip">一致性哈希</span></a><a href="#ch11"><span class="tooltip">通信协议</span></a><a href="#ch12"><span class="tooltip">知识检验</span></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+<div class="particles" id="particles"></div>
+<div class="hero-label">Software Engineer Learning Path</div>
+<h1>系统设计学习指南<span class="en">System Design Interview Essentials</span></h1>
+<p>涵盖 Consistent Hashing、CAP Theorem、Load Balancing、Caching、Data Partitioning、Indexes、Proxies、Replication、SQL vs. NoSQL、通信协议等全部核心主题。</p>
+<a href="#ch1" class="hero-cta">开始学习 →</a>
+<div class="scroll-hint"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+</section>
+
+<!-- CH1: KEY CHARACTERISTICS -->
+<section class="chapter" id="ch1"><div class="fi">
+<div class="chapter-num">CHAPTER 01</div>
+<h2>分布式系统的核心特性<span class="en">Key Characteristics of Distributed Systems</span></h2>
+<p>设计大型系统需思考：有哪些<span class="hl">架构组件（Architectural Pieces）</span>？它们如何<span class="hl">协同工作</span>？如何做出<span class="hl">正确的权衡（Tradeoffs）</span>？虽然过早投资扩展通常不明智，但提前进行架构思考可以节省大量时间和资源。</p>
+
+<div class="sh">📈 可扩展性 <span class="et">Scalability</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">系统在<span class="hl">增长的工作量</span>（更多数据、更多事务）下持续运转的能力。实际中由于管理开销（如网络延迟），性能通常随规模下降。某些任务具有<span class="hp">原子性</span>无法被分布执行，最终会限制分布式加速效果。可扩展的架构会尝试<span class="hg">均匀地平衡所有节点的负载</span>。</p>
+
+<div class="dbox" style="margin-top:1.5rem">
+<svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="20" width="360" height="220" rx="16" fill="#1a1a26" stroke="#2a2a3e"/>
+<text x="200" y="50" text-anchor="middle" fill="#a29bfe" font-size="14" font-weight="700">纵向扩展 Vertical Scaling</text>
+<text x="200" y="70" text-anchor="middle" fill="#6868a0" font-size="10">给同一台服务器增加 CPU, RAM, Storage</text>
+<rect x="80" y="95" width="60" height="80" rx="8" fill="#222233" stroke="#6c5ce7" stroke-width="1.5"/>
+<text x="110" y="135" text-anchor="middle" fill="#9898b0" font-size="9">Small</text>
+<path d="M155 135 L200 135" stroke="#fdcb6e" stroke-width="2" fill="none" marker-end="url(#aY)"/>
+<defs><marker id="aY" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#fdcb6e"/></marker></defs>
+<rect x="215" y="85" width="80" height="100" rx="8" fill="#222233" stroke="#6c5ce7" stroke-width="2"/>
+<text x="255" y="135" text-anchor="middle" fill="#a29bfe" font-size="10" font-weight="600">Bigger!</text>
+<text x="200" y="215" text-anchor="middle" fill="#fdcb6e" font-size="9">例: MySQL — 有上限且常需停机</text>
+
+<rect x="420" y="20" width="360" height="220" rx="16" fill="#1a1a26" stroke="#2a2a3e"/>
+<text x="600" y="50" text-anchor="middle" fill="#00cec9" font-size="14" font-weight="700">横向扩展 Horizontal Scaling</text>
+<text x="600" y="70" text-anchor="middle" fill="#6868a0" font-size="10">添加更多服务器到资源池</text>
+<rect x="460" y="95" width="50" height="50" rx="6" fill="#222233" stroke="#00cec9" stroke-width="1.5"/><text x="485" y="124" text-anchor="middle" fill="#9898b0" font-size="8">Srv</text>
+<rect x="520" y="95" width="50" height="50" rx="6" fill="#222233" stroke="#00cec9" stroke-width="1.5"/><text x="545" y="124" text-anchor="middle" fill="#9898b0" font-size="8">Srv</text>
+<rect x="580" y="95" width="50" height="50" rx="6" fill="#222233" stroke="#00cec9" stroke-width="1.5"/><text x="605" y="124" text-anchor="middle" fill="#9898b0" font-size="8">Srv</text>
+<rect x="640" y="95" width="50" height="50" rx="6" fill="#222233" stroke="#00cec9" stroke-width="1.5"/><text x="665" y="124" text-anchor="middle" fill="#9898b0" font-size="8">Srv</text>
+<rect x="520" y="160" width="50" height="50" rx="6" fill="#222233" stroke="#00cec9" stroke-width="1.5" stroke-dasharray="4,4"/><text x="545" y="190" text-anchor="middle" fill="#00cec9" font-size="16">+</text>
+<text x="600" y="215" text-anchor="middle" fill="#00cec9" font-size="9">例: Cassandra, MongoDB — 易于动态扩展</text>
+</svg>
+<div class="dlabel">Vertical vs Horizontal Scaling — 纵向有上限且需停机，横向更灵活</div>
+</div>
+
+<div class="sh">🛡️ 可靠性 <span class="et">Reliability</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">系统在给定时间段内<span class="hp">不发生故障</span>的概率。可靠的分布式系统即使部分软硬件故障仍能服务。关键手段是<span class="hl">冗余（Redundancy）</span>——软件组件和数据都备份，消除每一个<span class="hp">单点故障（Single Point of Failure）</span>。</p>
+
+<div class="cb">
+<div class="cl">💡 实战案例</div>
+<h4>Amazon 购物车的可靠性</h4>
+<p>用户加入购物车后服务器宕机，另一台持有<span class="hl">精确副本（Replica）</span>的服务器立即接管，用户无感知。冗余有成本，但可靠系统必须为此付出代价。</p>
+</div>
+
+<div class="sh">⏱️ 可用性 <span class="et">Availability</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">系统在特定时间段内保持<span class="hg">正常运行</span>的百分比。考虑可维护性、修复时间、备件可用性等因素。一架每月能飞行很多小时且停机很少的飞机拥有高可用性。</p>
+
+<div class="cb cbg">
+<div class="cl" style="color:var(--green)">⚠️ Reliability vs Availability</div>
+<h4>可靠性 vs 可用性</h4>
+<p><span class="hg">可靠 → 一定可用</span>；但<span class="hp">可用 ≠ 一定可靠</span>。一个在线零售系统前两年有 99.99% 可用性，但未做信息安全测试。第三年遭遇安全事件导致长时间不可用，给客户造成声誉和财务损失。高可用性可以通过<span class="ho">缩短修复时间和确保备件随时可用</span>来实现，即使系统不够可靠。</p>
+</div>
+
+<div class="sh">⚡ 效率 <span class="et">Efficiency</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">两个标准：<span class="hg">响应时间/延迟（Latency）</span>——获取第一个结果的延迟；<span class="hg">吞吐量/带宽（Throughput）</span>——单位时间内交付的结果数。对应两种单位成本：</p>
+<p style="margin-top:.3rem;color:var(--text2)">① <span class="hl">系统节点间全局发送的消息数量（Number of messages）</span>，不论消息大小</p>
+<p style="margin-top:.2rem;color:var(--text2)">② <span class="hl">消息的大小（Size of messages）</span>，代表数据交换的总量</p>
+<p style="margin-top:.5rem;color:var(--text3);font-size:.93rem">仅用"消息数量"分析过于简化——忽略了网络拓扑、负载变化、软硬件异构性等。但精确的成本模型很难构建，我们只能使用粗略但稳健的估算。</p>
+
+<div class="sh">🔧 可维护性 <span class="et">Serviceability / Manageability</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">系统<span class="hl">维修和维护的简便程度</span>。修复时间越长，可用性越低。需要考虑：诊断和理解问题的难易度、更新修改的难易度、日常运行是否顺畅。</p>
+<p style="margin-top:.5rem;color:var(--text2)"><span class="hg">早期故障检测</span>可减少或避免停机。例如一些企业系统在检测到故障时能<span class="hl">自动拨打服务中心（无需人工干预）</span>进行报告。</p>
+</div></section>
+
+<!-- CH2: LOAD BALANCING -->
+<section class="chapter" id="ch2"><div class="fi">
+<div class="chapter-num">CHAPTER 02</div>
+<h2>负载均衡<span class="en">Load Balancing</span></h2>
+<p>负载均衡器（LB）将流量<span class="hl">分散到一组服务器</span>上，提升响应速度和可用性。LB 跟踪所有资源状态——如果服务器不可用、无响应或错误率过高，LB 停止向其发送流量。LB 位于客户端和服务器之间，使用各种算法将请求分配到多台后端服务器，<span class="hg">防止任何单一服务器成为单点故障</span>。</p>
+<p style="margin-top:.8rem;color:var(--text2)">可以在系统每一层添加 LB：① 用户↔Web 服务器 ② Web 服务器↔应用/缓存服务器 ③ 内部平台层↔数据库</p>
+
+<div class="sh">✅ 负载均衡的好处 <span class="et">Benefits of Load Balancing</span></div>
+<div class="card-grid">
+<div class="card"><div class="card-icon">🚀</div><h3>用户体验更快更流畅</h3><p>请求不会卡在繁忙服务器上等待，而是被立即转发到更空闲的资源。</p></div>
+<div class="card"><div class="card-icon">🛡️</div><h3>更高吞吐更少停机</h3><p>即使服务器完全宕机，LB 也会自动绕过路由到健康服务器，终端用户无感知。</p></div>
+<div class="card"><div class="card-icon">⚙️</div><h3>运维更轻松</h3><p>负载分散使管理员更容易处理入站请求，同时降低用户等待时间。</p></div>
+<div class="card"><div class="card-icon">🔮</div><h3>智能预测分析 Predictive Analytics</h3><p>智能 LB 能通过预测分析在流量瓶颈发生前识别它们，为自动化和业务决策提供可行洞察。</p></div>
+<div class="card"><div class="card-icon">💚</div><h3>更少的组件压力</h3><p>工作由多台设备分担，每台只承担一小部分，减少单个设备的故障和压力。</p></div>
+</div>
+
+<div class="sh">🔄 负载均衡算法 <span class="et">Load Balancing Algorithms</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">LB 转发请求前：① 确认目标服务器在正常响应 ② 使用预配置算法从健康服务器中选择一台。</p>
+
+<div class="cb cbo" style="margin-top:1rem">
+<div class="cl" style="color:var(--orange)">🏥 健康检查 Health Checks</div>
+<h4>LB 如何知道服务器是否健康？</h4>
+<p>LB 定期尝试连接后端服务器进行"健康检查"。未通过检查的服务器被<span class="hp">自动从池中移除</span>，流量不再转发给它，直到再次通过健康检查。</p>
+</div>
+
+<div class="acc">
+<div class="ai"><div class="ah"><span>📉 最少连接法 Least Connection Method</span><span class="aw">▼</span></div><div class="ab"><div class="abi">将流量导向当前<span class="hg">活跃连接数最少</span>的服务器。当大量持久客户端连接在服务器间分布不均时特别有效。</div></div></div>
+<div class="ai"><div class="ah"><span>⚡ 最短响应时间法 Least Response Time Method</span><span class="aw">▼</span></div><div class="ab"><div class="abi">综合：<span class="hl">最少活跃连接数</span> + <span class="hl">最低平均响应时间</span>。"最少连接法"的增强版。</div></div></div>
+<div class="ai"><div class="ah"><span>📶 最少带宽法 Least Bandwidth Method</span><span class="aw">▼</span></div><div class="ab"><div class="abi">选择当前正在提供<span class="hg">最少流量（以 Mbps 计）</span>的服务器。适用于带宽敏感的场景。</div></div></div>
+<div class="ai"><div class="ah"><span>🔄 轮询法 Round Robin Method</span><span class="aw">▼</span></div><div class="ab"><div class="abi">按顺序轮流分配请求。到达列表末尾后从头开始。适用于<span class="hg">服务器性能相近</span>且没有大量持久连接的场景。</div></div></div>
+<div class="ai"><div class="ah"><span>⚖️ 加权轮询法 Weighted Round Robin Method</span><span class="aw">▼</span></div><div class="ab"><div class="abi">为不同处理能力的服务器分配不同<span class="hl">权重（Weight，整数值表示处理能力）</span>。权重高的服务器优先获得新连接，也获得更多连接总量。</div></div></div>
+<div class="ai"><div class="ah"><span>🔐 IP 哈希法 IP Hash</span><span class="aw">▼</span></div><div class="ab"><div class="abi">对客户端 IP 地址哈希计算后路由到对应服务器。<span class="hg">同一客户端请求始终到达同一服务器</span>，利于 Session 保持。</div></div></div>
+</div>
+
+<div class="sh">🔁 冗余负载均衡器 <span class="et">Redundant Load Balancers</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">LB 本身也可能成为<span class="hp">单点故障</span>。解决方案：第二台 LB 与第一台组成<span class="hl">集群（Cluster）</span>。两台 LB 互相监控健康状态（heartbeat），两者都具备同等的流量服务和故障检测能力。主 LB 故障时，备用 LB <span class="hg">立即接管（Failover）</span>。</p>
+</div></section>
+
+<!-- CH3: CACHING -->
+<section class="chapter" id="ch3"><div class="fi">
+<div class="chapter-num">CHAPTER 03</div>
+<h2>缓存<span class="en">Caching</span></h2>
+<p>负载均衡帮助横向扩展，而缓存让你<span class="hl">更高效利用已有资源</span>。缓存利用<span class="hl">引用局部性原理（Locality of Reference）</span>：最近被请求的数据很可能再次被请求。缓存像短期记忆——空间有限但比原始数据源快得多。缓存存在于计算的几乎所有层级：硬件、操作系统、Web 浏览器、Web 应用等。缓存通常靠近前端，能快速返回数据而不给下游增加负担。</p>
+
+<div class="sh">💻 应用服务器缓存 <span class="et">Application Server Cache</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">在请求层节点直接放置缓存，允许本地存储响应数据。命中则快速返回，未命中则从磁盘查询。缓存可在<span class="hl">内存中（极快）</span>或<span class="hl">本地磁盘上（比网络存储快）</span>。</p>
+<p style="margin-top:.5rem;color:var(--text2)">扩展到<span class="hp">多个节点</span>时：LB 随机分配请求导致同一请求落在不同节点上，<span class="hp">Cache Miss 增加</span>。解决方案：</p>
+<p style="margin-top:.3rem;color:var(--text2)">① <span class="hg">全局缓存（Global Cache）</span>——所有节点共享一个缓存层</p>
+<p style="margin-top:.2rem;color:var(--text2)">② <span class="hg">分布式缓存（Distributed Cache）</span>——缓存本身也被分片到多个节点</p>
+
+<div class="sh">🌐 CDN — 内容分发网络 <span class="et">Content Distribution Network</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">CDN 是针对<span class="hl">大量静态媒体</span>的缓存。请求先到 CDN，有本地缓存就直接返回；没有则查询后端，缓存后再返回。<br><span class="hg">小技巧：</span>系统不够大时先用独立子域名（如 <code>static.yourservice.com</code>）配合 Nginx 提供静态资源，未来轻松切换 DNS 到 CDN。</p>
+
+<div class="sh">🔄 缓存失效 <span class="et">Cache Invalidation</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">缓存需维护与数据源的<span class="hl">一致性（Coherence）</span>。数据在数据库被修改后，缓存应被失效；否则导致不一致。</p>
+
+<div class="tg">
+<div class="tbtns">
+<button class="tbtn active" onclick="st(this,'c-wt')">Write-Through</button>
+<button class="tbtn" onclick="st(this,'c-wa')">Write-Around</button>
+<button class="tbtn" onclick="st(this,'c-wb')">Write-Back</button>
+</div>
+<div class="tc active" id="c-wt"><h4>直写缓存 Write-Through</h4><p>数据<span class="hl">同时写入缓存和数据库</span>。完全一致，崩溃/断电不丢数据。</p><p style="color:var(--accent3);margin-top:.5rem">⚠️ 每次写执行两次才返回成功，<strong>写入延迟较高</strong>。</p></div>
+<div class="tc" id="c-wa"><h4>绕写缓存 Write-Around</h4><p>数据<span class="hl">直接写入永久存储，绕过缓存</span>。减少缓存被不常读取的写操作淹没。</p><p style="color:var(--accent3);margin-top:.5rem">⚠️ 刚写入的数据被读取时产生 <strong>Cache Miss</strong>，需从更慢的后端读取。</p></div>
+<div class="tc" id="c-wb"><h4>回写缓存 Write-Back</h4><p>数据<span class="hl">仅写入缓存</span>，立即确认完成。之后按间隔或条件写入永久存储。</p><p style="color:var(--green);margin-top:.5rem">✅ <strong>低延迟 + 高吞吐</strong>，适合写密集型应用。</p><p style="color:var(--accent3);margin-top:.3rem">⚠️ 崩溃时可能<strong>丢失数据</strong>（唯一副本只在缓存中）。</p></div>
+</div>
+
+<div class="sh">🗑️ 缓存淘汰策略 <span class="et">Cache Eviction Policies</span></div>
+<table class="ct">
+<tr><th>策略</th><th>英文名</th><th>规则</th></tr>
+<tr><td><span class="hl">FIFO</span></td><td>First In First Out</td><td>最先进入缓存的最先淘汰，不考虑访问频率</td></tr>
+<tr><td><span class="hl">LIFO</span></td><td>Last In First Out</td><td>最后进入缓存的最先淘汰，不考虑访问频率</td></tr>
+<tr><td><span class="hg">LRU ⭐</span></td><td>Least Recently Used</td><td>最近最少使用的优先淘汰（最常用策略）</td></tr>
+<tr><td><span class="hl">MRU</span></td><td>Most Recently Used</td><td>最近使用的优先淘汰（与 LRU 相反）</td></tr>
+<tr><td><span class="hl">LFU</span></td><td>Least Frequently Used</td><td>统计访问频率，使用频率最低的优先淘汰</td></tr>
+<tr><td><span class="hl">RR</span></td><td>Random Replacement</td><td>随机选择候选项淘汰</td></tr>
+</table>
+</div></section>
+
+<!-- CH4: DATA PARTITIONING -->
+<section class="chapter" id="ch4"><div class="fi">
+<div class="chapter-num">CHAPTER 04</div>
+<h2>数据分区 / 分片<span class="en">Sharding / Data Partitioning</span></h2>
+<p>将大型数据库拆分为多个更小部分，提升<span class="hl">可管理性、性能、可用性和负载均衡</span>。超过一定规模后，横向添加更多机器比纵向升级单台服务器更经济可行。</p>
+
+<div class="sh">📦 分区方法 <span class="et">Partitioning Methods</span></div>
+<div class="card-grid">
+<div class="card"><div class="card-icon">↔️</div><h3>水平分区</h3><div class="es">Horizontal Partitioning / Range-based Sharding</div><p>不同的<span class="hg">行（Rows）</span>放入不同表。例如 ZIP &lt; 10000 存表A，≥10000 存表B。<br><span style="color:var(--accent3)">⚠️ </span>分区键选择不当导致不均匀——曼哈顿数据远多于郊区。</p></div>
+<div class="card"><div class="card-icon">↕️</div><h3>垂直分区</h3><div class="es">Vertical Partitioning</div><p>按<span class="hg">功能特性</span>分割。如 Instagram：用户资料→A，好友→B，照片→C。实现简单，影响小。<br><span style="color:var(--accent3)">⚠️ </span>单功能增长后（140M 用户 10B 照片）单服务器无法承载。</p></div>
+<div class="card"><div class="card-icon">📖</div><h3>基于目录的分区</h3><div class="es">Directory-Based Partitioning</div><p>创建<span class="hg">查找服务（Lookup Service）</span>维护映射。松耦合：添加服务器或改分区方案对应用透明。<br><span style="color:var(--accent3)">⚠️ </span>增加复杂度，查找服务成新单点故障。</p></div>
+</div>
+
+<div class="sh">📐 分区标准 <span class="et">Partitioning Criteria</span></div>
+<div class="acc">
+<div class="ai"><div class="ah"><span>🔑 键/哈希分区 Key or Hash-based Partitioning</span><span class="aw">▼</span></div><div class="ab"><div class="abi">对键属性应用哈希函数得到分区编号。例如 100 台 DB 服务器，<code>ID % 100</code>。确保数据均匀分配。<span class="hp">根本问题：</span>固定了 DB 服务器总数，添加新服务器需改哈希函数、重新分配数据并停机。解决方案：<span class="hl">一致性哈希（Consistent Hashing）</span>。</div></div></div>
+<div class="ai"><div class="ah"><span>📋 列表分区 List Partitioning</span><span class="aw">▼</span></div><div class="ab"><div class="abi">每个分区分配一组值列表。例如冰岛、挪威、瑞典、芬兰、丹麦用户存储在"北欧国家"分区中。</div></div></div>
+<div class="ai"><div class="ah"><span>🔄 轮询分区 Round-Robin Partitioning</span><span class="aw">▼</span></div><div class="ab"><div class="abi">最简单策略，确保<span class="hg">均匀数据分布</span>。有 n 个分区时，第 i 个元组分配到分区 <code>i mod n</code>。</div></div></div>
+<div class="ai"><div class="ah"><span>🧩 组合分区 Composite Partitioning</span><span class="aw">▼</span></div><div class="ab"><div class="abi">组合上述方案。如先列表分区再哈希分区。<span class="hl">一致性哈希</span>可视为哈希+列表分区的组合——哈希将键空间缩减到可列举的大小。</div></div></div>
+</div>
+
+<div class="sh">⚠️ 分片常见问题 <span class="et">Common Problems of Sharding</span></div>
+<div class="acc">
+<div class="ai"><div class="ah"><span>🔗 跨分片连接与反规范化 Joins & Denormalization</span><span class="aw">▼</span></div><div class="ab"><div class="abi">跨分片 JOIN 需从多台服务器编译数据，<span class="hp">低效或不可行</span>。常见方案：<span class="hl">反规范化（Denormalize）</span>将需 JOIN 的数据合并到单表。代价：处理数据不一致。</div></div></div>
+<div class="ai"><div class="ah"><span>🔒 引用完整性 Referential Integrity</span><span class="aw">▼</span></div><div class="ab"><div class="abi">大多数 RDBMS 不支持跨库外键约束。应用需在<span class="hl">代码层面</span>强制执行，并经常运行 SQL 清理任务处理<span class="hp">悬挂引用（Dangling References）</span>。</div></div></div>
+<div class="ai"><div class="ah"><span>⚖️ 再平衡 Rebalancing</span><span class="aw">▼</span></div><div class="ab"><div class="abi">原因：① 数据分布不均（某 ZIP Code 数据量无法放入单分区）② 某分片负载过高（用户照片分片请求太多）。需创建更多分片或重新调整，所有数据迁移。<span class="hp">不停机完成极其困难</span>。基于目录的分区可让再平衡更易管理，但增加复杂度并引入新单点故障。</div></div></div>
+</div>
+</div></section>
+
+<!-- CH5: INDEXES -->
+<section class="chapter" id="ch5"><div class="fi">
+<div class="chapter-num">CHAPTER 05</div>
+<h2>数据库索引<span class="en">Indexes</span></h2>
+<p>当数据库性能不再满意时，索引是首先考虑的优化。目标：让搜索表中特定行变得<span class="hl">更快</span>。索引可基于一个或多个列创建，支持快速随机查找和有序记录高效访问。</p>
+
+<div class="cb">
+<div class="cl">📚 类比 — 图书馆目录 Library Catalog</div>
+<h4>索引就像图书馆的目录卡片</h4>
+<p>图书馆目录通常有四列：书名、作者、主题、出版日期。通常有两个目录：一个按<span class="hl">书名</span>排序，一个按<span class="hl">作者</span>排序。可以按作者查（想读某作者的书），也可按书名查（知道书名不知作者）。这些目录提供了<span class="hg">按相关信息排序的、易于搜索的数据列表</span>——这就是索引的本质。</p>
+</div>
+
+<p style="margin-top:1rem;color:var(--text2)">索引是一种数据结构，可理解为<span class="hl">"目录（Table of Contents）"</span>指向实际数据位置。为某列创建索引时，存储该列值和指向完整行的指针。</p>
+<p style="margin-top:.5rem;color:var(--text2)">对于数据量达 TB 级但有效负载很小（如 1 KB）的大数据集，索引是<span class="hl">优化数据访问的必需品</span>——不可能遍历如此庞大的数据，且数据很可能分布在多个物理设备上。</p>
+
+<div class="cb cbp">
+<div class="cl" style="color:var(--accent3)">⚖️ How Indexes Decrease Write Performance</div>
+<h4>索引的代价：写入性能下降</h4>
+<p>索引能极大加速<span class="hg">读取</span>，但索引本身可能很大（额外的键）。每次 INSERT、UPDATE、DELETE 不仅要写数据还要<span class="hp">更新索引</span>。应<span class="hl">避免添加不必要的索引</span>，移除不再使用的索引。如果数据库主要用于写入且很少读取，索引代价可能不值得。</p>
+</div>
+</div></section>
+
+<!-- CH6: PROXIES -->
+<section class="chapter" id="ch6"><div class="fi">
+<div class="chapter-num">CHAPTER 06</div>
+<h2>代理服务器<span class="en">Proxies</span></h2>
+<p>代理是客户端和后端服务器之间的<span class="hl">中间层（Intermediary）</span>。客户端连接代理请求服务（网页、文件、连接等）。代理可<span class="hl">过滤、记录日志、转换请求</span>（添加/移除 Header、加密/解密、压缩）。代理缓存还能为大量重复请求服务，无需每次访问远程服务器。</p>
+
+<div class="sh">🌐 开放代理 <span class="et">Open Proxy</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">任何互联网用户都可访问的代理。一般代理只允许网络组内用户使用（封闭代理 Closed Proxy），用于存储和转发 DNS 或网页等互联网服务，减少和控制组内带宽使用。开放代理允许任何人使用。两种常见类型：</p>
+<div class="card-grid" style="margin-top:1rem">
+<div class="card"><div class="card-icon">🎭</div><h3>匿名代理 Anonymous Proxy</h3><p>表明自己是代理服务器，但<span class="hg">不透露客户端原始 IP 地址</span>。容易被发现，但对需要隐藏 IP 的用户有价值。</p></div>
+<div class="card"><div class="card-icon">👁️</div><h3>透明代理 Transparent Proxy</h3><p>表明自己是代理，通过 HTTP Header <span class="hp">可查看客户端原始 IP</span>。主要优势是<span class="hg">缓存网站内容</span>的能力。</p></div>
+</div>
+
+<div class="sh">🔄 反向代理 <span class="et">Reverse Proxy</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">代表客户端从一个或多个后端服务器<span class="hl">获取资源</span>，然后返回给客户端。看起来像是资源直接来自代理服务器本身。与正向代理（代表客户端）不同，反向代理<span class="hg">代表的是服务器端</span>。</p>
+</div></section>
+
+<!-- CH7: REDUNDANCY AND REPLICATION -->
+<section class="chapter" id="ch7"><div class="fi">
+<div class="chapter-num">CHAPTER 07</div>
+<h2>冗余与复制<span class="en">Redundancy and Replication</span></h2>
+
+<div class="sh">📋 冗余 <span class="et">Redundancy</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">对系统关键组件或功能的<span class="hl">复制（Duplication）</span>，目的是提高可靠性（作为备份/故障安全 Fail-safe）或提升性能。如果文件只存储在单台服务器上，该服务器丢失=文件丢失。通过创建<span class="hg">冗余副本</span>解决。冗余在消除<span class="hp">单点故障</span>中起关键作用。例如两个服务实例在生产环境运行，一个挂了，系统可以<span class="hl">故障转移（Failover）</span>到另一个。</p>
+
+<div class="sh">🔄 复制 <span class="et">Replication</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">在冗余资源之间<span class="hl">共享信息以保持一致性</span>，提高可靠性、容错性或可访问性。在许多 DBMS 中广泛使用，通常采用<span class="hl">主从关系（Master-Slave Relationship）</span>：</p>
+<p style="margin-top:.3rem;color:var(--text2)">① <span class="hg">主节点（Master）</span>接收所有更新</p>
+<p style="margin-top:.2rem;color:var(--text2)">② 更新<span class="hl">传播（Ripple Through）</span>到所有从节点（Slaves）</p>
+<p style="margin-top:.2rem;color:var(--text2)">③ 每个从节点发回<span class="hg">确认消息（ACK）</span>表示已成功接收更新，从而允许发送后续更新</p>
+</div></section>
+
+<!-- CH8: SQL vs NoSQL -->
+<section class="chapter" id="ch8"><div class="fi">
+<div class="chapter-num">CHAPTER 08</div>
+<h2>SQL vs NoSQL<span class="en">Relational vs Non-relational Databases</span></h2>
+<p>两大阵营：<span class="hl">SQL（关系型）</span>和<span class="hl">NoSQL（非关系型）</span>。关系型有预定义模式（像电话簿）；非关系型非结构化、分布式、动态模式（像文件夹，包含一切）。</p>
+
+<table class="ct">
+<tr><th style="width:16%">维度</th><th style="width:42%">SQL</th><th style="width:42%">NoSQL</th></tr>
+<tr><td><strong>存储</strong></td><td>行列表格。每行=实体，每列=数据点（Color, Make, Model）</td><td>多种模型：键值对、文档、图、宽列</td></tr>
+<tr><td><strong>模式</strong></td><td>固定模式（Fixed Schema），修改需全库离线</td><td>动态模式（Dynamic Schema），列可随时添加</td></tr>
+<tr><td><strong>查询</strong></td><td>SQL（Structured Query Language），功能强大</td><td>各库自有语法，称为 UnQL</td></tr>
+<tr><td><strong>扩展</strong></td><td><span class="hp">纵向</span>为主（更强硬件，成本高），跨服务器扩展困难耗时</td><td><span class="hg">横向</span>为主，廉价硬件或云实例即可，许多技术自动分发数据</td></tr>
+<tr><td><strong>ACID</strong></td><td><span class="hg">✅ 绝大多数 ACID 兼容</span></td><td><span class="hp">⚠️ 多数牺牲 ACID</span>换性能和扩展性</td></tr>
+</table>
+
+<div class="sh">🗃️ NoSQL 四大类型</div>
+<div class="card-grid">
+<div class="card"><div class="card-icon">🔑</div><h3>键值存储</h3><div class="es">Key-Value Stores</div><p>键值对数组。代表：<span class="hl">Redis, Voldemort, Dynamo</span></p></div>
+<div class="card"><div class="card-icon">📄</div><h3>文档数据库</h3><div class="es">Document Databases</div><p>数据存储在文档中，每个文档结构可完全不同。代表：<span class="hl">CouchDB, MongoDB</span></p></div>
+<div class="card"><div class="card-icon">📊</div><h3>宽列数据库</h3><div class="es">Wide-Column Databases</div><p>"列族"代替"表"，不需预知所有列，每行列数可不同。适合大数据分析。代表：<span class="hl">Cassandra, HBase</span></p></div>
+<div class="card"><div class="card-icon">🕸️</div><h3>图数据库</h3><div class="es">Graph Databases</div><p>节点（实体）、属性（信息）、边（连接）。代表：<span class="hl">Neo4J, InfiniteGraph</span></p></div>
+</div>
+
+<div class="cb" style="margin-top:2rem">
+<div class="cl">🤔 如何选择？</div>
+<h4>选择 SQL 当…</h4>
+<p>① 需要 <span class="hl">ACID 合规</span>——减少异常、保护数据完整性（电商/金融首选）<br>② 数据<span class="hl">结构化且不经常变化</span>，无大规模增长需求</p>
+<h4 style="margin-top:1rem">选择 NoSQL 当…</h4>
+<p>① 存储<span class="hg">海量非结构化数据</span>——无需预定义类型，随需添加<br>② <span class="hg">充分利用云计算和存储</span>——数据轻松分布到多台服务器（如 Cassandra 设计时就考虑了跨数据中心扩展，无需大量额外配置）<br>③ <span class="hg">快速迭代开发</span>——不需提前准备数据结构，频繁更新不会导致大量停机</p>
+</div>
+</div></section>
+
+<!-- CH9: CAP THEOREM -->
+<section class="chapter" id="ch9"><div class="fi">
+<div class="chapter-num">CHAPTER 09</div>
+<h2>CAP 定理<span class="en">CAP Theorem</span></h2>
+<p>分布式软件系统<span class="hl">不可能同时提供三个保证的全部</span>。设计分布式系统时，CAP 权衡几乎是<span class="ho">首先要考虑的事</span>。只能选择其中两个：</p>
+
+<div class="card-grid">
+<div class="card" style="border-color:var(--green)"><div class="card-icon">🔄</div><h3>一致性 Consistency</h3><p>所有节点同一时间看到<span class="hg">相同数据</span>。通过在允许读取前更新多个节点实现。</p></div>
+<div class="card" style="border-color:var(--accent2)"><div class="card-icon">✅</div><h3>可用性 Availability</h3><p>每个请求都收到<span class="hl">成功/失败响应</span>。通过在不同服务器间复制数据实现。</p></div>
+<div class="card" style="border-color:var(--accent3)"><div class="card-icon">🌐</div><h3>分区容错 Partition Tolerance</h3><p>系统在<span class="hp">消息丢失或部分故障</span>时继续工作。数据充分复制以应对间歇性中断。</p></div>
+</div>
+
+<p style="margin-top:1.5rem;color:var(--text2)"><span class="hl">CA</span>: RDBMS — <span class="hl">CP</span>: BigTable, MongoDB, HBase — <span class="hl">AP</span>: Cassandra, CouchDB</p>
+<p style="margin-top:.5rem;color:var(--text2)">为什么不可能三者兼得？一致性要求所有节点以相同顺序看到更新。但网络分区时，一个分区的更新可能无法到达另一个分区。客户端先从已更新分区读取、再从未更新分区读取就会看到不一致数据。唯一办法是<span class="hp">停止从过时分区提供服务</span>——但这样服务不再 100% 可用。</p>
+</div></section>
+
+<!-- CH10: CONSISTENT HASHING -->
+<section class="chapter" id="ch10"><div class="fi">
+<div class="chapter-num">CHAPTER 10</div>
+<h2>一致性哈希<span class="en">Consistent Hashing</span></h2>
+
+<div class="sh">📋 背景：分布式哈希表 <span class="et">Distributed Hash Table (DHT)</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">DHT 是分布式可扩展系统的基础组件。哈希表需要键、值和哈希函数：<code>index = hash_function(key)</code>。</p>
+<p style="margin-top:.5rem;color:var(--text2)">假设设计分布式缓存，有 n 台缓存服务器。直觉哈希函数 <code>key % n</code> 简单常用，但有<span class="hp">两个主要缺陷</span>：</p>
+<p style="margin-top:.3rem;color:var(--text2)">① <span class="hp">不可横向扩展（NOT horizontally scalable）</span>——添加新缓存主机时所有已有映射失效，有大量数据时难以安排停机更新</p>
+<p style="margin-top:.2rem;color:var(--text2)">② <span class="hp">可能导致负载不均（NOT load balanced）</span>——数据分布不均匀时，某些缓存过热饱和，其他缓存几乎空闲</p>
+
+<div class="sh">💡 什么是一致性哈希？</div>
+<p style="margin-top:.8rem;color:var(--text2)">对分布式缓存和 DHT 非常有用的策略。以<span class="hg">最小化重组</span>方式分布数据。调整大小时只需重新映射 <code>k/n</code> 个键（k=总键数，n=总服务器数），而非全部。</p>
+<p style="margin-top:.5rem;color:var(--text2)">原则：对象尽可能映射到<span class="hl">相同主机</span>。主机移除→其对象被其他主机分担；新主机加入→从少数主机接管部分键。</p>
+
+<div class="sh">⚙️ 工作原理 <span class="et">How does it work?</span></div>
+<p style="margin-top:.8rem;color:var(--text2)">假设哈希输出范围 [0, 256)，将整数想象排列在<span class="hl">一个环上</span>：</p>
+<p style="margin-top:.3rem;color:var(--text2)">① 将所有缓存服务器哈希到环上的位置</p>
+<p style="margin-top:.2rem;color:var(--text2)">② 映射键到服务器：将键哈希为整数，沿<span class="hg">顺时针</span>移动，遇到的第一个缓存就是存储位置</p>
+<p style="margin-top:.5rem;color:var(--text2)"><span class="hg">添加新服务器</span>（如 D）：原在 C 上的部分键分给 D，其他不受影响。<span class="hp">移除缓存</span>（如 A）：原映射到 A 的键落到下一个（B），只需迁移这些键。</p>
+<p style="margin-top:.5rem;color:var(--text2)">数据分布可能不均匀。解决：为每台缓存在环上创建多个<span class="hl">虚拟副本（Virtual Replicas）</span>，使每台缓存关联多个区段。哈希函数混合均匀时，虚拟副本越多键分布越均衡。</p>
+</div></section>
+
+<!-- CH11: COMMUNICATION PROTOCOLS -->
+<section class="chapter" id="ch11"><div class="fi">
+<div class="chapter-num">CHAPTER 11</div>
+<h2>通信协议<span class="en">Long-Polling vs WebSockets vs SSE</span></h2>
+<p>先理解标准 HTTP 请求：① 客户端打开连接请求数据 → ② 服务器计算响应 → ③ 服务器在已开连接上发回响应。</p>
+
+<div class="tg">
+<div class="tbtns">
+<button class="tbtn active" onclick="st(this,'p-poll')">Ajax Polling</button>
+<button class="tbtn" onclick="st(this,'p-long')">Long-Polling</button>
+<button class="tbtn" onclick="st(this,'p-ws')">WebSockets</button>
+<button class="tbtn" onclick="st(this,'p-sse')">SSE</button>
+</div>
+<div class="tc active" id="p-poll"><h4>Ajax 轮询 Ajax Polling</h4><p>AJAX 应用的标准技术。客户端<span class="hl">反复请求</span>服务器。① 用常规 HTTP 请求 → ② 页面按固定间隔（如 0.5s）发送请求 → ③ 服务器像常规 HTTP 计算并返回 → ④ 客户端周期性重复。</p><p style="color:var(--accent3);margin-top:.5rem">⚠️ 客户端必须不断请求，大量空响应造成 HTTP 开销浪费。</p></div>
+<div class="tc" id="p-long"><h4>HTTP 长轮询 Long-Polling / "Hanging GET"</h4><p>服务器<span class="hl">可能不会立即响应</span>。① 客户端发请求并等待 → ② 服务器延迟响应直到有更新或超时 → ③ 有更新时发送完整响应 → ④ 客户端收到后立即（或短暂延迟）再次发起长轮询 → ⑤ 每个请求有超时，超时后需重连。</p></div>
+<div class="tc" id="p-ws"><h4>WebSocket</h4><p>通过单个 TCP 连接提供<span class="hg">全双工（Full Duplex）</span>通信。持久连接，双方任何时刻可发数据。通过 <span class="hl">WebSocket 握手</span>建立。允许服务器无需客户端请求就推送内容，消息在连接保持打开时来回传递——真正的<span class="hg">双向（Bi-directional）持续对话</span>。</p><p style="color:var(--green);margin-top:.5rem">✅ 最低开销的双向实时通信。</p></div>
+<div class="tc" id="p-sse"><h4>服务端推送事件 Server-Sent Events (SSEs)</h4><p>客户端建立<span class="hl">持久长期连接</span>。服务器用此连接向客户端发数据。客户端若要发数据需用其他协议。① 客户端用 HTTP 请求 → ② 页面打开到服务器的连接 → ③ 服务器有新信息时发数据。</p><p style="color:var(--green);margin-top:.5rem">✅ 适合服务器到客户端实时推送，或服务器在循环中生成数据发送多个事件。</p></div>
+</div>
+
+<table class="ct" style="margin-top:1.5rem">
+<tr><th>特性</th><th>Polling</th><th>Long-Polling</th><th>WebSocket</th><th>SSE</th></tr>
+<tr><td>方向</td><td>单向</td><td>单向</td><td><span class="hg">双向</span></td><td>服务器→客户端</td></tr>
+<tr><td>连接</td><td>短连接</td><td>半长连接</td><td><span class="hg">持久连接</span></td><td>持久连接</td></tr>
+<tr><td>实时性</td><td style="color:var(--accent3)">低</td><td>中</td><td><span class="hg">高</span></td><td>高</td></tr>
+<tr><td>开销</td><td style="color:var(--accent3)">高</td><td>中</td><td><span class="hg">低</span></td><td>低</td></tr>
+</table>
+</div></section>
+
+<!-- CH12: QUIZ -->
+<section class="chapter" id="ch12"><div class="fi">
+<div class="chapter-num">CHAPTER 12</div>
+<h2>知识检验<span class="en">Test Your Knowledge</span></h2>
+<p>检验你对全部系统设计核心概念的理解！</p>
+
+<div class="qb" id="q1"><h4>Q1: Write-Back Cache 的最大风险是什么？</h4>
+<button class="qo" onclick="ck('q1',this,0)">写入延迟高</button><button class="qo" onclick="ck('q1',this,1)">崩溃时数据丢失（唯一副本只在缓存中）</button><button class="qo" onclick="ck('q1',this,0)">缓存命中率低</button><button class="qo" onclick="ck('q1',this,0)">无法与数据库保持一致</button><div class="qfb" id="q1-fb"></div></div>
+
+<div class="qb" id="q2"><h4>Q2: Cassandra 和 CouchDB 在 CAP 中属于哪种组合？</h4>
+<button class="qo" onclick="ck('q2',this,0)">CA — 一致性 + 可用性</button><button class="qo" onclick="ck('q2',this,1)">AP — 可用性 + 分区容错</button><button class="qo" onclick="ck('q2',this,0)">CP — 一致性 + 分区容错</button><button class="qo" onclick="ck('q2',this,0)">三者全部满足</button><div class="qfb" id="q2-fb"></div></div>
+
+<div class="qb" id="q3"><h4>Q3: 使用 key % n 时添加新服务器，需要重新映射多少键？</h4>
+<button class="qo" onclick="ck('q3',this,0)">只有 k/n 个键</button><button class="qo" onclick="ck('q3',this,1)">所有键都需要重新映射</button><button class="qo" onclick="ck('q3',this,0)">一半</button><button class="qo" onclick="ck('q3',this,0)">不需要</button><div class="qfb" id="q3-fb"></div></div>
+
+<div class="qb" id="q4"><h4>Q4: 主从复制中，从节点收到更新后做什么？</h4>
+<button class="qo" onclick="ck('q4',this,0)">转发给其他从节点</button><button class="qo" onclick="ck('q4',this,1)">发送 ACK 确认消息给主节点</button><button class="qo" onclick="ck('q4',this,0)">直接向客户端确认</button><button class="qo" onclick="ck('q4',this,0)">被动等待</button><div class="qfb" id="q4-fb"></div></div>
+
+<div class="qb" id="q5"><h4>Q5: 哪种通信协议支持真正的双向实时通信？</h4>
+<button class="qo" onclick="ck('q5',this,0)">Ajax Polling</button><button class="qo" onclick="ck('q5',this,0)">Long-Polling</button><button class="qo" onclick="ck('q5',this,1)">WebSocket</button><button class="qo" onclick="ck('q5',this,0)">SSE</button><div class="qfb" id="q5-fb"></div></div>
+
+<div class="qb" id="q6"><h4>Q6: 索引主要降低了哪种操作的性能？</h4>
+<button class="qo" onclick="ck('q6',this,0)">SELECT / 读取</button><button class="qo" onclick="ck('q6',this,1)">INSERT / UPDATE / DELETE</button><button class="qo" onclick="ck('q6',this,0)">JOIN 连接</button><button class="qo" onclick="ck('q6',this,0)">不影响任何操作</button><div class="qfb" id="q6-fb"></div></div>
+
+<div class="qb" id="q7"><h4>Q7: 一致性哈希中「虚拟副本」的目的是什么？</h4>
+<button class="qo" onclick="ck('q7',this,0)">提高数据安全性</button><button class="qo" onclick="ck('q7',this,0)">减少服务器数量</button><button class="qo" onclick="ck('q7',this,1)">使数据分布更均匀（解决负载不均衡）</button><button class="qo" onclick="ck('q7',this,0)">加速哈希计算</button><div class="qfb" id="q7-fb"></div></div>
+</div></section>
+
+<div class="footer">
+<p>System Design Interview Learning Guide — 基于 "Grokking the System Design Interview" 整理</p>
+<p style="margin-top:.5rem">持续学习，保持好奇 🚀</p>
+</div>
+
+<script>
+const pc=document.getElementById('particles');for(let i=0;i<30;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(6+Math.random()*8)+'s';p.style.animationDelay=Math.random()*6+'s';p.style.width=p.style.height=(2+Math.random()*4)+'px';p.style.background=['#6c5ce7','#a29bfe','#00cec9','#fd79a8','#fdcb6e'][Math.floor(Math.random()*5)];pc.appendChild(p);}
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';});
+const secs=document.querySelectorAll('.chapter,.hero'),navs=document.querySelectorAll('.side-nav a');
+new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const id=en.target.id;navs.forEach(l=>{l.classList.toggle('active',l.getAttribute('href').slice(1)===id);});}});},{threshold:.2}).observe&&secs.forEach(s=>new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const id=en.target.id;navs.forEach(l=>{l.classList.toggle('active',l.getAttribute('href').slice(1)===id);});}});},{threshold:.2}).observe(s));
+new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1}).observe&&document.querySelectorAll('.fi').forEach(el=>new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1}).observe(el));
+function st(b,id){const g=b.closest('.tg');g.querySelectorAll('.tbtn').forEach(x=>x.classList.remove('active'));g.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(id).classList.add('active');}
+document.querySelectorAll('.ah').forEach(h=>{h.addEventListener('click',()=>{const i=h.parentElement,b=i.querySelector('.ab'),n=b.querySelector('.abi');if(i.classList.contains('open')){b.style.maxHeight='0';i.classList.remove('open');}else{b.style.maxHeight=n.scrollHeight+40+'px';i.classList.add('open');}});});
+const qd={q1:{ci:1,ok:'✅ 正确！Write-Back 只写缓存就确认完成，崩溃时仅有的数据副本可能丢失。',no:'❌ Write-Back 的最大风险是崩溃时数据丢失，因为唯一副本只在缓存中。'},q2:{ci:1,ok:'✅ Cassandra/CouchDB 是 AP 系统，牺牲强一致性保证可用性和分区容错。',no:'❌ 它们属于 AP，牺牲一致性。'},q3:{ci:1,ok:'✅ key%n 中 n 变化后所有键映射都变。一致性哈希只需移动 k/n 个。',no:'❌ 传统 key%n 中 n 一变，所有键都要重算。'},q4:{ci:1,ok:'✅ 从节点发送 ACK 确认已成功接收更新，主节点才允许发送后续更新。',no:'❌ 从节点会发 ACK 确认消息给主节点。'},q5:{ci:2,ok:'✅ WebSocket 全双工通信，双方任何时刻可主动发送数据。',no:'❌ 只有 WebSocket 支持全双工双向实时通信。'},q6:{ci:1,ok:'✅ 每次写操作需额外更新索引，因此降低写入性能。',no:'❌ 索引加速读取但降低写入性能。'},q7:{ci:2,ok:'✅ 虚拟副本让每台缓存关联环上多个区段，数据分布更均匀。',no:'❌ 虚拟副本的目的是使数据分布更均匀，解决负载不均衡问题。'}};
+function ck(qid,btn,isC){const box=document.getElementById(qid);if(box.dataset.done)return;box.dataset.done='1';const d=qd[qid],fb=document.getElementById(qid+'-fb');if(isC){btn.classList.add('correct');fb.textContent=d.ok;fb.style.background='rgba(0,206,201,.1)';fb.style.color='#00cec9';}else{btn.classList.add('wrong');fb.textContent=d.no;fb.style.background='rgba(253,121,168,.1)';fb.style.color='#fd79a8';[...box.querySelectorAll('.qo')].forEach((o,i)=>{if(i===d.ci)o.classList.add('correct');});}fb.style.display='block';}
+</script>
+</body></html>
