@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f7f8;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-card: #1f2937;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --accent-color: #60a5fa;
+            --accent-hover: #3b82f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--accent-color); }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .doc-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .doc-title i { color: var(--accent-color); }
+
+        /* Markdown content styling */
+        .md-content h1 { font-size: 2rem; font-weight: 700; margin: 2rem 0 1rem; }
+        .md-content h2 { font-size: 1.5rem; font-weight: 600; margin: 1.75rem 0 0.75rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border-color); }
+        .md-content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+        .md-content h4 { font-size: 1.1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+
+        .md-content p { margin: 0.75rem 0; }
+
+        .md-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .md-content a:hover { text-decoration: underline; }
+
+        .md-content ul, .md-content ol {
+            margin: 0.75rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .md-content li { margin: 0.3rem 0; }
+
+        .md-content code {
+            background: var(--bg-secondary);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+
+        .md-content pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .md-content pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .md-content blockquote {
+            border-left: 3px solid var(--accent-color);
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .md-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .md-content th, .md-content td {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+
+        .md-content th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .md-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .md-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        /* Loading / Error states */
+        .status {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .status i { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+        .error { color: #dc2626; }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="index.html" class="logo">Peilin Hao</a>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="doc-title" id="docTitle">
+            <i class="fas fa-file-alt"></i>
+            <span>Loading...</span>
+        </div>
+        <div class="md-content" id="mdContent">
+            <div class="status">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading document...
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; <span id="year"></span> Peilin Hao. All Rights Reserved.</p>
+    </footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Dark mode (synced with index.html)
+(function() {
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        icon.className = 'fas fa-sun';
+    }
+    toggle.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+})();
+
+// Fetch and render markdown
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get('file');
+    const titleEl = document.getElementById('docTitle').querySelector('span');
+    const contentEl = document.getElementById('mdContent');
+
+    if (!file || !file.endsWith('.md')) {
+        titleEl.textContent = 'Error';
+        contentEl.innerHTML = '<div class="status error"><i class="fas fa-exclamation-triangle"></i>No valid markdown file specified.</div>';
+        return;
+    }
+
+    // Set page title
+    const displayName = decodeURIComponent(file).replace(/\.md$/, '').replace(/[_-]/g, ' ');
+    titleEl.textContent = displayName;
+    document.title = displayName + ' — Peilin Hao';
+
+    fetch(file)
+        .then(res => {
+            if (!res.ok) throw new Error('File not found');
+            return res.text();
+        })
+        .then(md => {
+            contentEl.innerHTML = marked.parse(md);
+        })
+        .catch(() => {
+            contentEl.innerHTML = '<div class="status error"><i class="fas fa-exclamation-triangle"></i>Could not load the document. Make sure the file exists.</div>';
+        });
+})();
+</script>
+</body>
+
+</html>
