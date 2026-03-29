@@ -13,6 +13,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f7f7f8;
@@ -24,6 +28,19 @@
             --accent-hover: #1d4ed8;
             --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-card: #1f2937;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --accent-color: #60a5fa;
+            --accent-hover: #3b82f6;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
         }
 
         body {
@@ -73,8 +90,29 @@
             transition: color 0.2s;
         }
 
-        .nav-links a:hover {
+        .nav-links a:hover,
+        .nav-links a.active {
             color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-color);
+            border-color: var(--accent-color);
         }
 
         /* Main Container */
@@ -227,6 +265,11 @@
             transform: translateY(-2px);
         }
 
+        .resource-card:hover .resource-icon {
+            background: var(--accent-color);
+            color: #ffffff;
+        }
+
         .resource-icon {
             width: 40px;
             height: 40px;
@@ -238,6 +281,7 @@
             color: var(--accent-color);
             font-size: 1.1rem;
             flex-shrink: 0;
+            transition: all 0.2s;
         }
 
         .resource-content {
@@ -260,17 +304,52 @@
         /* Tag badge */
         .tag {
             display: inline-block;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            padding: 0.1rem 0.5rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 999px;
-            margin-top: 0.4rem;
+            margin-top: 0.5rem;
+            letter-spacing: 0.01em;
         }
 
         .tag-blue  { background: #dbeafe; color: #1e40af; }
         .tag-purple{ background: #ede9fe; color: #5b21b6; }
         .tag-green { background: #d1fae5; color: #065f46; }
         .tag-orange{ background: #ffedd5; color: #92400e; }
+        .tag-red   { background: #fee2e2; color: #991b1b; }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
 
         /* Footer */
         .footer {
@@ -372,6 +451,9 @@
                 <a href="#news">News</a>
                 <a href="https://github.com/haopeilin" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/peilinhao/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <div class="search-wrap">
                     <i class="fas fa-search search-icon"></i>
                     <input class="search-input" type="text" id="siteSearch" placeholder="Search..." autocomplete="off"
@@ -436,6 +518,24 @@
                         <div class="resource-title">Grok System Design Interview (PDF)</div>
                         <div class="resource-desc">Full reference PDF for system design interview preparation.</div>
                         <span class="tag tag-green">PDF</span>
+                    </div>
+                </a>
+
+                <a href="grok_system_design_interview_basic.pdf" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Grok System Design Interview — Basic (PDF)</div>
+                        <div class="resource-desc">Introductory system design concepts and foundational interview topics.</div>
+                        <span class="tag tag-green">PDF</span>
+                    </div>
+                </a>
+
+                <a href="NANOCHAT_DOCUMENTATION.md" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">NanoChat Documentation</div>
+                        <div class="resource-desc">Documentation for the NanoChat project.</div>
+                        <span class="tag tag-blue">Docs</span>
                     </div>
                 </a>
             </div>
@@ -549,6 +649,15 @@
                         <span class="tag tag-green">Case Study</span>
                     </div>
                 </a>
+
+                <a href="system_design_学习指南.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-book-open"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">System Design 学习指南</div>
+                        <div class="resource-desc">Comprehensive system design study guide with structured learning path (中文).</div>
+                        <span class="tag tag-red">学习指南</span>
+                    </div>
+                </a>
             </div>
         </section>
 
@@ -595,6 +704,10 @@
 
     </main>
 
+    <button class="back-to-top" id="backToTop" title="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <footer class="footer">
         <p>&copy; <span id="year"></span> Peilin Hao. All Rights Reserved.</p>
     </footer>
@@ -621,6 +734,9 @@ const SEARCH_INDEX = [
     { title: 'OpenClaw Tutorial',          url: 'openclaw-tutorial.html',                desc: 'AI agent framework, autonomous agents, MCP',            tag: 'Writing' },
     { title: 'PI_MONO Explained',          url: 'PI_MONO_EXPLAINED.html',                desc: 'Monorepo architecture for agentic AI systems',          tag: 'Writing' },
     { title: 'News Aggregator',            url: 'news-aggregator.html',                  desc: 'RSS feeds from Reuters, BBC, NBC, WSJ, Forbes',         tag: 'News' },
+    { title: 'Grok SD Interview Basic',   url: 'grok_system_design_interview_basic.pdf', desc: 'Introductory system design concepts and foundations',    tag: 'Documents' },
+    { title: 'System Design 学习指南',      url: 'system_design_学习指南.html',              desc: 'Comprehensive system design study guide (中文)',          tag: 'System Design' },
+    { title: 'NanoChat Documentation',    url: 'NANOCHAT_DOCUMENTATION.md',              desc: 'Documentation for the NanoChat project',                tag: 'Documents' },
 ];
 
 function onSearch(q) {
@@ -661,6 +777,7 @@ const TRACKED_PAGES = [
     { id: 'patterns',     title: 'Design Patterns',            url: 'designpatterns.html' },
     { id: 'openclaw',     title: 'OpenClaw Tutorial',          url: 'openclaw-tutorial.html' },
     { id: 'pimono',       title: 'PI_MONO Explained',          url: 'PI_MONO_EXPLAINED.html' },
+    { id: 'sd_guide_zh', title: 'SD 学习指南',                  url: 'system_design_学习指南.html' },
 ];
 
 function renderProgress() {
@@ -691,6 +808,50 @@ function renderProgress() {
 renderProgress();
 // Re-render if user navigates back after reviewing a page
 window.addEventListener('focus', renderProgress);
+
+// ── DARK MODE ───────────────────────────────────────────────────────────────
+(function() {
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        icon.className = 'fas fa-sun';
+    }
+    toggle.addEventListener('click', () => {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+})();
+
+// ── BACK TO TOP ─────────────────────────────────────────────────────────────
+(function() {
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 400);
+    });
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+
+// ── ACTIVE NAV HIGHLIGHT ────────────────────────────────────────────────────
+(function() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navLinks.forEach(link => link.classList.remove('active'));
+                const active = document.querySelector('.nav-links a[href="#' + entry.target.id + '"]');
+                if (active) active.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-20% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+})();
 </script>
 </body>
 
