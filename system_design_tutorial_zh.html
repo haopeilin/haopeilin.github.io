@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系统设计完全教程（大学生版）</title>
+<style>
+  :root{
+    --cardinal:#8C1515; --dark:#2e2d29; --sand:#f7f5f0; --ink:#333;
+    --accent:#175e54; --gold:#b26f16; --line:#e0dcd3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Songti SC','SimSun',Georgia,serif;color:var(--ink);background:var(--sand);line-height:1.75;font-size:17px}
+  header.hero{background:linear-gradient(135deg,var(--cardinal),#5c0e0e);color:#fff;padding:56px 24px 44px;text-align:center}
+  header.hero h1{font-size:2.3em;margin-bottom:10px;letter-spacing:2px}
+  header.hero p{max-width:820px;margin:8px auto;opacity:.92;font-size:1.05em}
+  .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 14px;font-size:.8em;margin:4px 4px 0;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+  nav.toc{background:#fff;border-bottom:3px solid var(--cardinal);padding:20px 24px}
+  nav.toc .wrap{max-width:1000px;margin:0 auto}
+  nav.toc h2{font-size:1em;letter-spacing:4px;color:var(--cardinal);font-family:'PingFang SC','Microsoft YaHei',sans-serif;margin-bottom:10px}
+  nav.toc ol{columns:2;column-gap:40px;list-style-position:inside;font-size:.92em}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--dark);text-decoration:none;border-bottom:1px dotted #bbb}
+  nav.toc a:hover{color:var(--cardinal)}
+  main{max-width:1000px;margin:0 auto;padding:30px 24px 80px}
+  section.chapter{background:#fff;border:1px solid var(--line);border-radius:8px;padding:34px 38px;margin:28px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  h2.ch-title{color:var(--cardinal);font-size:1.6em;border-bottom:2px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+  .meta{font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:.8em;color:#777;margin-bottom:18px}
+  .meta .pill{display:inline-block;border-radius:12px;padding:2px 10px;margin-right:6px;color:#fff}
+  .easy{background:#3a7d44}.medium{background:var(--gold)}.hard{background:var(--cardinal)}.core{background:var(--accent)}
+  h3{color:var(--dark);margin:24px 0 8px;font-size:1.15em}
+  h4{color:var(--accent);margin:16px 0 6px;font-size:1.02em}
+  p{margin:8px 0}
+  ul,ol{margin:8px 0 8px 26px}
+  li{margin:4px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+  th{background:var(--dark);color:#fff;padding:8px 12px;text-align:left}
+  td{border:1px solid var(--line);padding:7px 12px;background:#fdfcfa}
+  tr:nth-child(even) td{background:#f4f1ea}
+  code,pre{font-family:'SF Mono',Consolas,Menlo,monospace;font-size:.86em}
+  code{background:#f0ede6;padding:1px 5px;border-radius:3px}
+  pre{background:#2e2d29;color:#e8e6df;padding:14px 18px;border-radius:6px;overflow-x:auto;margin:12px 0;line-height:1.5}
+  .prof{background:#fdf6ec;border-left:4px solid var(--gold);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .prof::before{content:"🎓 教授笔记 — ";font-weight:bold;color:var(--gold);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:.85em}
+  .key{background:#eef5f3;border-left:4px solid var(--accent);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .key::before{content:"🔑 核心思想 — ";font-weight:bold;color:var(--accent);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:.85em}
+  .warn{background:#faeeee;border-left:4px solid var(--cardinal);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .warn::before{content:"⚠️ 常见误区 — ";font-weight:bold;color:var(--cardinal);font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:.85em}
+  .quiz{background:#f1f0fb;border:1px dashed #7b74c9;padding:12px 16px;margin:18px 0;border-radius:6px}
+  .quiz::before{content:"✏️ 自测题";display:block;font-weight:bold;color:#4b44a0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;font-size:.85em;margin-bottom:6px}
+  .formula{background:#f0ede6;text-align:center;padding:8px;margin:10px 0;border-radius:4px;font-family:'SF Mono',Consolas,monospace;font-size:.9em}
+  .part-divider{text-align:center;margin:50px 0 10px;color:var(--cardinal);font-family:'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:6px;font-size:1.05em;font-weight:bold}
+  .part-divider::before,.part-divider::after{content:"—— ";letter-spacing:0}
+  footer{text-align:center;padding:26px;color:#888;font-size:.85em;font-family:'PingFang SC','Microsoft YaHei',sans-serif}
+  a.top{display:inline-block;margin-top:14px;font-size:.8em;font-family:'PingFang SC','Microsoft YaHei',sans-serif;color:var(--cardinal);text-decoration:none}
+  @media(max-width:700px){nav.toc ol{columns:1}section.chapter{padding:22px 18px}}
+</style>
+</head>
+<body id="top">
+<header class="hero">
+  <h1>系统设计完全教程</h1>
+  <p>面向大学生的分步教程 —— 学习如何思考、估算并架构大规模分布式系统：通过十五道经典设计题与其背后的核心构件，逐章掌握系统设计的完整方法论。</p>
+  <span class="badge">第一部分 · 面试方法框架</span>
+  <span class="badge">第二部分 · 15 个设计案例</span>
+  <span class="badge">第三部分 · 系统设计基础</span>
+</header>
+
+<nav class="toc"><div class="wrap">
+<h2>目录</h2>
+<ol>
+  <li><a href="#framework">七步设计法框架</a></li>
+  <li><a href="#tinyurl">短链接服务（TinyURL）</a></li>
+  <li><a href="#pastebin">Pastebin 文本粘贴服务</a></li>
+  <li><a href="#instagram">Instagram 图片分享</a></li>
+  <li><a href="#dropbox">Dropbox / Google Drive 云盘</a></li>
+  <li><a href="#messenger">Facebook Messenger 即时通讯</a></li>
+  <li><a href="#twitter">Twitter</a></li>
+  <li><a href="#youtube">YouTube / Netflix 视频服务</a></li>
+  <li><a href="#typeahead">输入联想（Typeahead）</a></li>
+  <li><a href="#ratelimiter">API 限流器</a></li>
+  <li><a href="#twittersearch">Twitter 搜索</a></li>
+  <li><a href="#webcrawler">网络爬虫</a></li>
+  <li><a href="#newsfeed">Facebook 信息流</a></li>
+  <li><a href="#yelp">Yelp / 附近服务</a></li>
+  <li><a href="#uber">Uber 后端</a></li>
+  <li><a href="#ticketmaster">Ticketmaster 订票系统</a></li>
+  <li><a href="#characteristics">分布式系统的关键特性</a></li>
+  <li><a href="#loadbalancing">负载均衡</a></li>
+  <li><a href="#caching">缓存</a></li>
+  <li><a href="#sharding">分片 / 数据分区</a></li>
+  <li><a href="#indexes">索引</a></li>
+  <li><a href="#proxies">代理</a></li>
+  <li><a href="#replication">冗余与复制</a></li>
+  <li><a href="#sqlnosql">SQL 与 NoSQL</a></li>
+  <li><a href="#cap">CAP 定理</a></li>
+  <li><a href="#consistenthashing">一致性哈希</a></li>
+  <li><a href="#realtime">长轮询 / WebSocket / SSE</a></li>
+</ol>
+</div></nav>
+
+<main>
+<div class="part-divider">第一部分 · 如何应对任何设计题</div>
+
+<section class="chapter" id="framework">
+<h2 class="ch-title">第 0 章 · 七步设计法框架</h2>
+<div class="meta"><span class="pill core">基础</span> 请先读本章 —— 后面每一章都遵循这套流程。</div>
+
+<p>学生在系统设计面试（SDI）中失利，通常有三个可预见的原因：题目是开放式的、没有标准答案；大多数人从未真正构建过大规模系统；以及最容易补救的一点——根本没有准备。在顶级公司，系统设计表现高于平均水平会直接影响 offer 的级别与薪资，因为它证明你能驾驭复杂系统。好消息是：一套可复用的"七步法"能把模糊的题目变成有条理的 35–40 分钟对话。</p>
+
+<h3>第 1 步 —— 澄清需求</h3>
+<p>设计题刻意描述不全。开场几分钟要先明确<em>最终目标</em>，并选定重点讨论的子系统。以类 Twitter 服务为例，应当先问：用户能发推并关注他人吗？要不要做时间线？推文含图片和视频吗？只做后端还是连前端一起？要支持搜索吗？热门话题？推送通知？每个答案都会改变最终设计。</p>
+
+<h3>第 2 步 —— 定义系统接口</h3>
+<p>写出系统需要暴露的 API。这不仅确立了系统的确切契约，还能及早发现理解偏差。例如：</p>
+<pre>postTweet(user_id, tweet_data, tweet_location, user_location, timestamp, ...)
+generateTimeline(user_id, current_time, user_location, ...)
+markTweetFavorite(user_id, tweet_id, timestamp, ...)</pre>
+
+<h3>第 3 步 —— 粗略估算（Back-of-the-envelope）</h3>
+<p>动手设计前先估算规模：预期流量（每秒新推文数、每秒时间线浏览数）、存储量（推文带不带媒体差别巨大）、以及网络带宽。这些数字决定了后面所有关于扩展、分区、负载均衡和缓存的决策。</p>
+
+<h3>第 4 步 —— 定义数据模型</h3>
+<p>识别实体、实体间的交互，以及数据在组件间的流动方式——这将指导后续的分区与管理。以 Twitter 为例：<code>User(UserID, Name, Email, DoB, CreationDate, LastLogin)</code>、<code>Tweet(TweetID, Content, TweetLocation, NumberOfLikes, TimeStamp)</code>、<code>UserFollow(UserID1, UserID2)</code>、<code>FavoriteTweets(UserID, TweetID, TimeStamp)</code>。然后追问：用 Cassandra 这类 NoSQL 还是 MySQL？图片视频用什么块存储？</p>
+
+<h3>第 5 步 —— 高层设计</h3>
+<p>画一张 5–6 个方块的框图，端到端覆盖问题。以 Twitter 为例：多台应用服务器 + 前置负载均衡器；若读远多于写，可把读写服务器分开；后端要一个能承受海量读的数据库，再加分布式文件存储放媒体文件。</p>
+
+<h3>第 6 步 —— 详细设计</h3>
+<p>深入两三个组件——让面试官的反馈引导方向。给出多种方案并比较利弊；没有唯一答案，重要的是在系统约束下权衡取舍。典型深挖点：海量数据如何分区到多个数据库？把一个用户的所有数据放在一台机器上会有什么问题？如何处理"热点"用户？存储要不要为扫描最新推文优化？在哪一层加多少缓存？哪些组件最需要负载均衡？</p>
+
+<h3>第 7 步 —— 识别并化解瓶颈</h3>
+<p>寻找单点故障及其缓解方案：数据副本是否足够，丢几台服务器仍能服务用户？各服务是否有足够多的运行副本，少量故障不会导致整体瘫痪？如何监控性能，关键组件故障或性能下降时是否有告警？</p>
+
+<div class="key">充分准备 + 面试中保持条理，就是 SDI 的制胜之道。七个步骤保证你按顺序覆盖：需求、规模、数据、架构、深度、可靠性。</div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<div class="part-divider">第二部分 · 十五道经典设计题</div>
+
+<section class="chapter" id="tinyurl">
+<h2 class="ch-title">第 1 章 · 设计短链接服务（TinyURL）</h2>
+<div class="meta"><span class="pill easy">简单</span> 类似服务：bit.ly、goo.gl、qlink.me</div>
+
+<h3>1. 为什么需要短链接？</h3>
+<p>短链接在消息、推文和印刷品中省空间、少打错字，还能做逐链接的用户/活动分析、隐藏原始 URL。一条很长的 educative.io 链接可缩成 <code>http://tinyurl.com/jlg8zpc</code> —— 约为原长的三分之一。</p>
+
+<h3>2. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>(1) 给定 URL 生成更短且唯一的别名；(2) 访问短链接时重定向到原始链接；(3) 可选自定义短链接；(4) 链接默认在标准时限后过期，用户可指定过期时间。</li>
+  <li><strong>非功能性：</strong>高可用（服务一挂所有跳转全部失败）；重定向实时、低延迟；短链接不可被猜测（不可预测）。</li>
+  <li><strong>扩展：</strong>统计分析（跳转次数）；对外提供 REST API。</li>
+</ul>
+
+<h3>3. 容量估算（读多写少，读写比 100:1）</h3>
+<p>假设每月 5 亿次新建短链 → 每月 500 亿次跳转。</p>
+<div class="formula">写入：500M / (30 × 24 × 3600) ≈ 200 条/秒　|　读取：100 × 200 = 2 万次/秒</div>
+<p>每条记录保存 5 年：500M × 5 × 12 = 300 亿个对象 × 约 500 字节 ≈ <strong>15 TB</strong>。带宽：写入 200 × 500 B = 100 KB/s；读出 20K × 500 B ≈ 10 MB/s。缓存内存：2 万 QPS ≈ 每天 17 亿次请求；按二八定律缓存最热的 20%：0.2 × 1.7B × 500 B ≈ <strong>170 GB</strong>（存在大量重复请求，实际更少）。</p>
+<table>
+<tr><th>指标</th><th>估算值</th></tr>
+<tr><td>新建短链</td><td>200 条/秒</td></tr>
+<tr><td>URL 跳转</td><td>2 万次/秒</td></tr>
+<tr><td>写入流量</td><td>100 KB/s</td></tr>
+<tr><td>读出流量</td><td>10 MB/s</td></tr>
+<tr><td>5 年存储</td><td>15 TB</td></tr>
+<tr><td>缓存内存</td><td>170 GB</td></tr>
+</table>
+
+<h3>4. 系统 API</h3>
+<pre>createURL(api_dev_key, original_url, custom_alias=None, user_name=None, expire_date=None)
+  → 成功返回短链接，失败返回错误码
+deleteURL(api_dev_key, url_key) → 返回 'URL Removed'</pre>
+<p><code>api_dev_key</code> 用于按注册开发者的配额限流（每个 key 在一段时间内限制创建与跳转次数）——这正是防止恶意用户耗尽全部 key、拖垮服务的手段。</p>
+
+<h3>5. 数据库设计</h3>
+<p>数据特征：数十亿条小记录（每条 &lt;1K）；除"谁创建了它"外记录之间没有关系；读多写少。两张表：<code>URL(Hash 主键 varchar(16), OriginalURL varchar(512), CreationDate, ExpirationDate, UserID)</code> 与 <code>User(UserID 主键, Name, Email, CreationDate, LastLogin)</code>。既然需要数十亿行且不需要连接，NoSQL 键值存储（DynamoDB、Cassandra、Riak）是更佳选择，也更易扩展。</p>
+
+<h3>6. Key 生成 —— 本题核心</h3>
+<h4>方案 A：对原 URL 编码</h4>
+<p>计算 URL 的 MD5/SHA256 哈希后用 base36/base62/base64 编码。6 位 base64 key 有 64⁶ ≈ 687 亿种组合；8 位则有 64⁸ ≈ 281 万亿。6 位已足够。MD5 产生 128 位哈希，base64 编码后超过 21 个字符，只取前 6–8 位——重复时换取其他字符或交换位置。问题：(1) 不同用户提交同一 URL 会得到相同短链，不可接受；(2) URL 编码不同但实际相同的地址会产生不同哈希。变通：给每个输入 URL 附加自增序号再哈希（序号可能溢出且影响性能），或附加用户 ID（未登录用户需另选唯一 key，冲突仍需重试）。</p>
+<h4>方案 B：离线 Key 生成服务（KGS）—— 推荐</h4>
+<p>独立的 KGS 预先生成随机 6 位字符串存入 key-DB；缩短 URL 时直接取用——无需编码、没有冲突。并发问题：KGS 用两张表（未用/已用 key）；key 一加载进内存就移入已用表，并对 key 数据结构加锁同步，确保不同应用服务器不会拿到同一个 key。若 KGS 挂掉时内存中的 key 丢失——687 亿个 key 面前完全可以接受。key-DB 大小：6 字节 × 68.7B ≈ <strong>412 GB</strong>。KGS 是单点故障，需配置热备副本。应用服务器也可本地缓存部分 key（服务器挂掉浪费一些 key，同样可接受）。</p>
+<p><strong>查询流程：</strong>在存储中查 key，命中则返回 <code>HTTP 302 重定向</code>（原 URL 放在 Location 头）；未命中返回 <code>HTTP 404</code> 或跳转首页。自定义别名要限制长度（16 字符）。</p>
+
+<h3>7. 分区与复制</h3>
+<p><strong>基于范围</strong>（按哈希 key 首字母）：可预测但会导致服务器失衡——以'E'开头的 URL 可能特别多。<strong>基于哈希</strong>：把 key 的哈希映射到 1…256 号分区；仍可能出现过载分区，用一致性哈希解决。</p>
+
+<h3>8. 缓存、负载均衡、清理、遥测与权限</h3>
+<p><strong>缓存：</strong>用 Memcached 按哈希存完整 URL；从日流量的 20%（约 170 GB）起步——一台 256 GB 内存的现代服务器即可容纳，或用几台小机器。LRU 淘汰（配 LinkedHashMap 结构）；缓存服务器做副本分摊读压力；未命中时回源并把新条目广播给所有副本（已有该条目的副本直接忽略）。<strong>负载均衡</strong>放三处：客户端↔应用层、应用层↔数据库、应用层↔缓存；先用简单轮询（能自动摘除死机，但不感知负载），再演进为定期询问后端负载的智能 LB。<strong>清理：</strong>惰性过期——访问到过期链接时删除并报错；再加一个轻量定时清理服务在低峰期运行；设默认过期时间（如两年）；回收的 key 归还 key-DB 复用；至于"六个月没人访问就删"——存储越来越便宜，可以永久保留。<strong>遥测：</strong>统计访问者国家、访问时间、来源页、浏览器/平台——注意热门 URL 的统计行在高并发更新下会成为热点。<strong>权限：</strong>每条 URL 存公开/私有标志，另建以哈希为 key 的权限表（列存有权查看的 UserID）；无权访问返回 HTTP 401。</p>
+
+<div class="quiz">为什么这里刻意用 302（临时重定向）而不是 301（永久重定向）？<em>提示：301 会被浏览器缓存映射——你的统计系统将再也看不到重复点击。</em></div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="pastebin">
+<h2 class="ch-title">第 2 章 · 设计 Pastebin</h2>
+<div class="meta"><span class="pill easy">简单</span> 类似服务：pastebin.com、pasted.co、chopapp.com</div>
+
+<h3>1. 是什么 & 需求</h3>
+<p>用户粘贴一段文本，获得一个随机 URL 用于访问。<strong>功能性：</strong>上传文本并获得唯一 URL；仅支持文本；数据与链接自动过期、可自定义过期时间；可选自定义别名。<strong>非功能性：</strong>高可靠（数据绝不丢失）、高可用、实时低延迟访问、链接不可猜测。<strong>扩展：</strong>访问统计、REST API。</p>
+<p>设计考量：单次粘贴限制 <strong>10 MB</strong> 防滥用；自定义 URL 限制长度以保持数据库一致。</p>
+
+<h3>2. 容量估算（读写比 5:1）</h3>
+<p>每天 100 万条新粘贴、500 万次读取 → <strong>写 12 次/秒、读 58 次/秒</strong>。平均每条约 10 KB → 每天 10 GB → 十年 36 TB。key：36 亿条粘贴需要 6 位 base64 key（64⁶ ≈ 687 亿），占 3.6B × 6 ≈ 22 GB（可忽略）。按 70% 容量模型（任何时刻用量不超过总容量七成），需预留 <strong>51.4 TB</strong>。带宽：写入 120 KB/s、读出 0.6 MB/s。缓存 20% 日读量：0.2 × 5M × 10 KB ≈ <strong>10 GB</strong>。</p>
+
+<h3>3. API</h3>
+<pre>addPaste(api_dev_key, paste_data, custom_url=None, user_name=None, paste_name=None, expire_date=None)
+  → 返回可访问该粘贴的 URL，或错误码
+getPaste(api_dev_key, api_paste_key) → 返回文本内容
+deletePaste(api_dev_key, api_paste_key) → true / false</pre>
+
+<h3>4. 存储设计</h3>
+<p>数十亿条记录；元数据对象极小（&lt;100 字节），但内容可达数 MB——所以<strong>把两者分开</strong>：元数据库（<code>Paste(URLHash 主键, ContentKey, ExpirationDate, CreationDate)</code> + <code>User</code> 表）加对象存储（如 Amazon S3）放内容。<code>URLHash</code> 即短链 key，<code>ContentKey</code> 指向存储的内容对象。这种拆分让两层可独立扩容。</p>
+
+<h3>5. 组件设计</h3>
+<p><strong>写：</strong>应用服务器生成随机 6 位 key（或使用用户自定义 key），把内容与 key 入库；遇到重复 key 就换新 key 重试直到成功；用户自定义 key 重复则直接报错。也可以复用第 1 章的 <strong>KGS 模式</strong>——预生成唯一 key、已用/未用两张表、热备副本消除单点、各服务器可缓存 key。<strong>读：</strong>按 key 查询，返回内容或错误码。清理、分区、缓存、负载均衡与权限设计全部沿用短链接一章。</p>
+
+<div class="prof">注意这里的教学用意：Pastebin = TinyURL + 一个变化点——内容大到值得把元数据与对象存储拆开。面试官很喜欢用"变体题"考察你能否迁移已有设计。</div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+<section class="chapter" id="instagram">
+<h2 class="ch-title">第 3 章 · 设计 Instagram</h2>
+<div class="meta"><span class="pill medium">中等</span> 类似服务：Flickr、Picasa</div>
+
+<h3>1. 范围与需求</h3>
+<p>我们设计一个简化的图片分享服务：用户上传照片、关注他人，并看到由关注对象的热门照片组成的信息流（News Feed）。<strong>功能性：</strong>上传/下载/浏览照片；按照片/视频标题搜索；关注用户；为用户生成并展示信息流。<strong>非功能性：</strong>高可用；信息流生成延迟 ≤200 ms；可牺牲一致性换可用性（短时间看不到某张照片没关系）；高可靠——任何上传的照片/视频绝不能丢。范围外：打标签、按标签搜索、评论、圈人、关注推荐等。</p>
+<p>设计考量：系统读多写少——优先保证快速取图；用户上传无上限，存储管理效率是关键；看图延迟要低；数据 100% 可靠。</p>
+
+<h3>2. 容量估算</h3>
+<ul>
+  <li>5 亿总用户，日活 100 万。</li>
+  <li>每天 200 万张新照片 ≈ 23 张/秒，平均每张 200 KB。</li>
+  <li>每日照片存储：2M × 200 KB = <strong>400 GB/天</strong>；十年约 <strong>1425 TB</strong>。</li>
+</ul>
+
+<h3>3. 高层设计与数据模型</h3>
+<p>两条路径——上传与查看/搜索——由对象存储服务器（放图片文件）和元数据库共同支撑。照片元数据需要 <code>(PhotoID, CreationDate)</code> 联合索引，因为总是先取最新照片。用 MySQL 这类 RDBMS 能做连接查询，但扩展困难；改为：照片放分布式文件存储（HDFS 或 S3）；元数据放键值存储（key = PhotoID，value = PhotoLocation、UserLocation、CreationTimestamp 等）；两张关系表放 Cassandra 这类宽列存储——<code>UserPhoto</code>（UserID → 拥有的 PhotoID 列表）与 <code>UserFollow</code>。Cassandra 自动维护副本保证可靠性，且删除并非立即生效，会保留若干天（支持恢复）后才永久移除。</p>
+
+<h3>4. 数据量估算（10 年）</h3>
+<table>
+<tr><th>表</th><th>行大小</th><th>总量</th></tr>
+<tr><td>User</td><td>UserID 4 + Name 20 + Email 32 + 生日 4 + 创建时间 4 + 最后登录 4 = 68 B</td><td>500M × 68 ≈ 32 GB</td></tr>
+<tr><td>Photo</td><td>PhotoID 4 + UserID 4 + 路径 256 + 照片/用户经纬度 4×4 (16) + 创建时间 4 = 284 B</td><td>2M/天 × 284 ≈ 0.5 GB/天 → 1.88 TB</td></tr>
+<tr><td>UserFollow</td><td>8 B</td><td>500M 用户 × 500 关注 × 8 ≈ 1.82 TB</td></tr>
+<tr><td colspan="2"><strong>元数据总计</strong></td><td><strong>≈ 3.7 TB</strong></td></tr>
+</table>
+
+<h3>5. 组件设计 —— 读写分离</h3>
+<p>上传要写磁盘、很慢；读取（尤其命中缓存时）很快。Web 服务器有连接数上限（假设 500 并发），大量慢速上传会占满连接、饿死读请求。方案：<strong>读服务器与写服务器分开部署</strong>，各自独立扩容与优化。</p>
+
+<h3>6. 可靠性与冗余</h3>
+<p>丢文件是不可接受的：每个文件在不同存储服务器上保留多份副本；每个服务也运行多个副本，少量宕机不影响整体可用。若某服务只需单实例运行，则配一个不接流量的热备，主实例故障时接管（自动或人工故障切换）。冗余消除单点故障，并在危机中提供备用能力。</p>
+
+<h3>7. 数据分片</h3>
+<h4>a) 按 UserID 分片</h4>
+<p>分片号 = UserID % 10（3.7 TB / 每分片 1 TB → 4 个即可；为性能与扩展性留 10 个）。PhotoID 由各分片自增序列生成，再拼上分片号保证全局唯一。问题：热点（名人）用户压垮单分片；照片数量分布不均；单个用户的数据可能超出一个分片；该分片一挂用户数据整体不可用、高负载时延迟高。</p>
+<h4>b) 按 PhotoID 分片 —— 更优</h4>
+<p>先生成全局唯一 PhotoID，再取 PhotoID % 10 定分片。分片内自增行不通了（要先有 ID 才能定分片），改为专门一个只含 64 位 ID 字段的键生成数据库。它是单点——用<em>两台</em>服务器解决，一台发奇数 ID、一台发偶数 ID，前置负载均衡轮询：</p>
+<pre>KeyGeneratingServer1: auto-increment-increment = 2, auto-increment-offset = 1
+KeyGeneratingServer2: auto-increment-increment = 2, auto-increment-offset = 2</pre>
+<p>两台可能不同步（一台发得多）——无碍。同样的模式可扩展到 User、评论等其他实体；也可以直接复用第 1 章的 KGS。面向未来增长：预设大量<strong>逻辑分区</strong>映射到少量物理服务器（一台物理机可跑多个数据库实例），配置文件维护映射；迁移分区只需改配置。</p>
+
+<h3>8. 信息流生成</h3>
+<p>朴素做法：取每个关注对象最新 100 张照片的元数据，交给排序算法（按时间、点赞等）选出前 100 返回——但多表查询加排序/合并/打分意味着高延迟。改进：<strong>预生成</strong>——专用服务器持续为用户生成信息流并存入 <code>UserNewsFeed</code> 表；请求信息流变成一次查表；每次生成从上次生成时间点续算。</p>
+<p>推送模型：<strong>拉（Pull）</strong>——客户端定期或手动拉取：新内容要等下一次拉取才可见，且多数拉取返回空；<strong>推（Push）</strong>——内容一产生就推给粉丝（客户端维持长轮询接收）：百万粉丝的名人一发帖服务器推送量爆炸；<strong>混合</strong>——关注量大的用户走拉模式，只向关注量少（几百上千）的用户推送；或限制推送频率，高频用户自行拉取。</p>
+
+<h3>9. 分片下的信息流 —— 把时间编进 ID</h3>
+<p>让 PhotoID 本身可按时间排序：高位 = epoch 秒数，低位 = 自增序列。50 年的秒数 ≈ 86400 × 365 × 50 = 16 亿 → 需 <strong>31 位</strong>；每秒约 23 张新照片，<strong>9 位</strong>序列（每秒 512 张、每秒清零）足够。PhotoID 上的主索引让"取最新照片"极快。分片号仍取 PhotoID % 10。</p>
+
+<h3>10. 缓存与负载均衡</h3>
+<p>用大量地理分布的图片缓存服务器 + <strong>CDN</strong> 把内容推近用户。元数据加 Memcache 缓存热点行，LRU 淘汰。按二八定律：20% 的照片日读量产生 80% 流量——缓存这 20% 的照片与元数据即可。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="dropbox">
+<h2 class="ch-title">第 4 章 · 设计 Dropbox / Google Drive</h2>
+<div class="meta"><span class="pill medium">中等</span> 类似服务：OneDrive、Google Drive</div>
+
+<h3>1. 云存储的价值与需求</h3>
+<p>多设备、多平台时代成就了云存储：它承诺<strong>可用性</strong>（任何设备随时随地访问）、<strong>可靠与持久</strong>（多地多副本，永不丢数据）、<strong>可扩展</strong>（花钱即得无限空间）。需求：任意设备上传/下载；与他人共享文件或文件夹；自动跨设备同步；支持 GB 级大文件；文件操作保证 <strong>ACID</strong>（原子性、一致性、隔离性、持久性）；支持<strong>离线编辑</strong>，联网后自动同步。扩展需求：数据快照/版本回溯。</p>
+
+<h3>2. 设计考量与规模</h3>
+<p>读写量都巨大，且大致相当。关键技巧：<strong>把文件切成块（如 4 MB）</strong>——失败只重传失败的块；只传修改过的块；相同的块只存一份（省存储省带宽）；客户端本地保存元数据副本可省大量往返；小改动可只上传差异（diff）。规模：5 亿用户、1 亿日活、人均 3 台设备；人均 200 个文件 → 共 1000 亿个文件；平均 100 KB → <strong>10 PB</strong>；每分钟 100 万活跃连接。</p>
+
+<h3>3. 高层架构</h3>
+<p>用户指定一个工作区文件夹；其中的任何增删改都会同步到云端和其他所有设备。组件：<strong>块服务器（Block servers）</strong>——与客户端配合上传/下载文件块；<strong>元数据服务器</strong>——文件名、大小、目录、共享关系等存入 SQL/NoSQL；<strong>同步服务器</strong>——把变更通知到所有客户端。</p>
+
+<h3>4. 客户端 —— 四个组件</h3>
+<ol>
+  <li><strong>内部元数据库</strong>——本地记录所有文件、块、版本及其在文件系统中的位置。</li>
+  <li><strong>分块器（Chunker）</strong>——把文件切成 4 MB 块并能重组；检测哪些部分被修改，只传那些块。最优块大小取决于云端存储设备的空间利用率与 IOPS、网络带宽、平均文件大小。</li>
+  <li><strong>监视器（Watcher）</strong>——监控本地工作区，把用户的增删改事件通知给索引器；同时接收同步服务广播的其他客户端的变更。</li>
+  <li><strong>索引器（Indexer）</strong>——处理监视器事件、更新本地元数据库；块上传/下载成功后，通知远端同步服务广播变更并更新远端元数据。</li>
+</ol>
+<p>客户端如何得知远端变更？定期轮询浪费带宽且更新延迟大——改用 <strong>HTTP 长轮询</strong>：服务器把请求挂起，直到有新消息才响应。服务器繁忙/无响应时客户端应<strong>指数退避</strong>重试；移动端按需同步以节省带宽与空间。</p>
+
+<h3>5. 元数据库、同步服务、消息队列与块存储</h3>
+<p><strong>元数据库</strong>（MySQL 或 DynamoDB）存块、文件、用户、设备、工作区五类对象——多人同时编辑一个文件时必须给同步服务提供一致视图。关系型数据库天然支持 ACID，实现简单；若选 NoSQL，则要在同步服务的逻辑里自行实现 ACID 语义。
+<strong>同步服务</strong>——整个架构的心脏——把每个客户端的更新应用到所有订阅的客户端，并使本地库与远端元数据保持一致；离线客户端上线后主动轮询。它采用差分算法尽量少传数据：按块计算 SHA-256 哈希决定是否需要更新；若服务器上已有相同哈希的块（哪怕来自别的用户！），直接引用即可。
+<strong>消息队列服务</strong>负责解耦与削峰：一个全局共享的<em>请求队列</em>接收所有元数据更新请求，由多个同步服务实例消费；每个订阅客户端各有一个<em>响应队列</em>用于投递变更通知（消息被取走即删除，所以必须每个客户端一队）。
+<strong>云端/块存储</strong>保存文件块；客户端与之直接交互；元数据与存储分离使我们可以自由更换云端或自建存储。</p>
+
+<h3>6. 文件处理工作流</h3>
+<ol>
+  <li>客户端 A 把块上传到云存储。</li>
+  <li>客户端 A 更新元数据并提交变更。</li>
+  <li>A 收到确认；通知发往共享该文件的客户端 B 和 C。</li>
+  <li>B、C 收到元数据变更后下载更新的块（离线客户端的通知保留在各自的响应队列中，上线后领取）。</li>
+</ol>
+
+<h3>7. 数据去重</h3>
+<p>对每个新块计算哈希、与已有块哈希比对。<strong>后处理去重</strong>：先落盘、事后扫描——客户端无需等待哈希计算，存储性能不受影响，但重复数据会短暂占用存储且白白传输。<strong>在线（inline）去重</strong>：客户端实时计算哈希，块已存在时只在元数据里加一个引用——网络与存储双双最优。</p>
+
+<h3>8. 元数据分区</h3>
+<p><strong>垂直分区</strong>（按功能把表放到不同服务器）：实现简单，但单一功能仍会超出单机容量（万亿级块记录怎么办？），且跨库连接影响性能与一致性。<strong>范围分区</strong>（按文件路径首字母）：可预测但会失衡。<strong>哈希分区</strong>（对 FileID 哈希 → 1…256 号分区）：分布均匀，残余热点用一致性哈希解决。</p>
+
+<h3>9. 缓存、负载均衡与安全</h3>
+<p>块缓存用 Memcached 存整块（144 GB 内存的高端服务器可缓存约 3.6 万个 4 MB 块），LRU 淘汰；元数据库同样加缓存。负载均衡放两处：客户端↔块服务器、客户端↔元数据服务器——先轮询后智能。隐私与安全：用户可共享甚至公开文件，故在元数据库中为每个文件存<strong>权限信息</strong>，控制谁可见、谁可改。</p>
+
+<div class="key">分块 + 哈希是整个设计的发动机：一套机制同时支撑了增量同步、断点续传、差异上传以及跨用户去重。</div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="messenger">
+<h2 class="ch-title">第 5 章 · 设计 Facebook Messenger</h2>
+<div class="meta"><span class="pill medium">中等</span> 实时一对一聊天，Web 与移动端</div>
+
+<h3>1. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>一对一会话；跟踪用户在线/离线状态；持久化聊天记录。</li>
+  <li><strong>非功能性：</strong>实时、极低延迟；<em>强一致</em>——所有设备看到相同的聊天历史；高可用固然好，但可为一致性让步。</li>
+  <li><strong>扩展：</strong>群聊；离线用户的推送通知。</li>
+</ul>
+
+<h3>2. 容量估算</h3>
+<p>5 亿日活 × 每人每天 40 条 = <strong>每天 200 亿条消息</strong>。每条约 100 字节：<strong>2 TB/天</strong>；五年 ≈ <strong>3.6 PB</strong>（未计压缩与副本，还有用户信息与消息元数据）。带宽：2 TB / 86400 s ≈ <strong>上行 25 MB/s、下行 25 MB/s</strong>（每条消息都要再发出去）。</p>
+
+<h3>3. 高层设计与消息流程</h3>
+<p>聊天服务器是中枢，负责编排全部通信：</p>
+<ol>
+  <li>用户 A 通过聊天服务器向用户 B 发消息。</li>
+  <li>服务器收到后向 A 发送确认。</li>
+  <li>服务器把消息存入数据库，并发送给 B。</li>
+  <li>B 收到后向服务器发确认。</li>
+  <li>服务器通知 A：消息已成功送达 B。</li>
+</ol>
+
+<h3>4. 消息收发 —— 推优于拉</h3>
+<p><strong>拉模式</strong>：客户端定期询问有没有新消息——服务器要维护待投递消息，且大多数询问返回空，既浪费资源又延迟高。<strong>推模式</strong>：活跃用户与服务器保持长连接，消息一到立即转发——无需管理待投递消息，延迟最低。保持连接用 <strong>HTTP 长轮询</strong>（或 WebSocket）：服务器把请求挂起直到有消息；超时或断开后客户端立即重连。</p>
+<p>服务器用哈希表维护"UserID → 连接对象"的映射，收到消息就查表投递。接收方离线怎么办：通知发送方投递失败并让客户端内置重试（用户无需重敲）；若只是长轮询刚超时的短暂掉线，服务器也可暂存消息、等重连后重发。容量：5 亿并发连接，每台服务器承载 5 万 → 需要 <strong>1 万台聊天服务器</strong>；前置软件负载均衡器把每个 UserID 映射到对应服务器。</p>
+<p><strong>处理一条消息</strong> = 入库、投递给接收方、给发送方回执——回执不必等入库完成（后台异步写）。<strong>消息顺序：</strong>服务器时间戳无法确定真实顺序（A 发 M1 在 T1 到达、B 反向发 M2 在 T2&gt;T1 到达时，两人看到的顺序会不同）。方案：给每个用户维护<em>独立序号</em>——每个用户在自己所有设备上看到一致的顺序，尽管两位参与者的视图可能互不相同。</p>
+
+<h3>5. 存储 —— 为什么选 HBase</h3>
+<p>需求是极高频的小写入 + 快速<em>范围读取</em>近期消息。MySQL 或 MongoDB 每条消息一次读写磁盘——延迟高、负载重，不可行。宽列存储 <strong>HBase</strong>（仿 Google BigTable、跑在 HDFS 上）把新数据攒在内存缓冲、写满再刷盘——正适合海量小数据的快速写入、按 key 或范围扫描读取，也擅长存储变长数据。客户端应<strong>分页</strong>拉取，页大小按设备视口调整（手机显示更少会话）。入库方式二选一：起独立线程写库，或发异步请求写库；设计时要考虑连接池管理、失败重试、重试仍失败的请求落日志、以及问题解决后如何重放。</p>
+
+<h3>6. 用户状态管理</h3>
+<p>连接表本身就能判断在线状态。给 5 亿活跃用户广播每次状态翻转太昂贵，优化：客户端启动时一次性拉取好友列表的状态；给离线用户发消息时返回失败并顺带更新其状态；用户上线后延迟几秒再广播（防抖——也许马上又掉线）；只对视口内可见的用户拉取状态且频率不高（离线状态短暂过期可以接受）；打开新会话时即时拉取对方状态。</p>
+
+<h3>7. 分区、缓存、负载均衡与容错</h3>
+<p><strong>按 UserID 哈希分区</strong>，一个用户的全部消息落在同一分片：3.6 PB / 4 TB ≈ 900 → 取整 1000 个分片，<code>hash(UserID) % 1000</code>；拉取会话历史极快。初期用少量物理机承载大量逻辑分区，随存储增长再加机器。按 MessageID 分区会把一个会话打散到各分片、范围读取奇慢——否决。<strong>缓存</strong>：缓存最近约 5 个可见会话的最近 15 条消息；既然用户数据都在一个分片上，其缓存也应整体放在一台机器上。<strong>负载均衡</strong>：聊天服务器前（UserID → 持有连接的服务器）和缓存服务器前各一层。<strong>容错</strong>：把存活的 TCP 连接故障转移到别的服务器极其困难——更简单的做法是让客户端断线自动重连。消息数据绝不能只有一份：多副本，或用里德-所罗门（Reed-Solomon）纠删码分布式冗余。</p>
+
+<h3>8. 扩展需求</h3>
+<p><strong>群聊：</strong>聊天服务器上维护以 GroupChatID 标识的群对象（含成员列表）；负载均衡按 GroupChatID 路由，处理服务器遍历成员、找到各自连接所在的服务器投递；数据库中群聊单独建表、按 GroupChatID 分区。<strong>推送通知：</strong>新增通知服务器，把发给离线用户的消息转交各设备厂商的推送服务器送达设备（用户在设备/浏览器上自行开启）。</p>
+
+<div class="prof">Messenger 是本课程中唯一刻意选择<em>一致性优先于可用性</em>的设计——对比 Instagram 和 Twitter 的相反取舍。请准备好用 CAP 术语（第三部分）为这个选择辩护。</div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+<section class="chapter" id="twitter">
+<h2 class="ch-title">第 6 章 · 设计 Twitter</h2>
+<div class="meta"><span class="pill medium">中等</span> 发推、关注、收藏</div>
+
+<h3>1. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>发布推文（140 字符）；关注用户；收藏推文；生成由关注对象热门推文组成的时间线；推文可含图片与视频。</li>
+  <li><strong>非功能性：</strong>高可用；时间线生成 ≤200 ms；可牺牲一致性——短暂看不到一条推文没关系。</li>
+  <li><strong>扩展：</strong>搜索、回复、热门话题、@提及、通知、关注推荐、Moments。</li>
+</ul>
+
+<h3>2. 容量估算</h3>
+<p>10 亿总用户、2 亿日活、每天 1 亿条新推文、人均关注 200 人。收藏：200M × 5/天 = <strong>每天 10 亿次</strong>。浏览量：每个日活用户每天看 2 次自己的时间线 + 5 个他人页面，每页 20 条 → 200M × 7 × 20 = <strong>每天 280 亿次浏览</strong>。</p>
+<p><strong>存储：</strong>140 字符 × 2 字节 + 30 字节元数据 ≈ 310 B/条 → 100M × 310 ≈ <strong>30 GB/天</strong>（纯文本）。媒体：每 5 条推文 1 张 200 KB 照片、每 10 条 1 个 2 MB 视频 → (100M/5 × 200 KB) + (100M/10 × 2 MB) ≈ <strong>24 TB/天</strong>。</p>
+<p><strong>带宽：</strong>入口 24 TB/天 ≈ 290 MB/s。出口（280 亿次浏览；照片全展示；视频每 3 个看 1 个）：文本 93 MB/s + 照片 13 GB/s + 视频 22 GB/s ≈ <strong>共 35 GB/s</strong>。</p>
+<div class="formula">写 ≈ 平均 1150 条/秒 · 读 ≈ 平均 32.5 万条/秒 —— 峰值：每秒数千次写、约 100 万次读</div>
+
+<h3>3. API 与高层设计</h3>
+<pre>tweet(api_dev_key, tweet_data, tweet_location, user_location, media_ids, maximum_results_to_return)
+  → 成功返回该推文的访问 URL，否则返回相应 HTTP 错误</pre>
+<p>媒体单独上传（通过 media_ids 关联）。架构：负载均衡后的应用服务器集群；能承受巨大读量的数据库；照片/视频放文件存储。数据模型：<code>Tweet(TweetID, UserID, Content, 推文经纬度, 用户经纬度, CreationDate, NumFavorites)</code>，加 <code>User</code>、<code>UserFollow</code>、<code>Favorite</code> 三张表（SQL 与 NoSQL 的取舍同 Instagram 一章）。</p>
+
+<h3>4. 数据分片 —— 本题的核心讨论</h3>
+<h4>按 UserID</h4>
+<p>hash(UserID) 定位保存该用户全部推文/关注/收藏的服务器。问题：名人用户成为热点；用户数据增长不均。恢复手段：重新分区，或一致性哈希。</p>
+<h4>按 TweetID</h4>
+<p>每条推文随机落在某台服务器。生成时间线：应用服务器查出关注列表 → 向<em>所有</em>服务器发查询 → 各服务器按时间排序返回其匹配推文 → 聚合服务器归并。解决了热点用户，但每次读要扇出到全部分区——延迟更高（用热点推文缓存缓解）。</p>
+<h4>按创建时间</h4>
+<p>取最新推文只需查很少的服务器，但写入全部压在持有最新数据的那台服务器上，读也一样——其余服务器闲置。单独使用被否决。</p>
+<h4>组合方案：把创建时间编进 TweetID —— 最终设计</h4>
+<p>TweetID = [epoch 秒 | 自增序列]。50 年的秒数 ≈ 16 亿 → 31 位；每秒 1150 条推文需要 17 位序列（每秒 13 万条、每秒清零）→ 共 48 位。两台键生成数据库（奇/偶 ID）保证容错。以 epoch 1483228800 为例：<code>1483228800-000001、1483228800-000002、……</code>若用 64 位 ID 则可支撑 100 年、精确到毫秒。读仍需扇出到所有服务器，但读写都显著更快：(1) 不再需要创建时间的二级索引，降低写延迟；(2) 读取时无需按时间过滤——主键本身内嵌了时间。</p>
+
+<h3>5. 缓存</h3>
+<p>Memcache 缓存完整推文对象，应用服务器先查缓存再查库；LRU 淘汰。更聪明：按二八定律，每个分片缓存 20% 的日读量。再进一步：若 80% 的用户只看最近 3 天的推文，就把最近 3 天的全部推文放进缓存——纯文本不足 100 GB，一台服务器即可，复制多份分摊读流量（照片视频同理缓存最近 3 天的热门内容）。缓存结构：哈希表，key = OwnerID，value = 该用户近 3 天推文的双向链表——新推文插头部，旧的从尾部淘汰。</p>
+
+<h3>6. 复制、负载均衡与监控</h3>
+<p>读多写少 → 每个分区配多台只读从库；写入主库后复制到从库；主库宕机可切换到从库。负载均衡三处：客户端→应用服务器、应用服务器→数据库副本、聚合服务器→缓存——先轮询后按负载智能调度。监控指标：每天/每秒新推文数与峰值、时间线投递速率（每天/每秒送出多少推文）、用户刷新时间线的平均延迟——这些数字告诉你何时该加副本、负载均衡或缓存。</p>
+
+<h3>7. 扩展需求</h3>
+<p><strong>时间线服务：</strong>归并排序关注对象的最新推文并分页；只取前 N 条，N 按客户端视口而定（手机比网页少）；预缓存下一页提速；或参照 Instagram（第 3 章）预生成。<strong>转推：</strong>新推文对象里只存原推文 ID、不复制内容。<strong>热门话题：</strong>缓存最近 N 秒中出现频率最高的话题标签/搜索词，每 M 秒刷新；按推文/搜索/转推/点赞频率排名，向更多人展示的话题加权。<strong>关注推荐：</strong>推荐"关注对象的朋友"，向外扩两三层寻找名人，粉丝多者优先；用机器学习重排——信号包括粉丝增长势头、共同关注、是否互关、共同位置与兴趣等。<strong>Moments：</strong>抓取各网站过去 1–2 小时的头条，找相关推文，用监督学习或聚类分类（新闻/体育/财经/娱乐）后作为热门专题展示。<strong>搜索：</strong>见第 10 章。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="youtube">
+<h2 class="ch-title">第 7 章 · 设计 YouTube / Netflix</h2>
+<div class="meta"><span class="pill medium">中等</span> 类似服务：vimeo、dailymotion、veoh</div>
+
+<h3>1. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>上传视频；分享与观看；按标题搜索；记录统计数据（点赞/点踩、总播放量等）；添加和查看评论。</li>
+  <li><strong>非功能性：</strong>高可靠（上传的视频绝不丢失）；高可用（一致性可以让步——短暂看不到某视频没关系）；观看实时流畅、不卡顿。</li>
+  <li>范围外：推荐、热门榜、频道、订阅、稍后观看、收藏等。</li>
+</ul>
+
+<h3>2. 容量估算</h3>
+<p>15 亿总用户、8 亿日活、人均每天看 5 个视频：800M × 5 / 86400 ≈ <strong>4.6 万次观看/秒</strong>。上传:观看 = 1:200 → <strong>230 个上传/秒</strong>。存储：每分钟上传 500 小时视频，每分钟视频约需 50 MB（需存多种格式）→ <strong>1500 GB/分钟（25 GB/秒）</strong>——未计压缩与副本。带宽：上传按每分钟视频 10 MB 传输 → 300 GB/分钟（5 GB/秒）入口；乘 200 ≈ <strong>出口 1 TB/秒</strong>。</p>
+
+<h3>3. API</h3>
+<pre>uploadVideo(api_dev_key, video_title, video_description, tags[], category_id,
+            default_language, recording_details, video_contents)
+  → HTTP 202（已接受）；编码完成后邮件通知视频链接
+searchVideo(api_dev_key, search_query, user_location, maximum_videos_to_return, page_token)
+  → JSON 列表：标题、缩略图、创建日期、播放量
+streamVideo(api_dev_key, video_id, offset, codec, resolution) → 从指定偏移开始的媒体流块</pre>
+<p><code>offset</code>/<code>codec</code>/<code>resolution</code> 三个参数支撑跨设备续播：在电视上暂停、在手机上继续——不同设备需要不同的编解码器与分辨率，播放进度存在服务端。</p>
+
+<h3>4. 高层组件</h3>
+<ol>
+  <li><strong>处理队列</strong>——每个上传的视频进队列，等待编码、生成缩略图、入库。</li>
+  <li><strong>编码器</strong>——把视频转码成多种格式。</li>
+  <li><strong>缩略图生成器</strong>——为每个视频生成若干缩略图。</li>
+  <li><strong>视频与缩略图存储</strong>——分布式文件存储（HDFS 或 GlusterFS）。</li>
+  <li><strong>用户数据库</strong>与<strong>视频元数据库</strong>——MySQL：VideoID、标题、描述、大小、缩略图、上传者、点赞/点踩/播放量；评论表（CommentID、VideoID、UserID、内容、时间）。</li>
+</ol>
+
+<h3>5. 详细设计要点</h3>
+<p>读写比 200:1 —— 读写流量分离。元数据用<strong>主从架构</strong>：写主库、读从库；新视频入库后从库短暂（毫秒级）读到旧数据，可以接受。<strong>缩略图</strong>又小（约 5 KB）又比视频读得多（一页展示 20 张）：按独立文件存磁盘会引发大量寻道、延迟高——改用 <strong>BigTable</strong>，它把多个文件合并进一个块存储、擅长小数据随机读，这正是两大需求；热门缩略图进内存缓存（文件小、可大量缓存）。<strong>上传：</strong>视频很大，断线必须支持断点续传。<strong>编码：</strong>队列驱动，完成后通知上传者、视频上线。</p>
+
+<h3>6. 元数据分片</h3>
+<p><strong>按 UserID：</strong>热门用户压垮单机、增长不均，且按标题搜索本来就要查所有服务器（由中心服务器聚合排序）。<strong>按 VideoID：</strong>哈希每个 VideoID 定位服务器；搜索仍查所有服务器，但热门<em>用户</em>不再是问题——热门<em>视频</em>仍是，用数据库前的热点视频缓存解决。</p>
+
+<h3>7. 视频去重</h3>
+<p>海量用户上传必然带来大量重复（不同转码、宽高比、加边框/水印、片段截取）。重复的代价：浪费存储、拉低缓存效率、增加网络传输与能耗，用户侧则表现为重复的搜索结果、更慢的起播、卡顿。应<strong>在上传时在线去重</strong>而非事后处理：上传一开始就跑视频匹配算法（块匹配、相位相关等）；发现已有副本则终止上传复用现有的，或保留质量更高的新副本；若新视频是已有视频的子片段（或相反），可智能切块、只上传缺失的部分。</p>
+
+<h3>8. 负载均衡、缓存、CDN 与容错</h3>
+<p>缓存服务器之间用<strong>一致性哈希</strong>均衡负载；但静态"视频→主机"映射仍会因视频热度不同造成逻辑副本负载不均——繁忙服务器可用动态 HTTP 重定向把客户端引向同一缓存位置中较闲的服务器。重定向的代价：本地化调度可能引发多次重定向；每次重定向多一次 HTTP 往返、起播更慢；跨层（跨数据中心）重定向可能把客户端引到遥远的缓存。<strong>缓存：</strong>地理分布的视频缓存服务器；元数据用 Memcache + LRU；按二八定律缓存 20% 的日读量。<strong>CDN：</strong>热门视频交给 CDN——内容多点复制、离用户更近、跳数更少，CDN 节点大量使用内存缓存；冷门视频（每天 1–20 次观看）由自建数据中心服务。<strong>容错：</strong>数据库服务器间也用一致性哈希——既能平滑替换死机，又能分摊负载。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="typeahead">
+<h2 class="ch-title">第 8 章 · 设计输入联想（Typeahead）</h2>
+<div class="meta"><span class="pill medium">中等</span> 实时搜索自动补全</div>
+
+<h3>1. 需求</h3>
+<p>用户每敲一个字符，就给出以当前前缀开头的前 10 个热门词——目的不是加快搜索，而是帮用户更好地表达查询。联想必须实时出现：<strong>≤200 ms</strong>。</p>
+
+<h3>2. 核心数据结构：Trie（前缀树）</h3>
+<p>要存储海量字符串并支持任意前缀查询——延迟要求太苛刻，数据库不可行，索引必须<strong>驻留内存</strong>，用 <strong>Trie</strong>：树中每个节点存一个字符，根到节点的路径拼出一个前缀（存入 cap、cat、caption、captain、capital 后，输入"cap"即走到 'p' 节点，其子树包含所有补全）。只有单一分支的节点链可合并以省空间。为简化假设数据不区分大小写。</p>
+<p><strong>前 10 排名：</strong>在每个词的终止节点记录搜索次数（CAPTAIN 100 次 vs CAPTION 500 次决定先推荐谁）。但每次按键都遍历整个子树太慢——"system design interview questions"这个短语深达 30 层。所以<strong>在每个节点预存前 10 个建议</strong>，用可观的存储换速度；进一步省空间的办法是只存指向终止节点的<em>引用</em>（附频次），通过父指针回溯拼出文本。构建自<strong>底向上</strong>：每个节点合并子节点的榜单得到自己的榜单。</p>
+
+<h3>3. 更新 Trie</h3>
+<p>每天 50 亿次搜索 ≈ <strong>6 万 QPS</strong>——每次查询都更新会拖垮读请求。改为：记录查询日志（可抽样——若低于 1000 次的词不展示，每 1000 次记 1 次是安全的），用 <strong>MapReduce</strong> 每小时批量统计频次，然后离线更新。两种上线方式：每台服务器复制一份 Trie 离线更新、更新完原子切换并丢弃旧的；或每台 Trie 服务器配主从——更新从库、切换为新主库、再更新旧主库。频次采用差量更新，并按<strong>指数移动平均（EMA）</strong>加权——最新数据权重更高。在终止节点更新频次后，还要<em>向上回溯到根</em>：每个祖先节点检查该词是否在其前 10 中——在则更新频次；不在则看是否够格进入，够则插入并挤掉频次最低者。<strong>删词</strong>（法律、仇恨、盗版等原因）随例行更新进行，期间每台服务器加过滤层拦截。排名还可以综合新鲜度、用户位置、语言、人口特征、个人历史等信号。</p>
+
+<h3>4. Trie 的持久化</h3>
+<p>定期快照存文件，服务器重启后可重建。按层存储：每个节点记录其字符与子节点数，随后紧跟其子节点——例如 <code>"C2,A2,R1,T,P,O1,D"</code>。各节点的前 10 榜单不存（自顶向下写文件时子节点尚未建立、无法存引用）——重建时顺带重新计算：每个节点算出榜单后上交父节点合并。</p>
+
+<h3>5. 规模估算与分区</h3>
+<p>每天 50 亿次查询中假设仅 20% 唯一，只索引前 50% 的热门词 → <strong>1 亿个唯一词条</strong>。平均查询 3 个词 × 每词 5 字符 = 15 字符，每字符 2 字节 ≈ 30 字节 → 3 GB；按每天 2% 新增、保留一年 ≈ <strong>25 GB</strong>。分区方案：</p>
+<ul>
+  <li><strong>按首字母范围：</strong>可预测，但任何静态划分都终将失衡。</li>
+  <li><strong>按服务器容量：</strong>服务器 1 一直装到内存满（如 'A'–'AABC'），服务器 2 接着装（'AABD'–'BXA'），依此类推；负载均衡器维护映射表。输入 'A' 要查服务器 1+2；输入 'AAA' 只查服务器 1。多服务器的结果由<em>聚合层</em>在服务端归并。热点（大家都在敲"cap"）依然存在。</li>
+  <li><strong>按词条哈希：</strong>分布随机、热点最少，但每次查询要问所有服务器再聚合。</li>
+</ul>
+
+<h3>6. 缓存、复制、容错与客户端优化</h3>
+<p>极少数词条占了大部分流量——在 Trie 服务器前加缓存层存最热词条及其联想（还可用小型机器学习模型基于计数、个性化、趋势预测参与度来决定缓存谁）。Trie 服务器做副本，兼顾负载与容错；主库挂了从库接管，重建的服务器从最近快照恢复。<strong>客户端优化：</strong>用户停顿 50 ms 再发请求；连续输入时取消在途请求；先等用户敲入头几个字符；预取部分数据；本地缓存最近的联想历史（复用率极高）；页面一打开就预先建立与服务器的连接（省去首字符时的握手耗时——这是感知延迟的大头）；服务器把部分缓存推到 CDN 和 ISP。<strong>个性化：</strong>服务端按用户存个人搜索历史并在客户端缓存，返回结果前把个性化词条合入且排在最前。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+<section class="chapter" id="ratelimiter">
+<h2 class="ch-title">第 9 章 · 设计 API 限流器</h2>
+<div class="meta"><span class="pill medium">中等</span> 按请求量对用户节流</div>
+
+<h3>1. 是什么 & 为什么</h3>
+<p>限流器限制一个实体（用户、设备、IP 等）在时间窗口内可执行的事件数——例如每秒只能发 1 条消息、每天最多 3 次信用卡失败交易、单 IP 每天最多注册 20 个账号——超限即拦截。它防御应用层滥用：DoS 洪水、暴力破解密码与信用卡（这类机器流量伪装成真人、难检测、易压垮服务），同时应对行为不端或写法糟糕的客户端（低优先级请求不应挤占关键交易）、限制双因素认证尝试次数、控制成本与资源、支撑按套餐分级的收费模式（买更高的限额）、阻止垃圾信息、抹平流量尖峰。</p>
+
+<h3>2. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>限制实体在时间窗口内对 API 的请求数（如每秒 15 次），且必须<em>跨集群全局</em>生效；超限时向用户返回错误。</li>
+  <li><strong>非功能性：</strong>高可用（它是护盾，必须常开）；引入的额外延迟必须极小。</li>
+</ul>
+<p>被限流时返回 <strong>HTTP 429 — Too Many Requests</strong>。三种节流方式：<strong>硬节流</strong>（绝不超限）、<strong>软节流</strong>（可超一定百分比，如限 100 条/分钟 + 10% 超额 = 110 条）、<strong>弹性/动态节流</strong>（系统有空闲资源时允许超限）。</p>
+
+<h3>3. 固定窗口 vs 滚动窗口</h3>
+<p><strong>固定窗口</strong>：窗口对齐时钟边界（0–60 秒）；限 2 条/秒时，第 1 秒内的 m1、m2 与第 2 秒内的 m3、m4、m5 中只有 m5 被拦。<strong>滚动窗口</strong>：窗口从每条请求的时刻起算；同样的序列会拦掉 m3 和 m4。固定窗口在边界处最多放行<em>两倍</em>速率（一分钟最后一秒发 3 条 + 下一分钟第一秒再发 3 条 = 约 2 秒内 6 条）。</p>
+
+<h3>4. 固定窗口设计及其两大问题</h3>
+<p>哈希表：UserID → {Count, StartTime}。每次请求（限 3 次/分钟）：用户不存在则插入 {1, 当前时间（归整到分钟）} 并放行；若 当前时间 − StartTime ≥ 1 分钟，重置为 {1, now} 并放行；否则 Count &lt; 3 就加一放行，Count ≥ 3 则拒绝。</p>
+<ol>
+  <li><strong>边界突刺</strong> —— 如上所述固定窗口最多放行 2 倍速率；解药是滑动窗口。</li>
+  <li><strong>原子性</strong> —— 分布式环境下"先读后写"存在竞态：两个进程同时读到 Count=2，都以为还能再放一条。用 Redis 锁包住读-改-写可解（代价是同一用户的并发请求变慢、复杂度上升）；Memcached 有类似方案；自建哈希表则可对每条记录加锁。</li>
+</ol>
+<p><strong>内存：</strong>UserID 8 B + Count 2 B（可数到 6.5 万）+ 只存分秒的时间戳 2 B = 12 B；加 20 B 哈希表开销 → 每用户 32 B → <strong>100 万用户 32 MB</strong>（加 4 字节锁则 36 MB）。单机放得下——但按每用户 10 次/秒算，限流器要扛 <strong>1000 万 QPS</strong>：必须用分布式 Redis/Memcached，各限流服务器在放行或拦截前统一读写远端存储。</p>
+
+<h3>5. 滑动窗口（精确版）</h3>
+<p>为每个用户维护一个 <strong>Redis 有序集合（Sorted Set）存请求时间戳</strong>。每次请求：删掉早于"当前时间 − 窗口"的时间戳；若集合大小 ≥ 限额则拒绝；否则插入当前时间并放行。<strong>内存暴涨：</strong>限 500 次/小时时：8 + (4 字节时间 + 20 字节有序集合开销) × 500 + 20 字节哈希开销 ≈ 每用户 12 KB → <strong>100 万用户 12 GB</strong>——约为固定窗口的 375 倍。（每元素 20 字节开销 ≈ 前后两个 8 字节指针 + 4 字节杂项。）</p>
+
+<h3>6. 计数器滑动窗口 —— 折中方案</h3>
+<p>为每个小固定窗口维护一个计数器（如小时限额按分钟计数——窗口的 1/60）；新请求到来时把过去一小时所有分钟计数器求和，超过限额（500）即拦截；可再叠加每分钟 10 次的小限额——真实用户几乎不会触发，即便触发，分钟计数器每分钟重置、重试即可成功。计数器存 <strong>Redis Hash</strong>（键少于 100 个时存储极其紧凑）：每次请求递增对应分钟的计数并把整个 Hash 的过期时间设为一小时后，时间归整到分钟。内存：8 + (4 + 2 + 20 Redis Hash 开销) × 60 + 20 ≈ 每用户 1.6 KB → <strong>100 万用户 1.6 GB</strong>——比精确滑动窗口省 86%。</p>
+
+<h3>7. 分片、缓存与身份维度</h3>
+<p>按 UserID 分片，配一致性哈希做复制与容错；不同 API 可设不同限额（createURL 与 deleteURL 各配限流器）；API 本身分区时可加每分区子限额（如总量 100 条/小时之外，每个分区再限每分钟 3 条短链）。缓存近期活跃用户：限流器特别适合<strong>写回（write-back）缓存</strong>——计数与时间戳只更新缓存、按固定间隔批量落盘，把附加延迟压到最低；读请求永远先查缓存——用户达到限额后限流器只读不写，缓存命中率极高。LRU 淘汰。</p>
+<p><strong>按 IP 还是按用户限流？</strong>按 IP：难分好人坏人，共享出口 IP（网吧、运营商 NAT）会殃及无辜；而且 IPv6 让黑客单机就能坐拥海量地址，轻易撑爆你的内存。按用户：需先认证、凭 token 限流——但登录 API 自己怎么限？攻击者可以故意输错密码打满限额，把真用户锁在门外（变相 DoS）。<strong>混合</strong>：按 IP + 按用户双管齐下，互补短板，代价是缓存条目更多、内存更大。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="twittersearch">
+<h2 class="ch-title">第 10 章 · 设计 Twitter 搜索</h2>
+<div class="meta"><span class="pill medium">中等</span> 存储并检索全部推文</div>
+
+<h3>1. 需求与规模</h3>
+<p>15 亿用户、8 亿日活；<strong>每天 4 亿条推文</strong>，平均 300 字节；<strong>每天 5 亿次搜索</strong>；查询由多个词经 AND/OR 组合而成。存储：400M × 300 B = <strong>120 GB/天</strong> ≈ 1.38 MB/s。</p>
+
+<h3>2. API</h3>
+<pre>search(api_dev_key, search_terms, maximum_results_to_return, sort, page_token)
+  sort：0 = 最新优先（默认），1 = 最相关，2 = 最多赞
+  → JSON 列表：用户 ID 与昵称、推文文本、推文 ID、创建时间、点赞数……</pre>
+
+<h3>3. 存储层</h3>
+<p>五年：120 GB × 365 × 5 ≈ 200 TB；按最多装 80% → 250 TB；再为容错留一份完整副本 → <strong>500 TB</strong>；每台服务器存 4 TB → <strong>125 台</strong>。简化模型：MySQL 存 <code>(TweetID, TweetText)</code> 两列，按 TweetID 哈希分区。五年推文总数 = 400M × 365 × 5 = <strong>7300 亿条</strong>，TweetID 需要 <strong>5 字节</strong>；ID 生成沿用第 6 章的方案。</p>
+
+<h3>4. 倒排索引</h3>
+<p>一个大型分布式哈希表：词 → 含该词的 TweetID 列表。词表：30 万英文单词 + 20 万专有名词 = 50 万词 × 平均 5 字符 ≈ 2.5 MB。把最近两年的索引放内存：两年 2920 亿条推文 × 5 B = 1460 GB 的 ID；每条推文约 40 词、去掉 'the'/'an'/'and' 等停用词后约 <strong>15 个词</strong>需要索引，即每个 TweetID 在索引中出现 15 次：(1460 × 15) + 2.5 MB ≈ <strong>21 TB</strong> → 每台 144 GB 内存 → <strong>152 台服务器</strong>。</p>
+<h4>索引分片</h4>
+<ul>
+  <li><strong>按词分片：</strong>查某词只需访问持有它的那台服务器——但热词成热点、词表增长不均（重新分区或一致性哈希恢复）。</li>
+  <li><strong>按推文对象分片：</strong>TweetID 哈希定服务器，该推文的<em>所有</em>词都在那台服务器上建索引；查询要扇出到所有服务器、由聚合服务器归并。更均衡——这是实际采用的方案。</li>
+</ul>
+
+<h3>5. 容错 —— Index-Builder 模式</h3>
+<p>每台索引服务器配一个从副本，主挂从上。若<em>主从同时挂</em>，重建时不知道该服务器存了哪些推文——暴力扫全库用哈希函数过滤既慢又留服务空窗。方案：在 <strong>Index-Builder 服务器</strong>上维护一个<strong>反向索引</strong>——哈希表：索引服务器编号 → 该服务器所有 TweetID 的 HashSet（HashSet 让增删都快）。重建的服务器只需要来要它的清单，再取回那些推文建索引即可，速度很快。Index-Builder 自身也要有副本。</p>
+
+<h3>6. 缓存、负载均衡与排名</h3>
+<p>数据库前置 Memcached 缓存热门推文，LRU 淘汰、按使用情况调整容量。负载均衡两处：客户端↔应用服务器、应用服务器↔后端。<strong>排名</strong>（热度、社交距离、相关性）：计算一个热度值（按点赞、评论等）随索引一并存储；每个分区先按热度排好自己的结果，聚合服务器归并、重排后返回全局最优。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="webcrawler">
+<h2 class="ch-title">第 11 章 · 设计网络爬虫</h2>
+<div class="meta"><span class="pill hard">困难</span> 又名：spider、robot、worm、walker、bot</div>
+
+<h3>1. 是什么 & 需求</h3>
+<p>爬虫有条不紊地浏览万维网，从种子页面出发递归抓取链接、收集文档——支撑搜索索引、页面/链接语法校验、站点变更监控、镜像站维护、侵权检索、专用索引（如理解多媒体内容的索引）。需求：<strong>可扩展性</strong>（能爬完整个 Web、抓取数亿文档）与<strong>可扩充性</strong>（模块化——未来轻松加入新文档类型与新协议）。</p>
+<p>先问范围：只爬 HTML，还是连图片视频一起（每种媒体类型独立解析模块）？只支持 HTTP 还是也要 FTP（先假定 HTTP、保持可扩展）？规模：假设 10 亿网站 → 上限 <strong>150 亿页面</strong>。有礼貌的爬虫要实现 <strong>Robots 排除协议</strong>：抓取真实内容前先取 robots.txt，遵守站长划定的禁区。</p>
+
+<h3>2. 容量估算</h3>
+<div class="formula">150 亿页 / (4 周 × 7 天 × 86400 秒) ≈ 6200 页/秒</div>
+<p>存储：每页 100 KB + 500 B 元数据 → 15B × 100.5 KB ≈ 1.5 PB；按 70% 容量模型 → <strong>2.14 PB</strong>。</p>
+
+<h3>3. 抓取循环与两大难点</h3>
+<ol>
+  <li>从未访问列表取一个 URL → 2. 解析其主机 IP → 3. 建连下载文档 → 4. 解析出新 URL → 5. 新 URL 加入未访问列表 → 6. 处理文档（存储/索引） → 回到第 1 步。</li>
+</ol>
+<p><strong>BFS</strong> 是标准策略；DFS 用于特殊场景——已与某站点建连时索性把站内 URL 一口气爬完、省下握手开销。<strong>路径上溯爬取</strong>：对种子 <code>http://foo.com/a/b/page.html</code> 顺带尝试 /a/b/、/a/、/——能发现没有入链的孤立资源。爬虫之难有二：Web 体量太大（任何时刻只能抓取一小部分——必须聪明地排优先级）；页面变化太快（还没爬完一个站，页面可能已改、新页已加）。</p>
+
+<h3>4. 组件设计</h3>
+<p>最小组件集：<strong>URL 边界（frontier）</strong>、<strong>HTTP 抓取器</strong>、<strong>链接提取器</strong>、<strong>去重器</strong>、<strong>数据存储</strong>。工作线程循环：从共享边界取一个绝对 URL；按 scheme（HTTP）选协议模块下载；文档写入<strong>文档输入流（DIS）</strong>供多个模块反复读取（≤64 KB 全内存缓存，更大的落临时文件）；先做<strong>文档去重测试</strong>（换了 URL 的相同文档不再处理）；按 MIME 类型调用各处理模块（模块化、可扩充）；HTML 模块提取所有链接，逐一转为绝对 URL、过 <strong>URL 过滤器</strong>、再做 <strong>URL 已见测试</strong>；新 URL 进入边界。</p>
+<h4>关键组件详解</h4>
+<ul>
+  <li><strong>URL 边界：</strong>分布到多台服务器，每台多个工作线程、每线程一个独立 FIFO 子队列。<em>礼貌性约束</em>：URL 按规范化主机名哈希到固定线程——同一 Web 服务器同时最多一个工作线程连接，且 FIFO 顺序防止压垮对方。边界规模达数亿 URL、超出内存：入队缓冲写满即刷盘，出队缓冲从磁盘定期补充。</li>
+  <li><strong>抓取器：</strong>按协议模块下载；为免每次请求都取 robots.txt，按主机名维护定长缓存存排除规则。</li>
+  <li><strong>文档去重：</strong>每份文档算 64 位校验和（MD5/SHA）存库比对；15B × 8 B = <strong>120 GB</strong>——现代服务器内存装得下，不够就每台放 LRU 缓存 + 持久化后备存储：先查缓存、再查后备，命中则丢弃文档，未命中则双双写入。</li>
+  <li><strong>URL 去重：</strong>存定长校验和而非文本：15B × 4 B = <strong>60 GB</strong>；各主机共享一个热门 URL 内存缓存——常见链接重复率高、命中率好。<em>布隆过滤器</em>更省空间但有假阳性——被误判的 URL 永远不会入队、该文档永远不被下载；加大位向量可降低假阳性概率。</li>
+  <li><strong>URL 过滤器：</strong>按域名、前缀、协议类型定制黑名单，入队前拦截。</li>
+  <li><strong>DNS：</strong>在这个量级上域名解析是大瓶颈——自建本地 DNS 缓存服务器。</li>
+  <li><strong>检查点：</strong>全网爬取耗时数周——定期把状态快照写盘；中断的爬取从最近检查点恢复。</li>
+</ul>
+
+<h3>5. 容错与数据分区</h3>
+<p>爬取服务器之间用<strong>一致性哈希</strong>（死机替换 + 负载再分配）。按主机名分区：每台服务器保存自己的待爬 URL、已见 URL 校验和、文档校验和三类数据，并定期把快照转储到远程服务器——某台挂掉后，替补机从最近快照接手；一致性哈希把负载暂时分流到其他服务器。</p>
+
+<h3>6. 爬虫陷阱</h3>
+<p>陷阱是让爬虫无限打转的 URL 集合——有的无心（文件系统符号链接成环），有的故意（动态生成无限网页的程序）。动机各异：反垃圾陷阱抓捕收割邮箱的爬虫，也有网站借陷阱套住搜索引擎爬虫刷排名。另需提防垃圾站点与伪装（cloaking）内容。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="newsfeed">
+<h2 class="ch-title">第 12 章 · 设计 Facebook 信息流</h2>
+<div class="meta"><span class="pill hard">困难</span> 类似：Twitter / Instagram / Quora 的 Feed</div>
+
+<h3>1. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>信息流由用户关注的人、主页（Page）和群组（Group）的帖子生成；用户可能好友众多、关注大量实体；内容可为文本、图片、视频；新帖到达时要能实时追加到所有活跃用户的信息流。</li>
+  <li><strong>非功能性：</strong>实时生成——用户端最大延迟 2 秒；在有新的信息流请求时，一条新帖从发布到进入粉丝信息流不超过 5 秒。</li>
+</ul>
+
+<h3>2. 容量估算</h3>
+<p>人均 300 好友 + 关注 200 个主页。3 亿日活 × 每天拉取 5 次 = 每天 15 亿次请求 ≈ <strong>17,500 次/秒</strong>。内存：每用户约保留 500 条帖子供快速取用，每条约 1 KB → 每用户 500 KB → 全部活跃用户 <strong>150 TB</strong> → 每台 100 GB → 约 <strong>1500 台机器</strong>。</p>
+
+<h3>3. API 与数据模型</h3>
+<pre>getUserFeed(api_dev_key, user_id, since_id, count, max_id, exclude_replies) → JSON 信息流条目
+  count 单次最多 200 条；since_id / max_id 按条目 ID 分页；exclude_replies 排除回复</pre>
+<p>三个主要对象：<strong>User</strong>、<strong>Entity</strong>（主页/群组）、<strong>FeedItem</strong>（帖子，含发帖者 UserID，可选 EntityID 标记发布位置）。关系：用户↔实体的关注关系（<code>UserFollow</code> 表，Type 列区分关注的是用户还是实体）、帖子↔媒体（<code>FeedMedia</code> 表）。</p>
+
+<h3>4. 信息流生成</h3>
+<p>朴素 SQL——从 FeedItem 中选出 UserID 或 EntityID 落在用户关注列表里的帖子，按创建时间倒序取前 100——有四个问题：好友/关注多的用户查询巨慢（海量帖子的排序/归并/打分）；在页面加载时才生成、延迟高；实时更新会让生成服务积压严重；给粉丝众多的账号推送新帖负载爆炸。</p>
+<p><strong>离线预生成：</strong>专用服务器持续生成信息流并存于内存，每次从"上次生成时间"续算。每用户在哈希表中存一个结构：</p>
+<pre>Struct {
+    LinkedHashMap&lt;FeedItemID, FeedItem&gt; feedItems;
+    DateTime lastGenerated;
+}</pre>
+<p>LinkedHashMap/TreeMap 既能跳到客户端上次看到的 FeedItemID，又能顺序翻页取下一批。初始每用户存 500 条（若数据表明一页 20 条、多数用户翻不过 10 页，可降到 200 条）；要看更早内容再查后端。不为不活跃用户常驻内存：LRU 淘汰久未访问的用户；或更聪明地学习用户的登录规律（每天几点、每周哪几天），在其到来前预生成。</p>
+
+<h3>5. 信息流发布 —— 扇出（fanout）</h3>
+<p>把帖子推给所有粉丝称为扇出：推 = 写时扇出（fanout-on-write），拉 = 读时扇出（fanout-on-load）。</p>
+<ul>
+  <li><strong>拉模式：</strong>近期数据驻留内存、客户端按需或定期拉取——新内容要等下次拉取才可见，拉取节奏难定（多数拉取返回空、浪费资源）。</li>
+  <li><strong>推模式：</strong>发帖后立即推给全部粉丝（粉丝维持长轮询接收）——读取时无需遍历好友列表逐个取数据，大幅减少读操作；但百万粉丝的名人一发帖，服务器要推送到海量用户。</li>
+  <li><strong>混合模式 —— 正解：</strong>对高粉丝账号停用扇出（其粉丝改为拉取），只对几百上千粉丝的普通账号推送；或只向在线好友扇出；"推送通知 + 拉取内容"兼得两者之长——纯推或纯拉都不够灵活。</li>
+</ul>
+<p>单次响应设上限（约 20 条），但允许客户端自定数量（手机取得少）。移动端流量金贵，可以不主动推数据，改为"下拉刷新"。</p>
+
+<h3>6. 排名与分区</h3>
+<p>按时间排序最简单，但现代排序做得更多：选出让帖子"重要"的<em>信号</em>——点赞数、评论数、分享数、更新时间、是否带图/视频等——组合算分；更进一步则持续检验排序是否提升了用户黏性、留存与广告收入。帖子与元数据的分片沿用 Twitter（第 6 章）。内存中的信息流数据按 <strong>UserID 哈希</strong>分区——每用户不超过 500 条、必然装进一台服务器，取信息流永远只查一台机器；未来扩容与复制用一致性哈希。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+<section class="chapter" id="yelp">
+<h2 class="ch-title">第 13 章 · 设计 Yelp / 附近服务</h2>
+<div class="meta"><span class="pill hard">困难</span> 对地点的邻近搜索</div>
+
+<h3>1. 需求与规模</h3>
+<ul>
+  <li><strong>功能性：</strong>增删改地点（Place）；给定用户经纬度，找出指定半径内的所有附近地点；用户可为地点添加含图片、文字和评分的评价。</li>
+  <li><strong>非功能性：</strong>实时搜索、延迟极低；搜索负载远大于新增地点——重读轻写。</li>
+</ul>
+<p>规模：<strong>5 亿个地点、10 万 QPS</strong>，两者每年增长约 20%。关键前提：地点的位置很少变化——若对象频繁移动（人、出租车），设计将完全不同（见第 14 章）。</p>
+
+<h3>2. 数据模型与 API</h3>
+<p><code>Location：LocationID 8 字节（4 字节够放 5 亿，但为增长预留）+ Name 256 + 纬度 8 + 经度 8 + 描述 512 + 类别 1 = 793 字节</code>。评价表：LocationID 8 + ReviewID 4（假设单个地点评价不超过 2³²）+ 评价文本 512 + 评分 1（十分制星级）；照片另建类似的表。</p>
+<pre>search(api_dev_key, search_terms, user_location, radius_filter, maximum_results_to_return,
+       category_filter, sort, page_token)
+  sort：0 = 最相关（默认），1 = 距离最近，2 = 评分最高
+  → JSON：每条结果含商家名称、地址、类别、评分、缩略图</pre>
+
+<h3>3. 从 SQL 到网格再到四叉树（QuadTree）</h3>
+<h4>a) 朴素 SQL</h4>
+<p>经纬度分别建索引，然后 <code>WHERE 纬度 BETWEEN X-D AND X+D AND 经度 BETWEEN Y-D AND Y+D</code>（近似真实距离公式）。问题：两个索引各自返回巨量地点，对两个大列表求交集效率极低。</p>
+<h4>b) 固定网格</h4>
+<p>把地图切成网格，格子边长取常用查询半径（如 10 英里）：任何搜索只需查目标格子加周边 8 个格子——由固定格长可静态算出任意经纬度所在的格子及其邻居。每个地点存 GridID（4 字节）并建索引；更好的做法是把整张网格索引放内存：哈希表 GridID → 地点列表。地球约 2 亿平方英里 → 2000 万个格子：(4 × 20M) + (8 × 500M) ≈ <strong>4 GB</strong>。弱点：地点分布不均——市中心格子爆满、海洋格子空空。</p>
+<h4>c) 动态网格 —— 四叉树</h4>
+<p>规定每格最多 <strong>500 个地点</strong>；超限就一分为四并把地点分给子格。得到<strong>四叉树</strong>：叶子节点持有地点列表；旧金山市中心会有很多小格子，太平洋只有几个大格子。构建：从代表全世界的根节点出发递归分裂，直到没有节点超过 500 个地点。查找定位格：从根向下、每一步进入包含目标位置的子节点，直到叶子。找邻居格：<em>把所有叶子节点用双向链表串起来</em>前后遍历；或通过父指针访问兄弟节点、逐层向上扩展。搜索流程：定位到用户所在叶子；地点够就返回；不够则沿邻居扩展，直到取够数量或超出最大半径。内存：每个地点只缓存 LocationID + 经纬度 = 24 B × 500M = 12 GB；5 亿 / 500 = 100 万个叶子；内部节点约为叶子的 1/3，每个 4 个 8 字节子指针 ≈ 10 MB —— <strong>整棵树约 12.01 GB，一台现代服务器装得下</strong>。新增地点要同时写数据库和四叉树（若树分布式部署，先定位所属服务器）。</p>
+
+<h3>4. 四叉树分区</h3>
+<ul>
+  <li><strong>按区域</strong>（如邮编）：热点区域压垮所在服务器，区域增长不均——重新分区或一致性哈希恢复。</li>
+  <li><strong>按 LocationID（采用）：</strong>每个地点哈希到某台服务器，各服务器对自己那份数据建四叉树。查询扇出到所有分区、各自返回附近地点，聚合服务器归并。各分区的树结构不同——无妨：我们在所有分区上按给定半径搜索邻近格子，且各服务器地点数大致均衡。</li>
+</ul>
+
+<h3>5. 复制与容错</h3>
+<p>四叉树服务器采用主从复制：从库只服务读（毫秒级滞后可接受），写走主库。主从同时挂时需要重建，但不知道那台服务器存过哪些地点——与其暴力扫全库，不如维护一台<strong>四叉树索引服务器</strong>：反向映射"分区号 → {LocationID, 经纬度} 的 HashSet"（HashSet 使增删都快，经纬度是重建树的必需信息）；重建的服务器直接来要清单即可，非常快。这台索引服务器也要有副本；即使它挂了，也能靠遍历数据库重建。</p>
+
+<h3>6. 缓存、负载均衡与排名</h3>
+<p>数据库前置 Memcache 存热门地点，LRU、按使用量调容量。负载均衡两处：客户端↔应用服务器、应用服务器↔后端，先轮询后智能。<strong>按热度排名：</strong>把聚合评分（十分制星级，取用户评分平均）同时存进数据库与四叉树；搜索半径内前 100 名时，各分区返回自己热度最高的 100 个，聚合服务器再选全局前 100。本设计假定数据不频繁更新，因此热度变化以懒方式回填——每天在系统低峰时更新一两次即可。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="uber">
+<h2 class="ch-title">第 14 章 · 设计 Uber 后端</h2>
+<div class="meta"><span class="pill hard">困难</span> 前置章节：第 13 章（Yelp）· 类似：Lyft、滴滴、Via、Sidecar</div>
+
+<h3>1. 需求</h3>
+<p>系统有两类用户——司机与乘客。司机持续上报当前位置与接单状态；乘客能看到附近所有可用司机；乘客发起叫车后，附近司机收到通知；司乘匹配后，双方持续互见实时位置直至行程结束；到达目的地后司机结束行程、恢复可接单。</p>
+<p>规模：3 亿乘客、100 万司机；日活 100 万乘客、50 万司机；每天 100 万单；所有在线司机<strong>每 3 秒</strong>上报一次位置；叫车请求须实时触达司机。</p>
+
+<h3>2. 为什么 Yelp 的四叉树不够用</h3>
+<p>Yelp 的四叉树假设数据几乎不动。这里每个司机都在持续移动：每次上报都更新树意味着——按旧位置找到所在格、移出、按新位置重新插入、新格超限还要再分裂——在这个更新频率下开销无法接受。此外还需要把司机位置快速推送给正在查看的乘客，行程中还要实时同步司乘双方位置。</p>
+
+<h3>3. DriverLocationHT + 四叉树惰性刷新</h3>
+<p>把最新位置放进哈希表 <strong>DriverLocationHT</strong>，并承诺四叉树在 <strong>15 秒内</strong>反映司机新位置（约每 10 秒刷新一次），而不是每 3 秒更新树。记录：DriverID 3 字节（100 万司机）+ 旧纬度 8 + 旧经度 8 + 新纬度 8 + 新经度 8 = <strong>35 字节</strong> → 1M × 35 = <strong>35 MB</strong>。上报带宽：(3 + 16) 字节 × 100 万司机 / 每 3 秒 ≈ <strong>每 3 秒 19 MB</strong>。单机装得下，但为了可扩展、性能与容错仍按 DriverID 随机分布到多台 <em>Driver Location 服务器</em>，每台做两件事：一收到位置更新就广播给所有关注该司机的乘客；按约 10 秒的节奏通知对应的四叉树服务器刷新。</p>
+
+<h3>4. 向乘客广播 —— 推 vs 拉</h3>
+<p><strong>推模式：</strong>基于发布/订阅的专用通知服务。乘客打开 App 时服务器返回附近司机，<em>同时把乘客订阅到这些司机的更新上</em>；DriverLocationHT 每次变化就广播给订阅者。内存：50 万活跃司机 × 平均 5 个订阅者，DriverID 3 B + CustomerID 8 B → (500K × 3) + (500K × 5 × 8) ≈ <strong>21 MB</strong>。广播带宽：250 万订阅者 × 19 B/秒 ≈ <strong>47.5 MB/s</strong>。实现用长轮询或推送通知。弱点：新司机进入乘客视野时如何动态建立订阅？必须跟踪每个乘客正在看的区域——方案复杂化。</p>
+<p><strong>拉模式（更简单，采用）：</strong>客户端每约 5 秒上报自己的位置，服务器查四叉树返回附近司机及其最新位置，客户端刷新画面。</p>
+<p>另外：允许网格在 500 上限外再增长/收缩 <strong>10%</strong> 的缓冲后才分裂/合并，减少高流量网格的反复分合。</p>
+
+<h3>5. "叫车"流程</h3>
+<ol>
+  <li>乘客发起叫车请求。</li>
+  <li>某台聚合（Aggregator）服务器接单，向四叉树服务器索取附近司机。</li>
+  <li>聚合服务器收集结果并按评分排序。</li>
+  <li>同时通知评分最高的（比如）三位司机；先接单者得单，其余收到取消；三位都无响应则通知下一批三位。</li>
+  <li>司机接单后通知乘客。</li>
+</ol>
+
+<h3>6. 容错与排名</h3>
+<p>Driver Location 服务器与通知服务器都配副本（主挂从上）；此外把数据持久化到高速 SSD——即使主从同时挂也能恢复。<strong>高评分司机优先：</strong>数据库与四叉树中都存司机的聚合评分（十分制）；搜索半径内前 10 名司机时，各分区返回自己评分最高的 10 位，聚合服务器再选全局前 10。</p>
+
+<h3>7. 进阶讨论题</h3>
+<ul>
+  <li>网络缓慢、频繁断线的客户端如何处理？</li>
+  <li>行程进行中客户端断连——计费怎么办？</li>
+  <li>如果一切都由客户端拉取、而非服务器推送，设计会怎么变？</li>
+</ul>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="ticketmaster">
+<h2 class="ch-title">第 15 章 · 设计 Ticketmaster 订票系统</h2>
+<div class="meta"><span class="pill hard">困难</span> 类似：bookmyshow.com —— 在线电影票预订</div>
+
+<h3>1. 需求</h3>
+<ul>
+  <li><strong>功能性：</strong>列出有合作影院的城市；选城市后展示该市上映影片；选影片后展示放映影院与场次；预订某场次的票；展示影厅座位图、可按喜好多选座位；能区分可选座位与已订座位；<strong>付款前座位可保留五分钟</strong>；若座位可能因他人保留过期而释放，用户可以排队等待；等待用户按<strong>先来先服务</strong>公平处理。</li>
+  <li><strong>非功能性：</strong>高并发——同一秒内多人抢同一批座位，必须优雅且公平地处理；订票涉及金钱交易——系统必须安全，数据库必须 <strong>ACID</strong> 合规。</li>
+</ul>
+<p>约定：为简化不做用户认证；不支持部分成交——要么全给要么不给；公平性是硬性要求；单次最多订 10 张防滥用；热门大片开票时流量陡增，系统必须可扩展、高可用。</p>
+
+<h3>2. 容量估算</h3>
+<p>每月 30 亿次页面浏览、售出 1000 万张票。存储：500 个城市 × 每市 10 家影院 × 每院 2000 座 × 每天 2 场 × (订座 50 B + 影片/影院信息 50 B) = <strong>2 GB/天</strong> → 五年约 <strong>3.6 TB</strong>。</p>
+
+<h3>3. API</h3>
+<pre>SearchMovies(api_dev_key, keyword, city, lat_long, radius, start_datetime, end_datetime,
+             postal_code, includeSpellcheck, results_per_page, sorting_order)
+  → JSON：影片与场次信息，含座位档位（如"普通" $14.99、"高级" $24.99）与余票状态
+ReserveSeats(api_dev_key, session_id, movie_id, show_id, seats_to_reserve[])
+  → "预订成功" | "预订失败——场次已满" | "预订失败——座位被他人保留，请重试"</pre>
+<p><code>session_id</code> 把保留与用户会话绑定——保留超时后凭它释放座位。</p>
+
+<h3>4. 数据库设计</h3>
+<p>关系：城市有多家影院；影院有多个影厅；影片有多个场次；场次有多笔订单；用户可有多笔订单。表：<code>City、Cinema(FK CityID)、Cinema_Hall(FK CinemaID)、Cinema_Seat(FK CinemaHallID)、Movie、
+Show(FK CinemaHallID, MovieID)、Show_Seat(FK CinemaSeatID, ShowID, BookingID；Status；Price)、
+Booking(FK UserID, ShowID；NumberOfSeats；Timestamp；Status 枚举)、User、Payment(FK BookingID；金额、时间、优惠券 ID、外部交易 ID、支付方式)</code>。</p>
+
+<h3>5. 订票流程</h3>
+<p>搜索 → 选影片 → 选场次 → 定票数 → 若余量足够：在座位图上选座 → 系统尝试保留。保留失败的三种情形：场次已满（报错）；想要的座位没了但还有别的（回到座位图重选）；所有座位要么已售、要么<em>正被他人保留在预订池中</em>——用户进入<strong>等待页</strong>，结局有四：等到足够座位释放 → 进座位图；等待期间全部售罄或剩余不足 → 报错；用户主动取消；等待达到<strong>一小时上限</strong>，会话过期、回到搜索页。保留成功后用户有<strong>五分钟</strong>付款，超时座位释放给他人。</p>
+
+<h3>6. 两个守护服务</h3>
+<h4>ActiveReservationsService（活跃保留服务）</h4>
+<p>每个场次的保留放在一个 <strong>LinkedHashMap</strong>（可跳到任意订单在完成时移除；表头永远是最老的保留，超时从头部弹出过期），外层哈希表 ShowID → {(BookingID, 时间戳)…}，同时数据也写库。数据库中 Booking.Status 从 Reserved(1) 变 Booked(2)；过期则删除或改为 Expired(3)，并同步从内存移除。该服务还对接外部支付服务处理付款；每当订单完成或保留过期，都会给 WaitingUsersService 发信号，好让等待的顾客得到服务。</p>
+<h4>WaitingUsersService（等待用户服务）</h4>
+<p>结构相同——ShowID → (UserID, 开始等待时间) 的 LinkedHashMap：用户取消时可跳到任意位置移除；表头永远是等得最久的用户，天然保证先来先服务。客户端用<strong>长轮询</strong>保持对预订状态的关注；座位一释放，服务器就借这个挂起的请求通知用户。<strong>过期缓冲：</strong>客户端展示的倒计时可能与服务器有偏差——服务器端多留五秒缓冲，确保客户端永远先于服务器超时，避免"以为买到了却被服务器判超时"的破碎体验。</p>
+
+<h3>7. 并发 —— 杜绝同座两卖</h3>
+<p>用 SQL 事务的 <strong>Serializable（可串行化）隔离级别</strong>——最高级别，杜绝脏读、不可重复读与幻读；事务内读到的行会被加写锁，他人无法更新：</p>
+<pre>SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+  -- 为 ShowID = 99 保留座位 54、55、56
+  SELECT * FROM Show_Seat WHERE ShowID = 99 AND ShowSeatID IN (54,55,56) AND Status = 0; -- 空闲
+  -- 恰好返回三行：UPDATE Show_Seat ...；UPDATE Booking ...；否则向用户返回失败
+COMMIT TRANSACTION;</pre>
+<p>事务提交成功后，才把保留登记进 ActiveReservationsService。</p>
+
+<h3>8. 容错与分区</h3>
+<p>ActiveReservationsService 崩溃后可从 Booking 表中 Status=Reserved(1) 的行恢复全部活跃保留（或直接主从热备）。等待用户只在内存里——没有主从热备就无法恢复。数据库同样主从配置。<strong>分区：</strong>按 MovieID 分区会把热门影片的所有场次压到一台服务器——改按 <strong>ShowID</strong> 分区，负载自然分散。两个守护服务按 <strong>ShowID 做一致性哈希</strong>分配到应用服务器（假设每个场次分到三台）。一笔保留过期时，持有它的服务器要：(1) 更新数据库（删除或标记过期订单、释放 Show_Seat 中的座位状态）；(2) 从 LinkedHashMap 移除该保留；(3) 通知用户保留已过期；(4) 向持有该场次等待用户的所有 WaitingUserService 服务器广播，找出等待最久的用户（一致性哈希能告诉我们是哪几台）；(5) 若释放的座位够用，通知持有该用户的服务器处理其请求。一笔预订成功时：(1) 持有该保留的服务器通知该场次所有等待服务器，让它们把"所需座位数超过剩余"的等待用户全部过期；(2) 各等待服务器收到消息后查询数据库确认当前余座（数据库缓存能让这条查询只跑一次）；(3) 遍历各自的 LinkedHashMap 清理不再可能满足的等待用户。</p>
+
+<div class="prof">Ticketmaster 是本课程的 ACID 样板：其他章节我们都愉快地拿一致性换可用性；这里牵涉真金白银，于是选择可串行化事务并承担其代价。</div>
+
+<h3>延伸阅读（源自原资料的资源清单）</h3>
+<p>Dynamo（高可用键值存储）、Kafka（分布式消息系统）、一致性哈希原始论文、Paxos（分布式共识协议）、乐观并发控制、Gossip 协议（故障检测）、Chubby（锁服务）、ZooKeeper（分布式协调）、MapReduce 与 Hadoop/HDFS。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<div class="part-divider">第三部分 · 系统设计基础（术语篇）</div>
+
+<section class="chapter" id="characteristics">
+<h2 class="ch-title">第 16 章 · 分布式系统的关键特性</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>五个特性刻画一个分布式系统：可扩展性、可靠性、可用性、效率、可管理性。</p>
+<h3>可扩展性（Scalability）</h3>
+<p>系统应对需求增长（数据量、事务量）并持续演进的能力，且理想情况下不损失性能。现实中系统越大性能越容易下滑（机器相距更远、网络变慢；有些任务因其原子性或设计缺陷无法分布，最终限制了加速比）；可扩展的架构要把负载均匀摊到所有节点。<strong>水平扩展</strong>：往资源池里加机器（可动态进行——Cassandra、MongoDB 是典型）；<strong>垂直扩展</strong>：给单机加 CPU/内存/存储（MySQL 的常见路线——但有上限，且往往伴随停机）。</p>
+<h3>可靠性（Reliability）</h3>
+<p>定义上是系统在给定时间内发生故障的概率；通俗地说，就是部分软硬件组件失效时系统仍能继续提供服务——任何故障机器都可被健康机器顶替以完成任务。经典例子（亚马逊这类电商）：用户的交易——比如购物车里的商品——绝不能因某台机器故障而丢失；靠的是软件组件与数据的双重冗余（承载购物车的服务器挂了，持有其精确副本的另一台顶上）。冗余当然有成本，可靠的系统必须为消除每个单点故障买单。</p>
+<h3>可用性（Availability）</h3>
+<p>系统在一段时期内保持正常运转的时间占比，涵盖可维护性、维修时间、备件保障等。一架每月能飞很多小时、极少停场的飞机可用性高；停场维护期间它就是不可用的。<strong>可靠 vs 可用：</strong>可靠必然可用，反之不成立——靠压缩维修时间、备件常备，也能让一个不可靠的产品呈现出高可用。反例：某网店上线头两年可用性 99.99%，却从未做过安全测试；第三年一连串安全事故导致长时间瘫痪，客户蒙受声誉与经济损失——它一直"可用"，却从不"可靠"。</p>
+<h3>效率（Efficiency）</h3>
+<p>两大标准度量：<strong>延迟</strong>（响应时间——拿到第一个结果的等待）与<strong>吞吐</strong>（带宽——单位时间交付的条目数）；对应两种成本单位：系统节点间发送的消息总数（不计大小）、消息体积（数据交换总量）。以消息数分析分布式结构固然过于简化——它忽略了网络拓扑、负载波动、软硬件异构等——但精确的成本模型不可行，我们只能接受粗略而稳健的估计。</p>
+<h3>可服务性 / 可管理性（Serviceability / Manageability）</h3>
+<p>系统被维修、维护的简易与迅捷程度——修复时间越长，可用性越低。要考虑：故障诊断与理解的难易、更新修改的难易、日常运维的简单程度（是否常规运行无异常）。尽早发现故障能减少乃至避免宕机——有些企业系统故障时能自动呼叫服务中心，无需人工介入。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="loadbalancing">
+<h2 class="ch-title">第 17 章 · 负载均衡</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>负载均衡器（LB）把流量摊到服务器集群上，提升应用、网站或数据库的响应速度与可用性；它同时跟踪所有资源的状态——宕机的、无响应的、错误率高的服务器不再接收流量。LB 可加在三个层次：用户↔Web 服务器、Web 服务器↔内部平台层（应用服务器、缓存服务器）、平台层↔数据库。</p>
+<h3>收益</h3>
+<p>用户体验更快更连贯（请求立即转给更空闲的资源，不用等一台苦撑的服务器）；服务方宕机更少、吞吐更高（哪怕整台服务器故障，LB 直接绕开）；管理员处理请求更轻松、用户等待更短；智能 LB 还能提供预测分析、提前发现流量瓶颈，为自动化和业务决策提供洞见；工作分散到多台设备，单点压力小、组件更少故障。</p>
+<h3>健康检查与算法</h3>
+<p>LB 只把流量发给"健康"的后端——健康检查定期连接后端确认其在监听；失败的服务器被摘出池子，恢复响应后重新纳入。选择算法：<strong>最少连接</strong>（发给活跃连接最少者——适合大量分布不均的持久连接）、<strong>最短响应时间</strong>（连接最少且平均响应最快）、<strong>最小带宽</strong>（当前吞吐 Mbps 最低者）、<strong>轮询</strong>（循环分发——适合配置相同、连接短暂的场景）、<strong>加权轮询</strong>（按处理能力赋权，权重高者多接新连接）、<strong>IP 哈希</strong>（按客户端 IP 哈希选服务器）。</p>
+<h3>冗余 LB</h3>
+<p>LB 自身也可能成为单点——把两台组成集群，互相监控健康；两台同样有能力转发流量与检测故障，主 LB 失效时备用者接管。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="caching">
+<h2 class="ch-title">第 18 章 · 缓存</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>负载均衡帮你水平扩容；缓存则让你把已有资源用到极致，甚至实现原本不可及的产品需求。缓存利用<strong>访问局部性原理</strong>——最近被请求的数据很可能再次被请求。它像短期记忆：空间有限但比原始数据源快得多、装着最近访问的内容；缓存存在于计算的每一层（硬件、操作系统、浏览器、Web 应用……），且离前端越近效果越好——快速返回、不惊动下游。</p>
+<h3>应用服务器缓存与 CDN</h3>
+<p>请求层节点上的本地缓存能秒回已有数据（内存最快，本地磁盘也快过网络存储）。扩展到多节点后，若 LB 随机分发，相同请求会落到不同节点、未命中率上升——用全局缓存或分布式缓存解决。<strong>CDN</strong> 是服务海量静态媒体的缓存：请求先问 CDN，有则直接返回，无则回源、缓存、再服务。规模还不够上 CDN？先把静态媒体放到独立子域（static.yourservice.com）、用 Nginx 这类轻量服务器托管，将来把 DNS 切给 CDN 即可平滑过渡。</p>
+<h3>缓存失效 —— 三种写策略</h3>
+<ul>
+  <li><strong>写穿（write-through）：</strong>同时写缓存与数据库——数据完全一致、崩溃断电不丢，但每次写要做两遍、写延迟更高。</li>
+  <li><strong>绕写（write-around）：</strong>只写数据库、绕过缓存——避免不会被重读的数据灌满缓存，但刚写的数据首读必未命中、要从慢速后端读取。</li>
+  <li><strong>写回（write-back）：</strong>只写缓存立即确认，稍后按间隔或条件落盘——写延迟最低、写密集吞吐最高，但唯一副本在缓存里，崩溃即丢数据。</li>
+</ul>
+<h3>淘汰策略</h3>
+<p>FIFO（先进先出——先淘汰最早进入者）、LIFO（后进先出——先淘汰最新进入者）、<strong>LRU</strong>（最近最少使用——本课程的主力）、MRU（最近最常使用——与 LRU 相反）、LFU（最不经常使用——按使用频次淘汰）、随机替换（RR）。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="sharding">
+<h2 class="ch-title">第 19 章 · 分片 / 数据分区</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>数据分区（分片）把大数据库拆成许多小块、分布到多台机器上，改善可管理性、性能、可用性与负载均衡——过了某个规模临界点，加机器（水平）比堆配置（垂直）更便宜也更可行。</p>
+<h3>分区方法</h3>
+<ul>
+  <li><strong>水平分区（范围分片）：</strong>不同的行进不同的表——如邮编 &lt; 10000 的地点一张表、其余另一张。范围键选得不慎就会失衡：曼哈顿的地点远多于郊区。</li>
+  <li><strong>垂直分区：</strong>按功能把表放到各自的服务器（用户资料一台、好友列表一台、照片一台）。实现直接、对应用影响小——但业务继续增长后，单一功能的库还是得再拆（1.4 亿用户的 100 亿张照片元数据无法由一台服务器扛下）。</li>
+  <li><strong>目录式分区：</strong>建一个查询服务保存"元组键 → 数据库服务器"的映射，把分区方案从数据访问代码中抽象出去——加服务器、改方案都不动应用。</li>
+</ul>
+<h3>分区依据</h3>
+<ul>
+  <li><strong>键值/哈希：</strong>对实体的键属性做哈希得到分区号（如 100 台服务器时取 ID % 100）。分配均匀，但等于把服务器数写死——加机器要改哈希函数、重分布数据、停机；对策是一致性哈希。</li>
+  <li><strong>列表：</strong>每个分区认领一组值（把冰岛、挪威、瑞典、芬兰、丹麦用户都放"北欧分区"）。</li>
+  <li><strong>轮转：</strong>第 i 条元组进第 (i mod n) 个分区，分布均匀而简单。</li>
+  <li><strong>复合：</strong>组合以上方案——一致性哈希本质上就是哈希 + 列表的复合（哈希先把键空间压缩到可列举的大小）。</li>
+</ul>
+<h3>分片的代价</h3>
+<p>跨表、跨行操作不再落在同一台服务器上：<strong>连接与反规范化</strong>——跨分片 join 通常不可行且低效，常见对策是反规范化把原需连接的查询合入一张表，但要承担数据不一致等风险；<strong>引用完整性</strong>——跨分片外键几乎无 RDBMS 支持，只能在应用代码里维护，还要定期跑 SQL 任务清理悬挂引用；<strong>再均衡</strong>——数据分布不均（某邮编地点爆多）或负载不均（照片分片请求过载）时不得不改分区方案、搬迁全部数据，不停机完成极其困难；目录式分区能缓解，代价是系统更复杂、且查询服务本身成为新单点。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="indexes">
+<h2 class="ch-title">第 20 章 · 索引</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>数据库性能撑不住时，第一个该想到的就是索引。对表的一列或多列建索引，既加速随机查找，又支持有序访问。心智模型：<strong>图书馆目录卡</strong>——按书名排一套、按作者排一套，各自指向书的实际位置；同理，索引保存被索引的列加一个指向整行的指针。对 TB 级、单条载荷极小（约 1 KB）、散布在多台物理设备上的数据集，索引不是可选项——它是在合理时间内找到数据物理位置的唯一手段。</p>
+<h3>写性能代价</h3>
+<p>索引能大幅提升读取，但它自身占空间，且每次插入、更新、删除都要同步维护索引——写性能随之下降。因此不要随手加索引，不再使用的索引要删掉。若一张表写多读少，为读优化而拖慢更常见的写操作，多半得不偿失。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="proxies">
+<h2 class="ch-title">第 21 章 · 代理</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>代理服务器是客户端与后端服务器之间的中间层——客户端连上代理请求网页、文件、连接等服务。代理通常用于过滤请求、记录日志，或转换请求（增删头部、加解密、压缩资源）；它的缓存还能就地服务大量请求——多个客户端要同一资源时，代理缓存一份即可，不必回源。</p>
+<h3>类型</h3>
+<ul>
+  <li><strong>开放代理：</strong>任何互联网用户都能使用（一般代理只服务组内用户、即封闭代理）。两个著名变种：<strong>匿名代理</strong>——表明自己是服务器但隐藏客户端原始 IP；<strong>透明代理</strong>——表明身份且通过 HTTP 头暴露原始 IP，主要优点是能缓存网站。</li>
+  <li><strong>反向代理：</strong>代表客户端向一台或多台服务器取回资源，返回时就像资源出自代理自身。</li>
+</ul>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="replication">
+<h2 class="ch-title">第 22 章 · 冗余与复制</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p><strong>冗余</strong>是对系统关键组件或功能的复制，目的在于提升可靠性——通常表现为备份或故障保护，也可用于提升实际性能。例：一个文件只存在一台服务器上，服务器没了文件就没了；复制多份即可化解。冗余消除单点故障，并在危机中提供后备——生产环境跑两个服务实例，一个失效就切到另一个。<strong>复制</strong>是在冗余资源（软硬件组件）间同步信息以保持一致，从而提升可靠性、容错与可访问性。数据库中最常见的是<strong>主从复制</strong>：主库接收全部更新，逐级传播给从库；每个从库确认收到后，后续更新才能继续发送。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="sqlnosql">
+<h2 class="ch-title">第 23 章 · SQL 与 NoSQL</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>数据库世界的两大阵营：SQL（关系型）与 NoSQL（非关系型）。关系库结构化、模式预定义——像电话簿，规规矩矩存号码地址；非关系库无结构、分布式、模式动态——像文件夹，从地址电话到 Facebook 点赞、购物偏好什么都能装。</p>
+<h3>两大家族</h3>
+<p><strong>SQL：</strong>按行列存储——MySQL、Oracle、MS SQL Server、SQLite、Postgres、MariaDB。<strong>NoSQL：</strong><em>键值存储</em>（Redis、Voldemort、Dynamo——键关联到值的数组）；<em>文档数据库</em>（CouchDB、MongoDB——数据存成文档、聚成集合，每个文档结构可完全不同）；<em>宽列数据库</em>（Cassandra、HBase——用列族取代表，列无需预先定义、每行列数可不同，最适合大数据集分析）；<em>图数据库</em>（Neo4J、InfiniteGraph——节点存实体、属性存信息、边存关系，适合天然成图的数据）。</p>
+<h3>核心差异</h3>
+<table>
+<tr><th></th><th>SQL</th><th>NoSQL</th></tr>
+<tr><td>存储</td><td>表：一行一实体，一列一属性</td><td>键值 / 文档 / 图 / 列族等多种模型</td></tr>
+<tr><td>模式</td><td>固定；每行都符合模式；改模式要动全库、要停机</td><td>动态；列可随加；每"行"不必填满每"列"</td></tr>
+<tr><td>查询</td><td>SQL 语言，极其强大</td><td>UnQL（非结构化查询语言），以文档集合为中心，各家语法不同</td></tr>
+<tr><td>扩展</td><td>通常垂直扩展（很贵）；跨服务器扩展困难耗时</td><td>水平扩展、廉价通用/云主机即可，许多产品自动分布数据</td></tr>
+<tr><td>ACID</td><td>绝大多数完全合规</td><td>大多为性能与扩展性牺牲 ACID</td></tr>
+</table>
+<h3>如何选择</h3>
+<p><strong>选 SQL</strong>：需要 ACID 合规时——它精确规定事务如何与数据库交互、减少异常、保护完整性，电商与金融应用的首选；或数据结构化且稳定、业务并非爆发式增长、无需为多样数据与高流量买单时。<strong>选 NoSQL</strong>：存储大量无结构或弱结构数据（对可存的数据类型不设限、随需新增类型；文档库无需预先定义"类型"）；充分利用云计算与云存储（数据需轻松摊到多台服务器——Cassandra 这类产品开箱即支持跨数据中心扩展、通用硬件即可）；快速开发迭代（数据结构频改时，关系库的模式迁移周期会拖慢你）。没有万能药——很多企业同时使用两者。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="cap">
+<h2 class="ch-title">第 24 章 · CAP 定理</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>CAP 定理：分布式软件系统不可能同时提供以下三项中的两项以上——
+<strong>一致性（C）</strong>：所有节点同一时刻看到相同的数据（靠"先更新若干节点、再允许后续读取"实现）；
+<strong>可用性（A）</strong>：每个请求都能得到成功或失败的响应（靠跨服务器复制数据实现）；
+<strong>分区容忍（P）</strong>：消息丢失或部分故障时系统照常工作——只要不是整网瘫痪，任何网络故障都能扛住，因为数据已充分复制到多种节点与网络组合上，间歇性断网不倒。</p>
+<p>为什么必须取舍：一致性要求所有节点以相同顺序看到相同的更新；而网络一旦分区，一侧的更新可能来不及传到另一侧，客户端就会在读过新数据后又从过期分区读到旧数据。唯一的补救是停止服务过期分区——可用性随即不再是 100%。设计分布式系统时，在 CAP 之间怎么取舍几乎是要考虑的第一件事。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="consistenthashing">
+<h2 class="ch-title">第 25 章 · 一致性哈希</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>分布式哈希表（DHT）是分布式可扩展系统的基础组件之一：键、值、哈希函数三要素，<code>index = hash(key)</code> 决定值存放的位置。给 n 台缓存服务器分配数据时，直觉方案 <code>key % n</code> 简单常用，却有两个致命缺陷：(1) <strong>不可水平扩展</strong>——每加一台机器，所有既有映射全部作废；缓存数据一多，安排停机重建映射就是运维噩梦；(2) <strong>可能负载不均</strong>——现实数据不会均匀分布，结果一些缓存又热又满、另一些几乎闲置。</p>
+<h3>哈希环</h3>
+<p>一致性哈希让节点增删时的数据重组最小化，缓存系统伸缩更容易：扩容时只需重新映射 <strong>k/n</strong> 个键（k 为键总数、n 为服务器数），而取模方案要重映射全部键。对象尽量映射到同一台主机；主机下线时其对象由其他主机分摊，新主机上线时只从少数几台接手份额、不动其他人的。机制：设哈希输出范围为 [0, 256)，把这些整数首尾相接排成一个环；(1) 把每台缓存服务器哈希成环上的整数；(2) 放置一个键时，先哈希成整数，再<strong>顺时针</strong>走到遇见的第一台缓存——就存在那里（例如 key1 → 缓存 A，key2 → 缓存 C）。新增服务器 D 时，只有原本属于其顺时针后继 C 的部分键迁到 D；移除（或故障）服务器 A 时，只有 A 的键落到下一台 B——其余键一概不动。</p>
+<h3>虚拟副本</h3>
+<p>真实数据本质上随机分布、未必均匀，环上的键可能偏斜。对策是给每台缓存加"<strong>虚拟副本</strong>"：不再映射到环上一个点，而是多个点——每台缓存对应环上的多段区间。只要哈希函数"混合得好"，副本越多，键的分布就越均衡。</p>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+<section class="chapter" id="realtime">
+<h2 class="ch-title">第 26 章 · 长轮询 vs WebSocket vs 服务器推送事件（SSE）</h2>
+<div class="meta"><span class="pill core">概念</span></div>
+<p>先看标准 HTTP 请求：客户端建立连接并请求数据 → 服务器计算响应 → 服务器在该请求上返回响应。以下三种模式带来更实时的通信：</p>
+<h3>Ajax 轮询</h3>
+<p>绝大多数 AJAX 应用的基本手段：客户端按固定间隔（如 0.5 秒）反复请求，服务器照常响应；没有新数据就返回空响应。问题在于客户端必须不停地问——大量空响应造成纯粹的 HTTP 开销。</p>
+<h3>HTTP 长轮询（"悬挂 GET"）</h3>
+<p>轮询的改良版，允许服务器在有数据时才推给客户端：客户端照常发请求，但预期服务器可能不会立即回应——没有数据时服务器<em>挂起</em>请求、等到有数据或超时才发出完整响应；客户端收到响应后立即再发一个长轮询请求，使服务器手上几乎总有一个可用的挂起请求来投递事件。每个长轮询请求都有超时，连接因超时关闭后客户端要定期重连。</p>
+<h3>WebSocket</h3>
+<p>在单条 TCP 连接上提供<strong>全双工</strong>通信信道：客户端通过 WebSocket 握手建立持久连接，成功后双方可随时互发数据、开销更低——它为"服务器不经请求就向浏览器推内容"提供了标准化方式，连接保持打开、消息双向往返，实现客户端与服务器之间真正的双向持续对话，适合实时数据传输。</p>
+<h3>服务器推送事件（SSE）</h3>
+<p>客户端用常规 HTTP 与服务器建立一条持久的长期连接，服务器经此单向推送数据：(1) 客户端发 HTTP 请求；(2) 页面与服务器建立连接；(3) 服务器有新信息就发给客户端。客户端若要向服务器发数据，得借助其他技术/协议。SSE 最适合"服务器持续产生数据流推向客户端"的场景（服务器在循环中生成并连发多个事件）。</p>
+<div class="key">把它们映射回案例：Messenger 与信息流依赖长轮询；Dropbox 的同步通知、Ticketmaster 的等待页、Uber 的位置分发，都是在这同一份菜单上做选择。传输方式的选择本身就是设计决策——面试时要明说。</div>
+<a class="top" href="#top">↑ 返回顶部</a>
+</section>
+
+</main>
+<footer>教学用途整理 · 中文版 · 另有配套英文版</footer>
+</body>
+</html>

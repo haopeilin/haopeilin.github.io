@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Design: A Complete Course for College Students</title>
+<style>
+  :root{
+    --cardinal:#8C1515; --dark:#2e2d29; --sand:#f7f5f0; --ink:#333;
+    --accent:#175e54; --gold:#b26f16; --line:#e0dcd3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Georgia,'Times New Roman',serif;color:var(--ink);background:var(--sand);line-height:1.65;font-size:17px}
+  header.hero{background:linear-gradient(135deg,var(--cardinal),#5c0e0e);color:#fff;padding:56px 24px 44px;text-align:center}
+  header.hero h1{font-size:2.3em;margin-bottom:10px;letter-spacing:.5px}
+  header.hero p{max-width:820px;margin:8px auto;opacity:.92;font-size:1.05em}
+  .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:3px 14px;font-size:.8em;margin:4px 4px 0;font-family:Helvetica,Arial,sans-serif}
+  nav.toc{background:#fff;border-bottom:3px solid var(--cardinal);padding:20px 24px}
+  nav.toc .wrap{max-width:1000px;margin:0 auto}
+  nav.toc h2{font-size:1em;text-transform:uppercase;letter-spacing:2px;color:var(--cardinal);font-family:Helvetica,Arial,sans-serif;margin-bottom:10px}
+  nav.toc ol{columns:2;column-gap:40px;list-style-position:inside;font-size:.92em}
+  nav.toc li{margin:3px 0;break-inside:avoid}
+  nav.toc a{color:var(--dark);text-decoration:none;border-bottom:1px dotted #bbb}
+  nav.toc a:hover{color:var(--cardinal)}
+  main{max-width:1000px;margin:0 auto;padding:30px 24px 80px}
+  section.chapter{background:#fff;border:1px solid var(--line);border-radius:8px;padding:34px 38px;margin:28px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  h2.ch-title{color:var(--cardinal);font-size:1.7em;border-bottom:2px solid var(--line);padding-bottom:10px;margin-bottom:6px}
+  .meta{font-family:Helvetica,Arial,sans-serif;font-size:.8em;color:#777;margin-bottom:18px}
+  .meta .pill{display:inline-block;border-radius:12px;padding:2px 10px;margin-right:6px;color:#fff}
+  .easy{background:#3a7d44}.medium{background:var(--gold)}.hard{background:var(--cardinal)}.core{background:var(--accent)}
+  h3{color:var(--dark);margin:24px 0 8px;font-size:1.18em}
+  h4{color:var(--accent);margin:16px 0 6px;font-size:1.02em}
+  p{margin:8px 0}
+  ul,ol{margin:8px 0 8px 26px}
+  li{margin:4px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92em;font-family:Helvetica,Arial,sans-serif}
+  th{background:var(--dark);color:#fff;padding:8px 12px;text-align:left}
+  td{border:1px solid var(--line);padding:7px 12px;background:#fdfcfa}
+  tr:nth-child(even) td{background:#f4f1ea}
+  code,pre{font-family:'SF Mono',Consolas,Menlo,monospace;font-size:.86em}
+  code{background:#f0ede6;padding:1px 5px;border-radius:3px}
+  pre{background:#2e2d29;color:#e8e6df;padding:14px 18px;border-radius:6px;overflow-x:auto;margin:12px 0;line-height:1.5}
+  .prof{background:#fdf6ec;border-left:4px solid var(--gold);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .prof::before{content:"🎓 Professor's note — ";font-weight:bold;color:var(--gold);font-family:Helvetica,Arial,sans-serif;font-size:.85em}
+  .key{background:#eef5f3;border-left:4px solid var(--accent);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .key::before{content:"🔑 Key idea — ";font-weight:bold;color:var(--accent);font-family:Helvetica,Arial,sans-serif;font-size:.85em}
+  .warn{background:#faeeee;border-left:4px solid var(--cardinal);padding:12px 16px;margin:14px 0;border-radius:0 6px 6px 0}
+  .warn::before{content:"⚠️ Common pitfall — ";font-weight:bold;color:var(--cardinal);font-family:Helvetica,Arial,sans-serif;font-size:.85em}
+  .quiz{background:#f1f0fb;border:1px dashed #7b74c9;padding:12px 16px;margin:18px 0;border-radius:6px}
+  .quiz::before{content:"✏️ Check yourself";display:block;font-weight:bold;color:#4b44a0;font-family:Helvetica,Arial,sans-serif;font-size:.85em;margin-bottom:6px}
+  .formula{background:#f0ede6;text-align:center;padding:8px;margin:10px 0;border-radius:4px;font-family:'SF Mono',Consolas,monospace;font-size:.9em}
+  .part-divider{text-align:center;margin:50px 0 10px;color:var(--cardinal);font-family:Helvetica,Arial,sans-serif;text-transform:uppercase;letter-spacing:3px;font-size:1.05em;font-weight:bold}
+  .part-divider::before,.part-divider::after{content:"—— ";letter-spacing:0}
+  footer{text-align:center;padding:26px;color:#888;font-size:.85em;font-family:Helvetica,Arial,sans-serif}
+  a.top{display:inline-block;margin-top:14px;font-size:.8em;font-family:Helvetica,Arial,sans-serif;color:var(--cardinal);text-decoration:none}
+  @media(max-width:700px){nav.toc ol{columns:1}section.chapter{padding:22px 18px}}
+</style>
+</head>
+<body id="top">
+<header class="hero">
+  <h1>System Design: A Complete Course</h1>
+  <p>A step-by-step tutorial for college students — how to think about, estimate, and architect large-scale
+     distributed systems, taught through fifteen classic design problems and the core building blocks behind them.</p>
+  <span class="badge">Part I · Interview Framework</span>
+  <span class="badge">Part II · 15 Design Case Studies</span>
+  <span class="badge">Part III · System Design Basics</span>
+</header>
+
+<nav class="toc"><div class="wrap">
+<h2>Table of Contents</h2>
+<ol>
+  <li><a href="#framework">The 7-Step Design Framework</a></li>
+  <li><a href="#tinyurl">URL Shortener (TinyURL)</a></li>
+  <li><a href="#pastebin">Pastebin</a></li>
+  <li><a href="#instagram">Instagram</a></li>
+  <li><a href="#dropbox">Dropbox / Google Drive</a></li>
+  <li><a href="#messenger">Facebook Messenger</a></li>
+  <li><a href="#twitter">Twitter</a></li>
+  <li><a href="#youtube">YouTube / Netflix</a></li>
+  <li><a href="#typeahead">Typeahead Suggestion</a></li>
+  <li><a href="#ratelimiter">API Rate Limiter</a></li>
+  <li><a href="#twittersearch">Twitter Search</a></li>
+  <li><a href="#webcrawler">Web Crawler</a></li>
+  <li><a href="#newsfeed">Facebook Newsfeed</a></li>
+  <li><a href="#yelp">Yelp / Proximity Server</a></li>
+  <li><a href="#uber">Uber Backend</a></li>
+  <li><a href="#ticketmaster">Ticketmaster</a></li>
+  <li><a href="#characteristics">Key Characteristics of Distributed Systems</a></li>
+  <li><a href="#loadbalancing">Load Balancing</a></li>
+  <li><a href="#caching">Caching</a></li>
+  <li><a href="#sharding">Sharding / Data Partitioning</a></li>
+  <li><a href="#indexes">Indexes</a></li>
+  <li><a href="#proxies">Proxies</a></li>
+  <li><a href="#replication">Redundancy &amp; Replication</a></li>
+  <li><a href="#sqlnosql">SQL vs. NoSQL</a></li>
+  <li><a href="#cap">CAP Theorem</a></li>
+  <li><a href="#consistenthashing">Consistent Hashing</a></li>
+  <li><a href="#realtime">Long-Polling vs. WebSockets vs. SSE</a></li>
+</ol>
+</div></nav>
+
+<main>
+<div class="part-divider">Part I · How to Attack Any Design Question</div>
+
+<section class="chapter" id="framework">
+<h2 class="ch-title">Chapter 0 · The 7-Step Design Framework</h2>
+<div class="meta"><span class="pill core">Foundation</span> Read this first — every later chapter follows this recipe.</div>
+
+<p>Students struggle with system design interviews (SDIs) for three predictable reasons: the questions are
+open-ended with no single correct answer, most students have never built a truly large system, and — most fixable
+of all — they simply didn't prepare. At top companies, an above-average SDI performance materially changes both the
+offer and the level, because it demonstrates that you can handle complexity. The good news: a repeatable
+7-step method turns a vague prompt into a structured 35–40 minute conversation.</p>
+
+<h3>Step 1 — Requirements clarification</h3>
+<p>Design questions are deliberately under-specified. Spend the first minutes defining the <em>end goals</em> and
+choosing which parts of the system you will focus on. For a Twitter-like service you'd ask: Can users post tweets
+and follow people? Do we build the timeline? Do tweets carry photos and video? Backend only, or front-end too?
+Is search in scope? Trending topics? Push notifications? Each answer reshapes the design.</p>
+
+<h3>Step 2 — System interface definition</h3>
+<p>Write down the APIs the system must expose. This nails the exact contract and catches requirement
+misunderstandings early. For example:</p>
+<pre>postTweet(user_id, tweet_data, tweet_location, user_location, timestamp, ...)
+generateTimeline(user_id, current_time, user_location, ...)
+markTweetFavorite(user_id, tweet_id, timestamp, ...)</pre>
+
+<h3>Step 3 — Back-of-the-envelope estimation</h3>
+<p>Estimate scale before designing: expected traffic (new tweets/sec, timeline views/sec), storage (very different if
+tweets carry media), and network bandwidth. These numbers drive every later decision about scaling, partitioning,
+load balancing, and caching.</p>
+
+<h3>Step 4 — Defining the data model</h3>
+<p>Identify the entities, how they interact, and how data flows between components — this guides partitioning and
+management later. For Twitter: <code>User(UserID, Name, Email, DoB, CreationDate, LastLogin)</code>,
+<code>Tweet(TweetID, Content, TweetLocation, NumberOfLikes, TimeStamp)</code>, <code>UserFollow(UserID1, UserID2)</code>,
+<code>FavoriteTweets(UserID, TweetID, TimeStamp)</code>. Then ask: NoSQL like Cassandra, or MySQL? What block storage
+for photos and videos?</p>
+
+<h3>Step 5 — High-level design</h3>
+<p>Draw a block diagram with 5–6 boxes covering the problem end-to-end. For Twitter: multiple application servers
+behind load balancers; if reads dominate writes, separate read and write server pools; a database built for heavy
+read volume; distributed file storage for media.</p>
+
+<h3>Step 6 — Detailed design</h3>
+<p>Dig into two or three components — let the interviewer's feedback steer you. Present alternative approaches with
+pros and cons; there is no single answer, only trade-offs under constraints. Typical deep dives: How do we partition
+massive data across databases, and what goes wrong if a user's whole dataset sits on one machine? How do we handle
+"hot" users? Should storage be optimized for scanning the latest tweets? Where do we cache, and how much? Which
+components need load balancing most?</p>
+
+<h3>Step 7 — Identifying and resolving bottlenecks</h3>
+<p>Hunt for single points of failure and mitigation. Do we have enough data replicas to survive server losses? Enough
+service copies that a few failures won't cause total shutdown? How do we monitor performance, and do we alert when
+critical components fail or degrade?</p>
+
+<div class="key">Preparation plus organization wins SDIs. The seven steps keep you on track and guarantee you cover
+requirements, scale, data, architecture, depth, and reliability — in that order.</div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<div class="part-divider">Part II · Fifteen Classic Design Problems</div>
+
+<section class="chapter" id="tinyurl">
+<h2 class="ch-title">Chapter 1 · Designing a URL Shortener (TinyURL)</h2>
+<div class="meta"><span class="pill easy">Easy</span> Similar: bit.ly, goo.gl, qlink.me</div>
+
+<h3>1. Why URL shortening?</h3>
+<p>Short links save space in messages, tweets and print, reduce typos, enable per-link analytics, and can hide the
+original URL. A long educative.io URL shrinks to something like <code>http://tinyurl.com/jlg8zpc</code> — roughly a
+third of the size.</p>
+
+<h3>2. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> (1) given a URL, generate a shorter, unique alias; (2) redirect visitors of a short
+  link to the original URL; (3) optional custom aliases; (4) links expire after a default timespan, with user-settable
+  expiration.</li>
+  <li><strong>Non-functional:</strong> high availability (if we're down, every redirection fails), real-time redirection
+  with minimal latency, and short links must not be guessable.</li>
+  <li><strong>Extended:</strong> analytics (redirect counts) and a REST API for other services.</li>
+</ul>
+
+<h3>3. Capacity estimation (read-heavy, 100:1 read/write)</h3>
+<p>Assume 500M new shortenings per month → 50B redirections per month.</p>
+<div class="formula">Writes: 500M / (30 × 24 × 3600) ≈ 200 URLs/s &nbsp; | &nbsp; Reads: 100 × 200 = 20K/s</div>
+<p>Storing every object for 5 years: 500M × 5 × 12 = 30B objects × ~500 bytes ≈ <strong>15 TB</strong>.
+Bandwidth: incoming 200 × 500 B = 100 KB/s; outgoing 20K × 500 B ≈ 10 MB/s. Memory for cache: 20K req/s ≈ 1.7B
+req/day; caching the hottest 20% (80/20 rule) needs 0.2 × 1.7B × 500 B ≈ <strong>170 GB</strong> (less in practice —
+duplicates).</p>
+<table>
+<tr><th>Metric</th><th>Estimate</th></tr>
+<tr><td>New URLs</td><td>200/s</td></tr>
+<tr><td>URL redirections</td><td>20K/s</td></tr>
+<tr><td>Incoming data</td><td>100 KB/s</td></tr>
+<tr><td>Outgoing data</td><td>10 MB/s</td></tr>
+<tr><td>Storage (5 years)</td><td>15 TB</td></tr>
+<tr><td>Cache memory</td><td>170 GB</td></tr>
+</table>
+
+<h3>4. System APIs</h3>
+<pre>createURL(api_dev_key, original_url, custom_alias=None, user_name=None, expire_date=None)
+  → returns the short URL, or an error code
+deleteURL(api_dev_key, url_key) → returns 'URL Removed'</pre>
+<p>The <code>api_dev_key</code> throttles each registered developer to a quota of creations/redirections per period —
+this is how we prevent a malicious user from consuming all keys.</p>
+
+<h3>5. Database design</h3>
+<p>Observations: billions of small records (&lt;1K each), no relationships beyond "who created it", read-heavy.
+Two tables: <code>URL(Hash PK varchar(16), OriginalURL varchar(512), CreationDate, ExpirationDate, UserID)</code> and
+<code>User(UserID PK, Name, Email, CreationDate, LastLogin)</code>. Because we need billions of rows and no joins,
+a NoSQL key-value store (DynamoDB, Cassandra, Riak) fits best and scales more easily.</p>
+
+<h3>6. Key generation — the heart of the problem</h3>
+<h4>Approach A: encode the actual URL</h4>
+<p>Compute MD5/SHA256 of the URL and encode it in base36/base62/base64. A 6-character base64 key gives
+64⁶ ≈ 68.7B strings; 8 characters give 64⁸ ≈ 281T. Six characters suffice. MD5 yields 21+ base64 characters, so
+we take the first 6–8 — resolving duplicates by swapping/choosing other characters. Problems: identical URLs from
+different users would collide into the same key, and URL-encoded variants of the same address hash differently.
+Workarounds: append an increasing sequence number (overflow and performance concerns) or append the user id
+(signed-out users must pick a uniqueness key; conflicts still need retries).</p>
+<h4>Approach B: offline Key Generation Service (KGS) — preferred</h4>
+<p>A standalone KGS pre-generates random 6-letter keys into a key-DB. Shortening just takes one — no encoding, no
+collisions. Concurrency: KGS keeps two tables (unused/used keys); as soon as keys are loaded into memory it moves
+them to "used", and it synchronizes access so no two app servers get the same key. If KGS dies with keys in memory
+they're wasted — acceptable with 68B available. Key-DB size: 6 bytes × 68.7B ≈ <strong>412 GB</strong>. KGS is a
+single point of failure, so run a standby replica. App servers may cache keys locally (dying servers waste them,
+also fine).</p>
+<p><strong>Lookup:</strong> hit the datastore; if found, return <code>HTTP 302 Redirect</code> with the original URL
+in the Location header; else <code>HTTP 404</code> or redirect home. Custom aliases get a size cap (16 characters).</p>
+
+<h3>7. Partitioning and replication</h3>
+<p><strong>Range-based</strong> (by first letter of the hash key) is predictable but unbalances servers — too many
+URLs may start with 'E'. <strong>Hash-based</strong> maps the key's hash to 1…256 partitions; hot partitions remain
+possible and are fixed with Consistent Hashing.</p>
+
+<h3>8. Cache, LB, cleanup, telemetry, security</h3>
+<p><strong>Cache:</strong> Memcached holding full URLs by hash; start at 20% of daily traffic (~170 GB, fits one
+256 GB server or a few smaller ones). LRU eviction with a Linked-Hash-Map; replicate cache servers, and on a miss
+update all replicas (a replica already holding the entry ignores it). <strong>Load balancers</strong> go in three
+places: client↔app, app↔DB, app↔cache; start with round-robin (removes dead servers, but ignores load) and evolve to
+load-aware LB. <strong>Cleanup:</strong> lazy expiry — delete on access if expired, plus a lightweight periodic
+cleanup service in off-peak hours; default expiry (e.g., two years); reclaimed keys return to key-DB.
+<strong>Telemetry:</strong> track visitor country, timestamp, referrer, browser/platform — beware hot rows updated
+per view. <strong>Security:</strong> store public/private permission per URL, plus a permissions table keyed by hash
+listing allowed UserIDs; unauthorized access returns HTTP 401.</p>
+
+<div class="quiz">Why is 302 (temporary) rather than 301 (permanent) redirect a deliberate choice here?
+<em>Hint: with 301 the browser caches the mapping — and your analytics never see repeat clicks.</em></div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="pastebin">
+<h2 class="ch-title">Chapter 2 · Designing Pastebin</h2>
+<div class="meta"><span class="pill easy">Easy</span> Similar: pastebin.com, pasted.co, chopapp.com</div>
+
+<h3>1. What it is & requirements</h3>
+<p>Users paste text and receive a random URL to access it. <strong>Functional:</strong> upload text and get a unique
+URL; text only; automatic expiry with user-settable expiration; optional custom alias. <strong>Non-functional:</strong>
+high reliability (no data loss), high availability, real-time access, unguessable links. <strong>Extended:</strong>
+analytics and a REST API.</p>
+<p>Design considerations: cap pastes at <strong>10 MB</strong> to stop abuse; cap custom URL length for a consistent
+database.</p>
+
+<h3>2. Capacity estimation (5:1 read/write)</h3>
+<p>1M new pastes/day, 5M reads/day → <strong>12 writes/s, 58 reads/s</strong>. Average paste ≈ 10 KB → 10 GB/day →
+36 TB over 10 years. Keys: 3.6B pastes need 6-char base64 keys (64⁶ ≈ 68.7B), costing 3.6B × 6 ≈ 22 GB (negligible).
+With a 70% capacity model, provision <strong>51.4 TB</strong>. Bandwidth: 120 KB/s in, 0.6 MB/s out. Cache 20% of
+daily reads: 0.2 × 5M × 10 KB ≈ <strong>10 GB</strong>.</p>
+
+<h3>3. APIs</h3>
+<pre>addPaste(api_dev_key, paste_data, custom_url=None, user_name=None, paste_name=None, expire_date=None)
+  → URL of the paste, or error
+getPaste(api_dev_key, api_paste_key) → paste text
+deletePaste(api_dev_key, api_paste_key) → true/false</pre>
+
+<h3>4. Storage design</h3>
+<p>Billions of records; metadata objects are tiny (&lt;100 bytes) but paste contents can reach a few MB — so
+<strong>separate them</strong>: a metadata DB (<code>Paste(URLHash PK, ContentKey, ExpirationDate, CreationDate)</code>
++ <code>User</code> table) and object storage (Amazon S3) for contents. <code>URLHash</code> is the short-URL key;
+<code>ContentKey</code> points at the stored object. This split lets each layer scale independently.</p>
+
+<h3>5. Component design</h3>
+<p><strong>Writes:</strong> the app server generates a random 6-letter key (or uses the user's custom key), stores
+contents + key; on duplicate-key failure it retries with a new key; duplicate <em>custom</em> keys return an error to
+the user. Alternatively, reuse the <strong>KGS pattern</strong> from Chapter 1 — pre-generated unique keys, two-table
+used/unused bookkeeping, standby replica for the KGS single point of failure, optional per-server key caching.
+<strong>Reads:</strong> look up the key; return contents or an error. Purging, partitioning, cache, LB, and
+security all follow the URL-shortener designs.</p>
+
+<div class="prof">Notice the pedagogy: Pastebin is TinyURL plus one twist — payloads big enough to justify splitting
+metadata from object storage. Interviewers love asking a "variant" problem to see if you can transfer a design.</div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+<section class="chapter" id="instagram">
+<h2 class="ch-title">Chapter 3 · Designing Instagram</h2>
+<div class="meta"><span class="pill medium">Medium</span> Similar: Flickr, Picasa</div>
+
+<h3>1. Scope & requirements</h3>
+<p>We design a simplified photo-sharing service: users upload photos, follow others, and see a News Feed of top
+photos from people they follow. <strong>Functional:</strong> upload/download/view photos; search by photo/video
+title; follow users; generate a News Feed of top photos from followees. <strong>Non-functional:</strong> high
+availability; ≤200 ms feed-generation latency; eventual consistency is acceptable (missing a photo briefly is fine);
+high reliability — no uploaded photo may ever be lost. Out of scope: tags, comments, tagging users, follow
+suggestions.</p>
+<p>Design considerations: read-heavy — optimize fast photo retrieval; storage efficiency matters because uploads are
+unlimited; low read latency; 100% data durability.</p>
+
+<h3>2. Capacity estimation</h3>
+<ul>
+  <li>500M total users, 1M daily active.</li>
+  <li>2M new photos/day ≈ 23/s, average 200 KB per photo.</li>
+  <li>Daily photo storage: 2M × 200 KB = <strong>400 GB/day</strong>; ten years ≈ <strong>1425 TB</strong>.</li>
+</ul>
+
+<h3>3. High-level design & schema</h3>
+<p>Two paths — upload and view/search — backed by object storage for image files plus a metadata database. Photo
+metadata needs an index on <code>(PhotoID, CreationDate)</code> because we always fetch recent photos first.
+An RDBMS handles the joins but scales painfully; instead: photos in distributed file storage (HDFS or S3), metadata
+in a key-value store (key = PhotoID → PhotoLocation, UserLocation, CreationTimestamp…), and the two relationship
+tables in a wide-column store like Cassandra — <code>UserPhoto</code> (UserID → list of PhotoIDs) and
+<code>UserFollow</code>. Cassandra maintains replicas for reliability, and deletes are retained for some days
+(supporting undelete) before permanent removal.</p>
+
+<h3>4. Data size estimation (10 years)</h3>
+<table>
+<tr><th>Table</th><th>Row size</th><th>Total</th></tr>
+<tr><td>User</td><td>UserID 4 + Name 20 + Email 32 + DoB 4 + CreationDate 4 + LastLogin 4 = 68 B</td><td>500M × 68 ≈ 32 GB</td></tr>
+<tr><td>Photo</td><td>PhotoID 4 + UserID 4 + Path 256 + lat/long ×4 (16) + CreationDate 4 = 284 B</td><td>2M/day × 284 ≈ 0.5 GB/day → 1.88 TB</td></tr>
+<tr><td>UserFollow</td><td>8 B</td><td>500M × 500 follows × 8 ≈ 1.82 TB</td></tr>
+<tr><td colspan="2"><strong>Total metadata</strong></td><td><strong>≈ 3.7 TB</strong></td></tr>
+</table>
+
+<h3>5. Component design — split reads from writes</h3>
+<p>Uploads go to disk and are slow; reads (especially cached ones) are fast. Web servers have a connection cap
+(say 500 concurrent), so heavy uploads can starve reads. Solution: <strong>dedicated read servers and write
+servers</strong>, letting each scale and be optimized independently.</p>
+
+<h3>6. Reliability and redundancy</h3>
+<p>Losing files is not an option: keep multiple copies of every file on different storage servers, and multiple
+replicas of every service. If only one instance of a service must run, keep a hot standby that takes over on
+failover (automatic or manual). Redundancy removes single points of failure.</p>
+
+<h3>7. Data sharding</h3>
+<h4>a) Partition by UserID</h4>
+<p>Shard = UserID % 10 (3.7 TB / 1 TB shards → 4 needed; keep 10 for headroom). PhotoIDs come from per-shard
+auto-increment, made global by appending the shard number. Issues: hot (celebrity) users overload one shard; photo
+counts are non-uniform; a user's data may outgrow one shard; one shard down = that user fully unavailable.</p>
+<h4>b) Partition by PhotoID — better</h4>
+<p>Generate a globally unique PhotoID <em>first</em>, then shard = PhotoID % 10. Since auto-increment inside shards
+can't work now, dedicate a key-generating DB with a single 64-bit ID table. That DB is a single point of failure —
+fix with <em>two</em> servers, one issuing odd IDs, one even, behind a round-robin load balancer:</p>
+<pre>KeyGeneratingServer1: auto-increment-increment = 2, auto-increment-offset = 1
+KeyGeneratingServer2: auto-increment-increment = 2, auto-increment-offset = 2</pre>
+<p>They may drift out of sync — harmless. The same pattern extends to Users, Comments, and other entities; or reuse
+Chapter 1's KGS. For future growth, create many <strong>logical partitions</strong> mapped onto fewer physical
+servers via a config file; migrating a partition is just a config change.</p>
+
+<h3>8. News Feed generation</h3>
+<p>Naive: fetch metadata for the latest 100 photos of every followee, run them through a ranking algorithm
+(recency, likes…), return the top 100 — but multi-table queries plus sort/merge/rank means high latency. Better:
+<strong>pre-generate</strong> the feed continuously into a <code>UserNewsFeed</code> table; the feed request becomes
+a single lookup, and regeneration resumes from the last generated timestamp.</p>
+<p>Delivery models: <strong>Pull</strong> (clients poll — data goes stale between polls and most polls return empty),
+<strong>Push</strong> (long-poll delivery on publish — celebrities with millions of followers make pushes explode),
+<strong>Hybrid</strong> (push only for users with few followers; heavy-follow users pull; or cap push frequency and
+let busy accounts pull).</p>
+
+<h3>9. Feed with sharded data — creation time inside the ID</h3>
+<p>Make the PhotoID itself sortable by time: high bits = epoch seconds, low bits = auto-increment sequence. Fifty
+years of seconds ≈ 86400 × 365 × 50 = 1.6B → <strong>31 bits</strong>; at 23 photos/s, <strong>9 bits</strong>
+of sequence (512/s, reset every second) suffice. The primary index on PhotoID then makes "latest photos" queries
+extremely fast. Shard = PhotoID % 10.</p>
+
+<h3>10. Cache & load balancing</h3>
+<p>Geo-distributed photo cache servers plus <strong>CDNs</strong> push content close to users. Metadata gets a
+Memcache layer with LRU eviction. Under the 80/20 rule, cache 20% of daily photo read volume (and metadata).</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="dropbox">
+<h2 class="ch-title">Chapter 4 · Designing Dropbox / Google Drive</h2>
+<div class="meta"><span class="pill medium">Medium</span> Similar: OneDrive, Google Drive</div>
+
+<h3>1. Why cloud storage & requirements</h3>
+<p>Cloud file storage won because we now use many devices and platforms: it promises <strong>availability</strong>
+(any device, anywhere), <strong>reliability/durability</strong> (multiple geo-distributed copies), and
+<strong>scalability</strong> (pay-as-you-grow). Requirements: upload/download from any device; share files/folders
+with other users; automatic cross-device sync; files up to a GB; <strong>ACID guarantees</strong> on file operations;
+<strong>offline editing</strong> with sync on reconnect. Extended: snapshotting/versioning of files.</p>
+
+<h3>2. Design considerations & scale</h3>
+<p>Huge read <em>and</em> write volume, roughly balanced. The pivotal trick: <strong>chunk every file (e.g., 4 MB
+pieces)</strong>. Failed transfers retry only the failed chunk; only modified chunks are transferred; duplicate
+chunks are stored once (saving storage and bandwidth); clients keep a local metadata copy to avoid round trips;
+small edits can upload diffs rather than whole chunks. Scale: 500M users, 100M DAU, 3 devices each; 100B files
+at 100 KB average → <strong>10 PB</strong>; 1M active connections per minute.</p>
+
+<h3>3. High-level architecture</h3>
+<p>The user designates a workspace folder; every change inside it propagates to the cloud and to all other devices.
+Components: <strong>Block servers</strong> (chunk upload/download with clients), <strong>Metadata servers</strong>
+(file name, size, directory, sharing info in SQL/NoSQL), and <strong>Synchronization servers</strong> (notify clients
+of changes).</p>
+
+<h3>4. The client — four parts</h3>
+<ol>
+  <li><strong>Internal Metadata Database</strong> — tracks files, chunks, versions, and locations locally.</li>
+  <li><strong>Chunker</strong> — splits files into 4 MB chunks, reconstructs them, detects which parts changed so only
+  those transfer. Optimal chunk size trades off storage-device IOPS, network bandwidth, and average file size.</li>
+  <li><strong>Watcher</strong> — monitors the workspace, notifies the Indexer of create/delete/update, and listens for
+  broadcasts from the Synchronization Service.</li>
+  <li><strong>Indexer</strong> — updates the internal DB with chunk info; after successful upload/download it tells the
+  Synchronization Service to broadcast changes and update remote metadata.</li>
+</ol>
+<p>How do clients learn of remote changes? Periodic polling wastes bandwidth and delays updates; use <strong>HTTP
+long polling</strong> — the server holds the request open until there's news. Clients should back off
+<em>exponentially</em> when servers are slow; mobile clients sync on demand to save bandwidth and battery.</p>
+
+<h3>5. Metadata DB, Sync Service, Message Queues, Block storage</h3>
+<p><strong>Metadata DB</strong> (MySQL or DynamoDB) stores chunks, files, users, devices, workspaces — and must give
+the Synchronization Service a consistent view when several users edit one file. A relational DB gives ACID natively;
+with NoSQL, the sync logic must supply ACID semantics itself.
+<strong>Synchronization Service</strong> — the heart of the system — applies each client's updates to all subscribed
+clients and reconciles local DBs with remote metadata; offline clients poll on reconnect. It transmits only
+<em>differences</em>, using SHA-256 hashes per chunk to decide whether a copy is needed; if the server already holds
+a chunk with the same hash (even from another user!), it just references it.
+<strong>Message Queuing Service</strong> decouples everything: one shared, global <em>Request Queue</em> for incoming
+metadata updates, and a per-client <em>Response Queue</em> for delivering change notifications (messages are deleted
+once received, so each subscriber needs its own queue).
+<strong>Cloud/Block Storage</strong> holds the chunks; clients talk to it directly, and separating metadata from
+storage lets us swap providers.</p>
+
+<h3>6. File processing workflow</h3>
+<ol>
+  <li>Client A uploads chunks to cloud storage.</li>
+  <li>Client A updates metadata and commits the change.</li>
+  <li>Client A receives confirmation; notifications go to clients B and C.</li>
+  <li>B and C receive the metadata change and download the updated chunks (offline clients get theirs from their
+  response queues later).</li>
+</ol>
+
+<h3>7. Data deduplication</h3>
+<p>Hash each incoming chunk and compare against existing hashes. <strong>Post-process dedupe</strong> stores first,
+dedupes later — no upload latency, but duplicate data is briefly stored and fully transferred.
+<strong>In-line dedupe</strong> hashes in real time on the client; if the chunk exists, store only a reference —
+optimal network and storage use.</p>
+
+<h3>8. Metadata partitioning</h3>
+<p><strong>Vertical</strong> (tables-per-feature on separate servers): simple, but giant tables still need further
+splitting and cross-DB joins hurt. <strong>Range-based</strong> (by first letter of file path): predictable but
+unbalanced. <strong>Hash-based</strong> (hash of FileID → partition 1…256): uniform, with residual hotspots solved by
+Consistent Hashing.</p>
+
+<h3>9. Cache, LB, security</h3>
+<p>A Memcached-style block cache serves hot chunks (a 144 GB server caches ~36K chunks at 4 MB); LRU eviction;
+plus a metadata cache. Load balancers sit between clients↔block servers and clients↔metadata servers — round robin
+first, load-aware later. For privacy, store per-file <strong>permissions</strong> in the metadata DB governing
+visibility and modification, since users can share files or make them public.</p>
+
+<div class="key">Chunking + hashing is the engine of this whole design: it powers partial sync, resumable transfers,
+diff uploads, <em>and</em> cross-user deduplication with one mechanism.</div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="messenger">
+<h2 class="ch-title">Chapter 5 · Designing Facebook Messenger</h2>
+<div class="meta"><span class="pill medium">Medium</span> Real-time one-on-one chat, web + mobile</div>
+
+<h3>1. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> one-on-one conversations; track online/offline status; persist chat history.</li>
+  <li><strong>Non-functional:</strong> real-time, minimal latency; <em>high consistency</em> — identical history on
+  every device; availability is desirable but may be traded for consistency.</li>
+  <li><strong>Extended:</strong> group chats; push notifications for offline users.</li>
+</ul>
+
+<h3>2. Capacity estimation</h3>
+<p>500M DAU × 40 messages/day = <strong>20B messages/day</strong>. At 100 bytes each: <strong>2 TB/day</strong>;
+five years ≈ <strong>3.6 PB</strong> (before compression/replication, plus metadata). Bandwidth: 2 TB / 86400 s ≈
+<strong>25 MB/s in and 25 MB/s out</strong> (every message leaves again).</p>
+
+<h3>3. High-level design & message flow</h3>
+<p>A chat server orchestrates everything:</p>
+<ol>
+  <li>User-A sends a message for User-B to the chat server.</li>
+  <li>Server acks to User-A.</li>
+  <li>Server stores the message and delivers it to User-B.</li>
+  <li>User-B acks to the server.</li>
+  <li>Server notifies User-A of successful delivery.</li>
+</ol>
+
+<h3>4. Message handling — push beats pull</h3>
+<p>With <strong>pull</strong>, clients poll for new messages: the server must track undelivered messages and most
+polls return empty — wasteful and slow. With <strong>push</strong>, active users keep a connection open and the
+server relays instantly, with no pending-message bookkeeping. Keep connections open via <strong>HTTP long polling</strong>
+(or WebSockets): the server holds each request until data arrives; timeouts trigger immediate reconnects.</p>
+<p>The server maps users to connections with a hash table (UserID → connection object). If a receiver has gone
+offline: notify the sender to retry (retry logic lives in the client so nobody retypes), or store briefly and retry
+on reconnect. Capacity: 500M concurrent connections at 50K per server → <strong>10K chat servers</strong>; a
+software load balancer maps each UserID to its server.</p>
+<p><strong>Delivering a message</strong> = store it, deliver to receiver, ack the sender — and the ack shouldn't wait
+for storage (write in the background). <strong>Ordering:</strong> server timestamps can't give a true order (if M1
+arrives at T1 and M2 at T2&gt;T1 from opposite directions, the two users would still see different orders). Keep a
+<em>per-user sequence number</em>: each client sees a consistent order on all its devices, even though the two
+participants' views may differ.</p>
+
+<h3>5. Storage — why HBase</h3>
+<p>We need a very high rate of tiny inserts and fast <em>range scans</em> over recent messages. RDBMS or MongoDB
+would incur a disk read/write per message — high latency and crushing load. A wide-column store like
+<strong>HBase</strong> (modeled on BigTable, atop HDFS) batches writes in a memory buffer and flushes to disk when
+full — perfect for lots of small, variably-sized data and range reads. Clients should <strong>paginate</strong>
+fetches, sized to the viewport (phones show fewer conversations). Options for storing on receipt: a separate worker
+thread, or an async DB request — while designing, mind connection pooling, retrying failures, logging unrecoverable
+failures, and replaying them later.</p>
+
+<h3>6. Managing user status</h3>
+<p>The connection table already tells us who's online. Broadcasting every flap to 500M users is too expensive, so:
+pull friends' statuses at app start; report failure when messaging someone offline and update the client; delay
+"came online" broadcasts a few seconds (they may vanish again); pull statuses only for users in the viewport,
+infrequently; refresh status when opening a new chat.</p>
+
+<h3>7. Partitioning, cache, LB, fault tolerance</h3>
+<p><strong>Partition by UserID hash</strong> so a user's whole history sits on one shard: 3.6 PB / 4 TB ≈ 900 →
+round to 1K shards, <code>hash(UserID) % 1000</code>; fetching a conversation range is fast. Start with many
+logical partitions on few physical servers. Partitioning by MessageID would scatter a conversation — ruled out.
+<strong>Cache</strong> the last ~15 messages of the ~5 visible conversations, co-located on the user's shard.
+<strong>LB</strong> in front of chat servers (UserID → connection holder) and cache servers.
+<strong>Failures:</strong> failing over live TCP connections is extremely hard — let clients reconnect
+automatically. Never keep one copy of messages: replicate or use Reed-Solomon encoding.</p>
+
+<h3>8. Extended requirements</h3>
+<p><strong>Group chat:</strong> GroupChatID-keyed objects on chat servers holding member lists; the LB routes by
+GroupChatID and the handling server fans out to each member's connection server; a separate table partitioned by
+GroupChatID stores them. <strong>Push notifications:</strong> a Notification server relays messages for offline
+users to each device manufacturer's push servers (opt-in per device).</p>
+
+<div class="prof">Messenger is the one design in this course that deliberately chooses <em>consistency over
+availability</em> — compare with Instagram and Twitter, which choose the opposite. Be ready to defend that choice
+with CAP vocabulary (Part III).</div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+<section class="chapter" id="twitter">
+<h2 class="ch-title">Chapter 6 · Designing Twitter</h2>
+<div class="meta"><span class="pill medium">Medium</span> Post tweets, follow people, favorite tweets</div>
+
+<h3>1. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> post tweets (140 chars); follow users; favorite tweets; generate a timeline of top
+  tweets from followees; tweets may carry photos and videos.</li>
+  <li><strong>Non-functional:</strong> high availability; timeline generation ≤ 200 ms; consistency can take a hit —
+  briefly missing a tweet is fine.</li>
+  <li><strong>Extended:</strong> search, replies, trending topics, tagging users, notifications, follow suggestions,
+  Moments.</li>
+</ul>
+
+<h3>2. Capacity estimation</h3>
+<p>1B total users, 200M DAU, 100M new tweets/day, average 200 followees per user.
+Favorites: 200M × 5/day = <strong>1B/day</strong>. Tweet-views: each DAU visits their timeline twice and five other
+pages, 20 tweets per page → 200M × 7 × 20 = <strong>28B views/day</strong>.</p>
+<p><strong>Storage:</strong> 140 chars × 2 bytes + 30 bytes metadata ≈ 310 B/tweet → 100M × 310 ≈
+<strong>30 GB/day</strong> of text. Media: every 5th tweet a 200 KB photo, every 10th a 2 MB video →
+(100M/5 × 200 KB) + (100M/10 × 2 MB) ≈ <strong>24 TB/day</strong>.</p>
+<p><strong>Bandwidth:</strong> ingress 24 TB/day ≈ 290 MB/s. Egress (28B views; every photo shown; every 3rd video
+watched): text 93 MB/s + photos 13 GB/s + videos 22 GB/s ≈ <strong>35 GB/s total</strong>.</p>
+<div class="formula">Writes ≈ 1,150 tweets/s average · Reads ≈ 325K tweets/s average — peaks: several thousand writes/s, ~1M reads/s</div>
+
+<h3>3. API & high-level design</h3>
+<pre>tweet(api_dev_key, tweet_data, tweet_location, user_location, media_ids, maximum_results_to_return)
+  → URL of the posted tweet, or HTTP error</pre>
+<p>Media upload is separate (via media_ids). Architecture: app servers behind load balancers; a database efficient
+for enormous read volume; file storage for photos/videos. Schema: <code>Tweet(TweetID, UserID, Content,
+TweetLatitude/Longitude, UserLatitude/Longitude, CreationDate, NumFavorites)</code>, plus <code>User</code>,
+<code>UserFollow</code>, and <code>Favorite</code> tables (SQL vs NoSQL trade-offs as in Instagram).</p>
+
+<h3>4. Data sharding — the central discussion</h3>
+<h4>By UserID</h4>
+<p>hash(UserID) → server holding all the user's tweets/follows/favorites. Problems: hot celebrity users; non-uniform
+growth. Fixes require repartitioning or consistent hashing.</p>
+<h4>By TweetID</h4>
+<p>Each tweet lands on a random server. Timeline generation: app server finds followees → queries <em>all</em>
+servers → each returns its matching tweets sorted by recency → aggregator merges. Solves hot users, but every read
+fans out to every partition — higher latency (mitigated by caching hot tweets).</p>
+<h4>By creation time</h4>
+<p>Fetching the latest tweets touches few servers, but both write and read load pile onto the server holding the
+newest data while old servers idle. Rejected alone.</p>
+<h4>Combined: TweetID that encodes creation time — the winning design</h4>
+<p>Make TweetID = [epoch seconds | auto-increment sequence]. 50 years of seconds ≈ 1.6B → 31 bits; 1,150 tweets/s
+needs 17 bits of sequence (130K/s, reset each second) → a 48-bit ID. Two key-generating DB servers (odd/even IDs)
+give fault tolerance. Example IDs from epoch 1483228800: <code>1483228800-000001, 1483228800-000002, …</code>
+A 64-bit ID would cover 100 years at millisecond granularity. We still fan out reads to all servers, but there's no
+secondary index on time (faster writes) and no creation-time filtering (the primary key embeds it).</p>
+
+<h3>5. Cache</h3>
+<p>Memcache stores whole tweet objects; LRU eviction. Smarter: with the 80/20 rule, cache 20% of daily read volume
+per shard. Smarter still: if 80% of users only look at the last 3 days of tweets, cache all tweets from the last
+three days — under 100 GB of text, one server, replicated for read throughput (do the same for 3 days of hot media).
+Cache structure: hash table with OwnerID → doubly-linked list of that user's recent tweets, newest inserted at the
+head, evicted from the tail.</p>
+
+<h3>6. Replication, LB, monitoring</h3>
+<p>Read-heavy → several read-only secondaries per partition; writes go to the primary and replicate out; failover to
+a secondary on primary death. LB layers: clients→app servers, app→DB replicas, aggregators→cache — round robin
+first, load-aware later. Monitor: new tweets/day and per-second peaks, timeline delivery rates, and user-perceived
+timeline refresh latency — these tell you when to add replication, LB, or cache.</p>
+
+<h3>7. Extended requirements</h3>
+<p><strong>Feed serving:</strong> merge/sort latest tweets from followees, paginate, fetch top N sized to viewport,
+pre-cache the next page; or pre-generate feeds (Instagram, Chapter 3). <strong>Retweet:</strong> store only the
+original tweet's ID in the new tweet object — no content copy. <strong>Trending topics:</strong> cache the most
+frequent hashtags/queries over the last N seconds, refresh every M seconds; weight by tweets/searches/retweets/likes
+and audience size. <strong>Who to follow:</strong> suggest friends-of-followees two or three hops out, prefer
+high-follower accounts, and use ML to shuffle — signals include rising follower counts, mutual followers, location,
+interests. <strong>Moments:</strong> mine top news per website over 1–2 hours, find related tweets, classify with
+supervised learning or clustering. <strong>Search:</strong> Chapter 10.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="youtube">
+<h2 class="ch-title">Chapter 7 · Designing YouTube / Netflix</h2>
+<div class="meta"><span class="pill medium">Medium</span> Similar: vimeo, dailymotion, veoh</div>
+
+<h3>1. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> upload videos; share and view; search by title; record stats (likes/dislikes,
+  views); add and view comments.</li>
+  <li><strong>Non-functional:</strong> highly reliable (no uploaded video ever lost); highly available (consistency
+  can lag — briefly not seeing a video is fine); real-time, lag-free playback.</li>
+  <li>Out of scope: recommendations, popular lists, channels, subscriptions, watch-later.</li>
+</ul>
+
+<h3>2. Capacity estimation</h3>
+<p>1.5B total users, 800M DAU, 5 views each: 800M × 5 / 86400 ≈ <strong>46K video views/s</strong>. Upload:view =
+1:200 → <strong>230 uploads/s</strong>. Storage: 500 hours of video uploaded per minute at 50 MB/min (all formats)
+→ <strong>1500 GB/min (25 GB/s)</strong>, ignoring compression and replication. Bandwidth: uploads at 10 MB/min of
+transfer → 300 GB/min (5 GB/s) in; ×200 ≈ <strong>1 TB/s out</strong>.</p>
+
+<h3>3. APIs</h3>
+<pre>uploadVideo(api_dev_key, video_title, video_description, tags[], category_id,
+            default_language, recording_details, video_contents)
+  → HTTP 202 (accepted); email with link once encoding finishes
+searchVideo(api_dev_key, search_query, user_location, maximum_videos_to_return, page_token)
+  → JSON list: title, thumbnail, creation date, view count
+streamVideo(api_dev_key, video_id, offset, codec, resolution) → media stream chunk</pre>
+<p>The <code>offset</code>/<code>codec</code>/<code>resolution</code> parameters let a user pause on their TV and
+resume on their phone — different devices need different codecs and resolutions, and the server stores the offset.</p>
+
+<h3>4. High-level components</h3>
+<ol>
+  <li><strong>Processing queue</strong> — every upload enters a queue for encoding, thumbnailing, storage.</li>
+  <li><strong>Encoder</strong> — transcodes into multiple formats.</li>
+  <li><strong>Thumbnail generator</strong> — a few thumbnails per video.</li>
+  <li><strong>Video &amp; thumbnail storage</strong> — distributed file storage (HDFS or GlusterFS).</li>
+  <li><strong>User database</strong> and <strong>video metadata storage</strong> — MySQL: VideoID, title, description,
+  size, thumbnail, uploader, likes/dislikes/views; comments (CommentID, VideoID, UserID, text, creation time).</li>
+</ol>
+
+<h3>5. Detailed design highlights</h3>
+<p>Read:write is 200:1 — segregate read from write traffic. Metadata uses <strong>master-slave</strong>: writes hit
+the master, reads spread over slaves; brief staleness (milliseconds) after a new upload is acceptable.
+<strong>Thumbnails</strong> are tiny (~5 KB) but read far more than videos (a page shows 20 of them): storing them
+as individual disk files means seek storms, so use <strong>BigTable</strong>, which packs many files into one block
+and excels at small random reads; keep hot thumbnails in memory. <strong>Uploads:</strong> support resume after
+disconnection — videos are huge. <strong>Encoding:</strong> queue-driven; notify the uploader when done.</p>
+
+<h3>6. Metadata sharding</h3>
+<p><strong>By UserID:</strong> hot users, uneven growth, and title searches must fan out to all servers anyway
+(aggregate + rank at a central server). <strong>By VideoID:</strong> hash each VideoID to a server; searches still
+query all servers, but hot <em>users</em> stop being a problem — hot <em>videos</em> remain one, fixed with a hot-video
+cache in front of the DBs.</p>
+
+<h3>7. Video deduplication</h3>
+<p>Massive duplication is inevitable (re-encodes, aspect-ratio changes, overlays, excerpts). Copies waste storage,
+degrade cache efficiency, inflate network use and energy, and surface as duplicate search results and slow starts.
+Deduplicate <strong>inline, at upload time</strong>: run matching algorithms (block matching, phase correlation);
+on a match, abort the upload and reuse the existing copy, or keep the better-quality version; if one video is a
+subsequence of another, divide into chunks and upload only the missing parts.</p>
+
+<h3>8. Load balancing, cache, CDN, fault tolerance</h3>
+<p><strong>Consistent hashing</strong> balances cache servers, but static video→host mapping still creates popularity
+hotspots; busy servers can issue dynamic HTTP redirects to less-busy neighbors in the same cache location — at the
+cost of extra round trips, multi-hop redirects, and possibly landing on a distant cache when redirected across
+tiers. <strong>Cache:</strong> geo-distributed cache servers; Memcache for metadata rows, LRU; cache 20% of daily
+read volume by the 80/20 rule. <strong>CDN:</strong> replicate popular videos at edge locations that serve mostly
+from memory; long-tail videos (1–20 views/day) stay in our data centers. <strong>Fault tolerance:</strong> consistent
+hashing also handles dead database servers and load redistribution.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="typeahead">
+<h2 class="ch-title">Chapter 8 · Designing Typeahead Suggestion</h2>
+<div class="meta"><span class="pill medium">Medium</span> Real-time search autocomplete</div>
+
+<h3>1. Requirements</h3>
+<p>As the user types, suggest the top 10 terms beginning with the current prefix — not to make search faster, but to
+help users articulate queries. Suggestions must appear in real time: <strong>≤ 200 ms</strong>.</p>
+
+<h3>2. The core data structure: a Trie</h3>
+<p>We must store a huge set of strings queryable by any prefix — too latency-critical for a database, so the index
+lives <strong>in memory</strong> in a <strong>trie</strong>: a tree where each node holds one character and each
+root-to-node path spells a prefix (store 'cap', 'cat', 'caption', 'captain', 'capital', and typing "cap" walks to the
+'p' node whose subtree contains all completions). Merge single-branch chains of nodes to save space. Assume
+case-insensitive data for simplicity.</p>
+<p><strong>Top-10 ranking:</strong> store, with each terminal node, how many searches ended there (CAPTAIN 100 vs
+CAPTION 500 tells us what to suggest first). But traversing a whole subtree per keystroke is far too slow — the
+phrase "system design interview questions" is 30 levels deep. So <strong>precompute the top 10 suggestions at every
+node</strong>, trading a big storage increase for speed; save space by storing <em>references</em> to terminal nodes
+(plus frequencies) instead of full strings, walking parent pointers to reconstruct text. Build the trie
+<strong>bottom-up</strong>: each node computes its top list from its children's lists.</p>
+
+<h3>3. Updating the trie</h3>
+<p>5B searches/day ≈ <strong>60K QPS</strong> — updating per query would crush reads. Instead: log queries (sample if
+needed — logging every 1000th query is safe when terms below 1000 hits aren't shown), run hourly
+<strong>MapReduce</strong> jobs to compute frequencies, then update offline. Two rollout options: each server updates
+a copy of its trie and atomically switches; or a master-slave pair per trie server — update the slave, promote it,
+then refresh the old master. Frequencies update as differences, weighted by <strong>Exponential Moving Average</strong>
+(recent data counts more). After inserting a term at its terminal node, walk <em>up</em> to the root: at each
+ancestor, if the term is in the top 10, update its frequency; otherwise insert it if it now qualifies, evicting the
+lowest. <strong>Removals</strong> (legal, hate, piracy) happen at the regular update, with an interim filtering layer
+on each server. Ranking can also weigh freshness, location, language, demographics, and personal history.</p>
+
+<h3>4. Persisting the trie</h3>
+<p>Snapshot periodically so a restarted server can rebuild. Store level-by-level: each node saves its character and
+child count, followed by its children — e.g., <code>"C2,A2,R1,T,P,O1,D"</code>. Top-suggestion lists aren't stored
+(children don't exist yet when a parent is written); they're recomputed during the rebuild, each node passing its
+list up to its parent.</p>
+
+<h3>5. Scale estimation & partitioning</h3>
+<p>Of 5B daily queries assume 20% unique, index only the top 50% → <strong>100M unique terms</strong>. Average query:
+3 words × 5 chars = 15 chars ≈ 30 bytes → 3 GB, plus 2% daily growth kept for a year ≈ <strong>25 GB</strong>.
+Partitioning schemes:</p>
+<ul>
+  <li><strong>Range-based (first letter):</strong> predictable, but statically defined letter ranges always end up
+  unbalanced.</li>
+  <li><strong>By server capacity:</strong> fill server 1 until memory runs out (say 'A'–'AABC'), server 2 continues
+  ('AABD'–'BXA'), etc., with a lookup map in the load balancer. Typing 'A' queries servers 1+2; 'AAA' only server 1.
+  Merging happens server-side via an <em>aggregator</em> layer. Hotspots (everyone typing "cap") persist.</li>
+  <li><strong>By hash of the term:</strong> uniform and hotspot-free, but every query asks all servers and aggregates.</li>
+</ul>
+
+<h3>6. Cache, replication, fault tolerance, client tricks</h3>
+<p>A small fraction of terms dominates traffic — cache top searches (optionally with a small ML model predicting
+engagement from counts, personalization, trends) in front of trie servers. Replicate trie servers for load and
+fault tolerance; on a crash, the slave takes over and rebuilding servers load the last snapshot.
+<strong>Client-side optimizations:</strong> only fire after 50 ms of no typing; cancel in-flight requests while the
+user keeps typing; wait for the first couple of characters; prefetch likely data; cache recent suggestion history
+locally (high reuse); open the server connection as soon as the search page loads (connection setup is a huge share
+of perceived latency); push parts of the cache to CDNs and ISPs. <strong>Personalization:</strong> store per-user
+history server-side, cache it on the client, and rank personal matches above global ones.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+<section class="chapter" id="ratelimiter">
+<h2 class="ch-title">Chapter 9 · Designing an API Rate Limiter</h2>
+<div class="meta"><span class="pill medium">Medium</span> Throttle users by request volume</div>
+
+<h3>1. What & why</h3>
+<p>A rate limiter caps how many events an entity (user, device, IP) may perform in a time window — e.g., one message
+per second, three failed card transactions per day, twenty accounts per IP per day — and blocks requests past the
+cap. It defends against application-layer abuse: DoS floods, brute-force password and credit-card attempts (bot
+traffic that looks human and is hard to detect), plus misbehaving or sloppy clients, 2FA-attempt limiting, cost and
+resource control, tier-based revenue models (buy higher limits), spam prevention, and smoothing traffic spikes.</p>
+
+<h3>2. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> limit requests per entity per window (e.g., 15 req/s), enforced <em>across the
+  whole cluster</em>, with an error once the threshold is crossed.</li>
+  <li><strong>Non-functional:</strong> highly available (it protects us from attack) and adding minimal latency.</li>
+</ul>
+<p>When throttled, the server returns <strong>HTTP 429 — Too Many Requests</strong>. Throttling flavors:
+<strong>hard</strong> (never exceed), <strong>soft</strong> (exceed by a set percentage, e.g. 100 + 10% = 110
+msgs/min), and <strong>elastic/dynamic</strong> (exceed while spare capacity exists).</p>
+
+<h3>3. Fixed Window vs. Rolling Window</h3>
+<p><strong>Fixed window:</strong> windows align to clock boundaries (0–60 s); with a limit of 2 msgs/s, of messages
+m1,m2 in second one and m3,m4,m5 in second two, only m5 throttles. <strong>Rolling window:</strong> the window starts
+at each request's timestamp; the same trace throttles m3 and m4. Fixed windows permit bursts of up to
+<em>double</em> the rate at boundaries (3 requests in a minute's last second + 3 in the next minute's first second =
+6 in ~2 s).</p>
+
+<h3>4. Fixed-window design & its two problems</h3>
+<p>Keep a hash table: UserID → {Count, StartTime}. On each request (limit 3/min): if the user is absent, insert
+{1, now} and allow; if now − StartTime ≥ 1 min, reset {1, now} and allow; otherwise allow and increment if
+Count &lt; 3, reject if Count ≥ 3.</p>
+<ol>
+  <li><strong>Boundary bursts</strong> — fixed windows allow up to 2× the rate as shown above; the fix is a sliding
+  window.</li>
+  <li><strong>Atomicity</strong> — in a distributed setup, two processes may read Count=2 concurrently and both
+  allow — a race. Redis locks around read-update solve it (slowing concurrent same-user requests); Memcached has
+  comparable issues; a custom store can lock per record.</li>
+</ol>
+<p><strong>Memory:</strong> UserID 8 B + Count 2 B (counts to 65K) + minute:second timestamp 2 B = 12 B; +20 B hash
+overhead → 32 B/user → <strong>32 MB for 1M users</strong> (36 MB with a 4-byte lock). Fits one server — but at 10
+req/s per user that's <strong>10M QPS</strong> of limiter traffic: use distributed Redis/Memcached; app servers
+read-and-update the remote store before serving or throttling.</p>
+
+<h3>5. Sliding Window (exact)</h3>
+<p>Store per user a <strong>Redis Sorted Set of request timestamps</strong>. On each request: evict timestamps older
+than now − window; reject if the set's size ≥ limit; otherwise insert now and accept.
+<strong>Memory explodes:</strong> for 500 req/hour: 8 + (4 B time + 20 B sorted-set overhead) × 500 + 20 B hash
+overhead ≈ 12 KB/user → <strong>12 GB for 1M users</strong> — roughly 375× the fixed window. (The 20-byte per-element
+overhead ≈ two 8-byte neighbor pointers + 4 bytes slack.)</p>
+
+<h3>6. Sliding Window with Counters — the hybrid</h3>
+<p>Keep one counter per small fixed window (e.g., per minute for an hourly limit — 1/60th of the window); a request
+is throttled when the sum of the last hour's counters exceeds the limit (optionally with a secondary per-minute cap,
+e.g. 500/hour and 10/min — real users retry successfully since minute counters reset). Store counters in a
+<strong>Redis Hash</strong> (very compact under 100 keys), incrementing and setting a 1-hour expiry per request,
+normalizing times to the minute. Memory: 8 + (4 + 2 + 20 Redis-hash overhead) × 60 + 20 ≈ 1.6 KB/user →
+<strong>1.6 GB for 1M users</strong> — 86% less than the exact sliding window.</p>
+
+<h3>7. Sharding, caching, and identity</h3>
+<p>Shard by UserID with consistent hashing for replication/fault tolerance; different APIs can get different limits
+(separate limiters for createURL vs deleteURL), and partitioned APIs can carry per-shard sub-limits (e.g., 3
+short-URLs/min per partition within 100/hour). Cache recent active users; a <strong>write-back cache</strong>
+(update counters in cache, flush to storage at intervals) keeps limiter latency minimal — reads always hit the cache
+first, which is ideal once a user is maxed out and we're only reading. LRU eviction.</p>
+<p><strong>Throttle by IP or by user?</strong> IP-based punishes everyone behind a shared IP (cafés, carrier NAT) and
+IPv6 gives attackers practically unlimited addresses to exhaust your memory. User-based needs authentication — but
+then the login API itself must be limited, and an attacker who spams wrong passwords can lock out the real user
+(a DoS). <strong>Hybrid</strong> per-IP <em>and</em> per-user limiting covers both weaknesses at the cost of more
+cache entries and memory.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="twittersearch">
+<h2 class="ch-title">Chapter 10 · Designing Twitter Search</h2>
+<div class="meta"><span class="pill medium">Medium</span> Store and search all tweets</div>
+
+<h3>1. Requirements & scale</h3>
+<p>1.5B users, 800M DAU; <strong>400M tweets/day</strong> averaging 300 bytes; <strong>500M searches/day</strong>;
+queries are words combined with AND/OR. Storage: 400M × 300 B = <strong>120 GB/day</strong> ≈ 1.38 MB/s.</p>
+
+<h3>2. API</h3>
+<pre>search(api_dev_key, search_terms, maximum_results_to_return, sort, page_token)
+  sort: 0 = latest first (default), 1 = best matched, 2 = most liked
+  → JSON list: user ID & name, tweet text, tweet ID, creation time, likes…</pre>
+
+<h3>3. Storage layer</h3>
+<p>Five years: 120 GB × 365 × 5 ≈ 200 TB; at ≤80% fill → 250 TB; doubled for a fault-tolerance copy →
+<strong>500 TB</strong>; at 4 TB/server → <strong>125 servers</strong>. Simple model: MySQL with
+<code>(TweetID, TweetText)</code>, partitioned by TweetID hash. Five years of tweets = 400M × 365 × 5 =
+<strong>730B tweets</strong>, so TweetIDs need <strong>5 bytes</strong>; generation follows Chapter 6's scheme.</p>
+
+<h3>4. The inverted index</h3>
+<p>A big distributed hash table: word → list of TweetIDs containing it. Vocabulary: 300K English words + 200K nouns
+= 500K words × 5 chars ≈ 2.5 MB. Index the last two years in memory: 292B tweets × 5 B = 1460 GB of IDs; with ~15
+indexable words per tweet (of ~40 total, skipping stopwords like 'the'/'an'/'and'), each ID appears 15 times:
+(1460 × 15) + 2.5 MB ≈ <strong>21 TB</strong> → at 144 GB/server, <strong>152 servers</strong>.</p>
+<h4>Sharding the index</h4>
+<ul>
+  <li><strong>By word:</strong> query only the server owning the word — but hot words become hotspots and word lists
+  grow unevenly (repartition or consistent hashing to recover).</li>
+  <li><strong>By tweet object:</strong> hash TweetID to a server which indexes <em>all</em> that tweet's words;
+  queries fan out to all servers and an aggregator merges. More balanced — this is the working choice.</li>
+</ul>
+
+<h3>5. Fault tolerance — the Index-Builder pattern</h3>
+<p>Each index server has a secondary replica. If <em>both</em> die, rebuilding requires knowing which tweets lived
+there — brute-forcing the whole DB through the hash function is slow and leaves a service gap. Solution: a
+<strong>reverse index</strong> on an Index-Builder server — a hashtable of index-server number → HashSet of its
+TweetIDs (HashSets make add/remove fast). A rebuilding server just asks for its list and fetches those tweets.
+Replicate the Index-Builder too.</p>
+
+<h3>6. Cache, LB, ranking</h3>
+<p>Memcached in front of the DB for hot tweets, LRU. LBs between clients↔app servers and app↔backend. For
+<strong>ranking</strong> (popularity, social distance, relevance): compute a popularity number (likes, comments…)
+and store it in the index; each partition returns its top results pre-sorted by it, and the aggregator merges,
+re-sorts, and returns the global top.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="webcrawler">
+<h2 class="ch-title">Chapter 11 · Designing a Web Crawler</h2>
+<div class="meta"><span class="pill hard">Hard</span> a.k.a. spiders, robots, worms, walkers, bots</div>
+
+<h3>1. What & requirements</h3>
+<p>A crawler browses the Web methodically, collecting documents by recursively following links from seed pages —
+powering search indexes, page/link validation, change monitoring, mirror maintenance, copyright search, and
+special-purpose indexes (e.g., multimedia understanding). Requirements: <strong>scalability</strong> (crawl the
+entire Web — hundreds of millions of documents) and <strong>extensibility</strong> (modular; new document types and
+protocols pluggable later).</p>
+<p>Scoping questions: HTML only, or images/videos too (each media type gets its own parsing module)? HTTP only, or
+FTP as well (assume HTTP, extensible)? Scale: assume 1B websites → upper bound <strong>15B pages</strong>.
+Courteous crawlers implement the <strong>Robots Exclusion Protocol</strong>, fetching robots.txt before any real
+content.</p>
+
+<h3>2. Capacity estimation</h3>
+<div class="formula">15B pages / (4 weeks × 7 × 86400 s) ≈ 6,200 pages/s</div>
+<p>Storage: 100 KB/page + 500 B metadata → 15B × 100.5 KB ≈ 1.5 PB; at 70% fill →
+<strong>2.14 PB</strong>.</p>
+
+<h3>3. The crawl loop & difficulties</h3>
+<ol>
+  <li>Take a URL from the unvisited list → 2. resolve its IP → 3. connect and download → 4. parse for new URLs →
+  5. add new URLs to the unvisited list → 6. process/store/index the document → repeat.</li>
+</ol>
+<p><strong>BFS</strong> is standard; DFS is used opportunistically to reuse a warm connection within one site.
+<strong>Path-ascending crawling</strong> (for seed <code>http://foo.com/a/b/page.html</code> also try /a/b/, /a/, /)
+finds isolated resources with no inbound links. Two facts make crawling hard: the Web's sheer volume (you can only
+fetch a fraction — prioritize wisely) and its rate of change (pages change while you crawl).</p>
+
+<h3>4. Component design</h3>
+<p>Minimum components: <strong>URL frontier</strong>, <strong>HTTP fetcher</strong>, <strong>extractor</strong>,
+<strong>duplicate eliminator</strong>, <strong>datastore</strong>. Worker threads loop: take a URL from the frontier;
+the scheme (HTTP) picks the protocol module; the document lands in a <strong>Document Input Stream (DIS)</strong> so
+several modules can re-read it (≤64 KB cached in memory, larger spilled to a backing file); run the
+<strong>document dedupe test</strong>; process by MIME type (modular); the HTML module extracts links; each link is
+made absolute, passed through the <strong>URL filter</strong>, then the <strong>URL-seen test</strong>; new URLs
+enter the frontier.</p>
+<h4>Key components in depth</h4>
+<ul>
+  <li><strong>URL frontier:</strong> distributed across servers, each with many worker threads and one FIFO sub-queue
+  per thread. <em>Politeness:</em> hash each URL's canonical hostname to a fixed thread — so at most one worker
+  connects to a given web server, and FIFO order prevents overload. Frontier size (hundreds of millions) exceeds
+  memory: buffer enqueues to disk, keep a dequeue cache refilled from disk.</li>
+  <li><strong>Fetcher:</strong> downloads via protocol modules; caches robots.txt rules per host to avoid refetching.</li>
+  <li><strong>Document dedupe:</strong> 64-bit checksum (MD5/SHA) per document; 15B × 8 B = <strong>120 GB</strong> —
+  fits memory on a big server, else LRU cache backed by persistent storage.</li>
+  <li><strong>URL dedupe:</strong> store fixed-size checksums (not text): 15B × 4 B = <strong>60 GB</strong>; an
+  in-memory cache of popular URLs gets a high hit rate. <em>Bloom filters</em> are a compact alternative but false
+  positives mean a URL is never crawled — mitigate with a larger bit vector.</li>
+  <li><strong>URL filters:</strong> blacklist by domain, prefix, or protocol before frontier insertion.</li>
+  <li><strong>DNS:</strong> a major bottleneck at this scale — run a local caching DNS server.</li>
+  <li><strong>Checkpointing:</strong> full crawls take weeks — snapshot state to disk regularly and resume from the
+  latest checkpoint after interruption.</li>
+</ul>
+
+<h3>5. Fault tolerance & partitioning</h3>
+<p>Distribute crawl servers with <strong>consistent hashing</strong> (dead hosts replaced, load redistributed).
+Partition by hostname: each host keeps its URLs-to-visit, seen-URL checksums, and document checksums together,
+checkpointing snapshots to a remote server so a replacement can take over.</p>
+
+<h3>6. Crawler traps</h3>
+<p>Traps are URL sets that make a crawler loop forever — unintentional (filesystem symlink cycles) or intentional
+(dynamically generated infinite document webs); anti-spam traps catch email-harvesting bots, and some sites trap
+search crawlers to inflate rankings. Beware also spam sites and cloaked content.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="newsfeed">
+<h2 class="ch-title">Chapter 12 · Designing Facebook's Newsfeed</h2>
+<div class="meta"><span class="pill hard">Hard</span> Similar: Twitter/Instagram/Quora feeds</div>
+
+<h3>1. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> feed built from posts of followed people, pages, and groups; users may have many
+  friends and follow many entities; items may be text, images, or video; new posts are appended to active users'
+  feeds as they arrive.</li>
+  <li><strong>Non-functional:</strong> feed generated in real time — ≤2 s end-user latency; a new post reaches a
+  user's feed within ≤5 s of a feed request.</li>
+</ul>
+
+<h3>2. Capacity estimation</h3>
+<p>Average user: 300 friends + 200 followed pages. 300M DAU × 5 fetches/day = 1.5B feed requests/day ≈
+<strong>17,500 req/s</strong>. Keeping ~500 posts/user in memory at ~1 KB each = 500 KB/user →
+<strong>150 TB</strong> for all active users → at 100 GB/server, <strong>~1,500 machines</strong>.</p>
+
+<h3>3. API & data model</h3>
+<pre>getUserFeed(api_dev_key, user_id, since_id, count, max_id, exclude_replies) → JSON feed items
+  count ≤ 200 per request; since_id / max_id paginate by item ID</pre>
+<p>Primary objects: <strong>User</strong>, <strong>Entity</strong> (page/group), <strong>FeedItem</strong> (post with
+UserID; optionally EntityID for where it was posted). Relations: User↔Entity follows (a <code>UserFollow</code> table
+whose Type column says user-or-entity) and FeedItem↔Media (<code>FeedMedia</code> table).</p>
+
+<h3>4. Feed generation</h3>
+<p>Naive query — select FeedItems whose UserID or EntityID appears in the user's follow list, ordered by
+CreationDate, limit 100 — has four problems: painfully slow for heavy followers (huge sort/merge/rank); it runs at
+page-load time (high latency); live updates cause a backlog of feed regenerations; and pushing updates for
+high-follower accounts creates crushing load.</p>
+<p><strong>Offline generation:</strong> dedicated servers continuously build feeds and keep them in memory, resuming
+each time from the timestamp of the last generation. Store per user a hash-table entry:</p>
+<pre>Struct {
+    LinkedHashMap&lt;FeedItemID, FeedItem&gt; feedItems;
+    DateTime lastGenerated;
+}</pre>
+<p>A LinkedHashMap/TreeMap lets us jump to the client's last-seen FeedItemID and return the next page. Store ~500
+items/user initially (tune down to ~200 if users rarely read past 10 pages of 20); deeper requests hit backend
+servers. Don't materialize feeds for dormant users: LRU-evict long-inactive users, or learn login patterns and
+pre-generate just before their usual times.</p>
+
+<h3>5. Feed publishing — fanout</h3>
+<p>Pushing a post to followers is <strong>fanout</strong>: push = fanout-on-write, pull = fanout-on-load.</p>
+<ul>
+  <li><strong>Pull:</strong> keep recent feeds in memory, clients fetch on demand — new data waits for the next pull,
+  and the right cadence is hard (most polls come back empty).</li>
+  <li><strong>Push:</strong> push each new post to all followers immediately (long-poll delivery); fetching no longer
+  walks the friend list — big read savings — but celebrity users with millions of followers make writes explosive.</li>
+  <li><strong>Hybrid — the answer:</strong> disable fanout for high-follower users (their followers pull); push only
+  for accounts with hundreds/thousands of followers; optionally fan out only to online friends. "Push to notify,
+  pull to serve" combines the best of both.</li>
+</ul>
+<p>Cap items per response (~20) but let clients choose (mobile fetches fewer). On mobile, where data is costly,
+consider not pushing — offer "pull to refresh."</p>
+
+<h3>6. Ranking & partitioning</h3>
+<p>Chronological is simplest, but modern ranking selects <em>signals</em> — likes, comments, shares, update time,
+media presence — and combines them into a score, then keeps improving by measuring user stickiness, retention, and
+ads revenue. Partition posts/metadata like Twitter (Chapter 6). Partition in-memory feed data by
+<strong>UserID hash</strong> — a user's ≤500 items always fit one server, so one lookup serves the feed; use
+consistent hashing for growth and replication.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+<section class="chapter" id="yelp">
+<h2 class="ch-title">Chapter 13 · Designing Yelp / Nearby Friends</h2>
+<div class="meta"><span class="pill hard">Hard</span> Proximity search over places</div>
+
+<h3>1. Requirements & scale</h3>
+<ul>
+  <li><strong>Functional:</strong> add/delete/update places; given a lat/long, find all nearby places within a radius;
+  add reviews with pictures, text, and a rating.</li>
+  <li><strong>Non-functional:</strong> real-time search with minimal latency; searches vastly outnumber place
+  additions.</li>
+</ul>
+<p>Scale: <strong>500M places, 100K QPS</strong>, ~20% annual growth in both. Crucially, place locations rarely
+change — a design for frequently-moving objects (people, taxis) would look very different (see Chapter 14).</p>
+
+<h3>2. Data model & API</h3>
+<p><code>Location: LocationID 8 B (4 would fit 500M, but plan for growth) + Name 256 + Lat 8 + Long 8 +
+Description 512 + Category 1 = 793 bytes</code>. Reviews: LocationID 8 + ReviewID 4 + ReviewText 512 + Rating 1
+(stars out of ten); photos in a similar separate table.</p>
+<pre>search(api_dev_key, search_terms, user_location, radius_filter, maximum_results_to_return,
+       category_filter, sort, page_token)
+  sort: 0 = best match, 1 = min distance, 2 = highest rated
+  → JSON: name, address, category, rating, thumbnail per result</pre>
+
+<h3>3. From SQL to grids to QuadTree</h3>
+<h4>a) Plain SQL</h4>
+<p>Index latitude and longitude separately, then
+<code>WHERE Latitude BETWEEN X-D AND X+D AND Longitude BETWEEN Y-D AND Y+D</code> (approximating true distance).
+Each index alone returns an enormous list, and intersecting two huge lists is slow.</p>
+<h4>b) Fixed grids</h4>
+<p>Divide the map into cells sized to the usual query radius (e.g., 10 miles); then any search touches only the
+containing cell plus its eight neighbors — all computable statically from lat/long. Store GridID (4 B) with each
+place and index it; better yet, keep the whole grid index in memory as a hash of GridID → place list. Earth ≈ 200M
+mi² → 20M cells: (4 × 20M) + (8 × 500M) ≈ <strong>4 GB</strong>. Weakness: places aren't uniform — downtown cells
+bulge while ocean cells sit empty.</p>
+<h4>c) Dynamic grids — the QuadTree</h4>
+<p>Cap each cell at <strong>500 places</strong>; when it overflows, split into four equal children. The result is a
+<strong>QuadTree</strong>: leaves hold place lists; dense San Francisco gets many small cells, the Pacific a few
+huge ones. Build: start from one world-node and split recursively. Search: descend from the root to the leaf
+containing the query point; if it lacks enough results, expand to neighbors — via a <em>doubly linked list threaded
+through the leaves</em>, or via parent pointers to reach siblings — until you have enough places or exhaust the
+radius. Memory: cache LocationID + lat/long = 24 B × 500M = 12 GB; 500M/500 = 1M leaves; internal nodes ≈ ⅓ × 1M,
+each with 4 × 8 B child pointers ≈ 10 MB — <strong>≈12.01 GB total, one server</strong>. Inserting a new place
+touches the DB and the QuadTree (find the right server first if distributed).</p>
+
+<h3>4. Partitioning the QuadTree</h3>
+<ul>
+  <li><strong>By region</strong> (e.g., zip codes): hot regions overload their server and regions grow unevenly —
+  repartition or consistent-hash to recover.</li>
+  <li><strong>By LocationID (chosen):</strong> hash each place to a server; each server builds a QuadTree over its
+  subset. Queries fan out to all partitions, which each return nearby places; an aggregator merges. Trees differ
+  across partitions — harmless, since we search neighboring grids on all partitions, and places stay roughly
+  balanced.</li>
+</ul>
+
+<h3>5. Replication & fault tolerance</h3>
+<p>Master-slave QuadTree replicas: reads from slaves (milliseconds staleness OK), writes through the master. Losing
+primary + secondary requires a rebuild without knowing what the server held — instead of brute-forcing the DB,
+keep a <strong>QuadTree Index server</strong>: a reverse map of partition → HashSet of {LocationID, lat/long}, so a
+rebuilding server just asks for its list (HashSet makes add/remove fast). Replicate this index server too; it can
+itself be rebuilt by scanning the database.</p>
+
+<h3>6. Cache, LB, ranking</h3>
+<p>Memcache for hot places in front of the DB, LRU, sized by usage. LBs at clients↔app and app↔backend, round robin
+then load-aware. <strong>Ranking by popularity:</strong> store an aggregate rating (stars out of ten) in both DB and
+QuadTree; each partition returns its top 100 by popularity and the aggregator picks the global top 100. Because the
+design assumes infrequent updates, propagate popularity changes lazily — once or twice a day at low-traffic hours.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="uber">
+<h2 class="ch-title">Chapter 14 · Designing the Uber Backend</h2>
+<div class="meta"><span class="pill hard">Hard</span> Prerequisite: Chapter 13 (Yelp) · Similar: Lyft, Didi, Via, Sidecar</div>
+
+<h3>1. Requirements</h3>
+<p>Two user kinds — drivers and customers. Drivers continuously report location and availability; customers see all
+nearby available drivers; a ride request notifies nearby drivers; once matched, both parties see each other's live
+location until trip end; on arrival, the driver marks the journey complete and becomes available again.</p>
+<p>Scale: 300M customers, 1M drivers; 1M daily active customers, 500K daily active drivers; 1M daily rides; all
+active drivers report location <strong>every 3 seconds</strong>; ride requests must reach drivers in near real
+time.</p>
+
+<h3>2. Why Yelp's QuadTree isn't enough</h3>
+<p>The Yelp QuadTree assumed rarely-moving data. Here, every driver moves constantly: updating the tree per report
+means finding the driver's old grid, removing, reinserting into the new grid, and possibly repartitioning — far too
+expensive at this update rate. We also need fast propagation of driver positions to watching customers and to both
+parties during a trip.</p>
+
+<h3>3. DriverLocationHT + lazy QuadTree refresh</h3>
+<p>Keep the latest positions in a hash table — <strong>DriverLocationHT</strong> — and guarantee the QuadTree
+reflects a driver's position within <strong>15 seconds</strong> (refreshing roughly every 10 s) instead of every 3 s.
+Record: DriverID 3 B (1M drivers) + old lat 8 + old long 8 + new lat 8 + new long 8 = <strong>35 B</strong> →
+1M × 35 = <strong>35 MB</strong>. Update bandwidth: (3 + 16) B × 1M every 3 s ≈ <strong>19 MB per 3 s</strong>.
+One server could hold it, but distribute by DriverID (for scalability, performance, fault tolerance) onto
+<em>Driver Location servers</em>, which do two jobs: broadcast each update to interested customers, and notify the
+appropriate QuadTree server on the ~10 s cadence.</p>
+
+<h3>4. Broadcasting to customers — push vs. pull</h3>
+<p><strong>Push model:</strong> a Notification Service on a publish/subscribe model. When a customer opens the app,
+the server returns nearby drivers <em>and subscribes the customer to those drivers' updates</em>; every
+DriverLocationHT change is broadcast to subscribers. Memory: 500K daily-active drivers × 5 subscribers, DriverID
+3 B + CustomerID 8 B → (500K × 3) + (500K × 5 × 8) ≈ <strong>21 MB</strong>. Bandwidth: 2.5M subscribers × 19 B/s ≈
+<strong>47.5 MB/s</strong>. Implement with long polling or push notifications. Weakness: newly arrived drivers in
+the customer's viewport require tracking what area each customer watches — complex.</p>
+<p><strong>Pull model (simpler, chosen):</strong> clients send their location every ~5 seconds and the server
+queries the QuadTree for nearby drivers, returning fresh positions each time.</p>
+<p>Also: let grids grow/shrink an extra <strong>10%</strong> beyond the 500-place limit before splitting/merging, to
+reduce churn on busy grids.</p>
+
+<h3>5. "Request Ride" workflow</h3>
+<ol>
+  <li>Customer requests a ride.</li>
+  <li>An Aggregator server asks the QuadTree servers for nearby drivers.</li>
+  <li>The aggregator collects results and sorts by rating.</li>
+  <li>It notifies the top three drivers simultaneously; first to accept gets the ride, others receive a cancellation;
+  no response → the next three.</li>
+  <li>The customer is notified once a driver accepts.</li>
+</ol>
+
+<h3>6. Fault tolerance & ranking</h3>
+<p>Replicate Driver Location and Notification servers (secondary takes over); also persist this data on fast SSDs so
+even a double failure is recoverable. <strong>Top-rated drivers:</strong> store each driver's aggregate rating in DB
+and QuadTree; partitions return their top 10 by rating, the aggregator picks the overall top 10.</p>
+
+<h3>7. Advanced discussion points</h3>
+<ul>
+  <li>Handling clients on slow, flaky, disconnecting networks.</li>
+  <li>A client disconnecting mid-ride — how does billing work?</li>
+  <li>What changes if clients pull everything instead of servers pushing?</li>
+</ul>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="ticketmaster">
+<h2 class="ch-title">Chapter 15 · Designing Ticketmaster</h2>
+<div class="meta"><span class="pill hard">Hard</span> Similar: bookmyshow.com — online movie ticket booking</div>
+
+<h3>1. Requirements</h3>
+<ul>
+  <li><strong>Functional:</strong> list cities with affiliate cinemas; show movies per city; show cinemas and
+  showtimes per movie; book tickets for a show; display the hall's seating map; distinguish available vs booked
+  seats; <strong>hold seats for five minutes</strong> pending payment; let users wait for seats that may free up when
+  other holds expire; serve waiting users <strong>first-come-first-serve</strong>.</li>
+  <li><strong>Non-functional:</strong> highly concurrent — many requests for the same seats must be handled
+  gracefully and fairly; financial transactions demand security and an <strong>ACID-compliant database</strong>.</li>
+</ul>
+<p>Assumptions: no user authentication (simplicity); no partial orders — all requested tickets or none; fairness is
+mandatory; cap 10 seats per booking to deter abuse; expect huge spikes on hot releases — must scale and stay
+available.</p>
+
+<h3>2. Capacity estimation</h3>
+<p>3B page views/month; 10M tickets sold/month. Storage: 500 cities × 10 cinemas × 2,000 seats × 2 shows/day ×
+(50 B booking + 50 B movie/cinema info) = <strong>2 GB/day</strong> → five years ≈ <strong>3.6 TB</strong>.</p>
+
+<h3>3. APIs</h3>
+<pre>SearchMovies(api_dev_key, keyword, city, lat_long, radius, start_datetime, end_datetime,
+             postal_code, includeSpellcheck, results_per_page, sorting_order)
+  → JSON: movie/show info incl. seat types ("Regular" $14.99, "Premium" $24.99) and fill status
+ReserveSeats(api_dev_key, session_id, movie_id, show_id, seats_to_reserve[])
+  → "Reservation Successful" | "Failed — Show Full" | "Failed — Retry, seats held by others"</pre>
+<p>The <code>session_id</code> ties the hold to the user's session so expiry can release it.</p>
+
+<h3>4. Database design</h3>
+<p>Each city has cinemas; each cinema has halls; each movie has shows; each show has bookings; users can have many
+bookings. Tables: <code>City, Cinema(FK CityID), Cinema_Hall(FK CinemaID), Cinema_Seat(FK CinemaHallID),
+Movie, Show(FK CinemaHallID, MovieID), Show_Seat(FK CinemaSeatID, ShowID, BookingID; Status; Price),
+Booking(FK UserID, ShowID; NumberOfSeats; Timestamp; Status enum), User, Payment(FK BookingID; amount, timestamp,
+discount coupon, remote txn ID, method)</code>.</p>
+
+<h3>5. Booking workflow</h3>
+<p>Search → pick movie → pick show → choose seat count → if enough seats: pick seats on the hall map → system tries
+to reserve. If it can't: the show may be full (error); the chosen seats may be gone but others remain (back to the
+map); or all seats are either booked <em>or held in the reservation pool</em> — then the user enters a
+<strong>waiting page</strong> until seats free up, with these outcomes: enough seats free → seat map; everything gets
+booked or too few remain → error; user cancels; or the wait hits the <strong>one-hour cap</strong> and the session
+expires. After a successful reservation, the user has <strong>five minutes to pay</strong>; otherwise the hold is
+released to others.</p>
+
+<h3>6. The two daemon services</h3>
+<h4>ActiveReservationsService</h4>
+<p>Per show, keep reservations in a <strong>LinkedHashMap</strong> (jump to any booking to remove it on completion;
+the head is always the oldest, so expiry pops from the front), inside a hashtable ShowID → {(BookingID,
+Timestamp)…}. In the DB, Booking.Status runs Reserved(1) → Booked(2), or Expired(3)/deleted on timeout, mirrored by
+removal from memory. This service also talks to the external financial service, and signals WaitingUsersService
+whenever a booking completes or expires.</p>
+<h4>WaitingUsersService</h4>
+<p>Same structure — ShowID → LinkedHashMap of (UserID, wait-start-time): jump-removal when users cancel, and the head
+is the longest-waiting user, guaranteeing first-come-first-serve. Clients hold <strong>long-poll</strong> requests
+for status updates; when seats free, the server answers the poll. <strong>Expiry buffer:</strong> the client shows
+a countdown that may drift from the server's — add five seconds server-side so the client never times out
+<em>after</em> the server and loses a purchase it thought it made.</p>
+
+<h3>7. Concurrency — no double-booked seats</h3>
+<p>Use SQL transactions with <strong>Serializable isolation</strong> — the highest level, safe from dirty,
+non-repeatable, and phantom reads; reading rows inside the transaction write-locks them:</p>
+<pre>SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+  -- reserve seats 54, 55, 56 for ShowID = 99
+  SELECT * FROM Show_Seat WHERE ShowID = 99 AND ShowSeatID IN (54,55,56) AND Status = 0; -- free
+  -- if exactly three rows returned: UPDATE Show_Seat ...; UPDATE Booking ...;  else fail
+COMMIT TRANSACTION;</pre>
+<p>Only after the transaction commits does the reservation enter ActiveReservationsService.</p>
+
+<h3>8. Fault tolerance & partitioning</h3>
+<p>If ActiveReservationsService crashes, rebuild from the Booking table's Reserved(1) rows (or run master-slave).
+Waiting users exist only in memory — a crash loses them unless there's a master-slave pair. Databases: master-slave.
+<strong>Partitioning:</strong> by MovieID all shows of a hot movie hit one server — partition by
+<strong>ShowID</strong> instead. Both daemon services are allocated to app servers by <strong>consistent hashing on
+ShowID</strong> (say three servers per show). On expiry, the owning server: (1) updates the DB (remove/expire
+booking, free seats in Show_Seat), (2) removes it from the LinkedHashMap, (3) notifies the user, (4) broadcasts to
+all WaitingUserService servers for that show to find the longest-waiting user, (5) messages the server holding that
+user to proceed if enough seats freed. On a successful booking: notify all waiting-user servers so they expire
+anyone needing more seats than remain; those servers query the DB once (a DB cache helps) and iterate their
+LinkedHashMaps to prune.</p>
+
+<div class="prof">Ticketmaster is the course's ACID showcase: everywhere else we happily traded consistency for
+availability; here money changes hands, so we reach for serializable transactions and accept the cost.</div>
+
+<h3>Further reading (from the source's resource list)</h3>
+<p>Dynamo (highly available KV store), Kafka (distributed messaging), the original Consistent Hashing paper, Paxos,
+optimistic concurrency control, Gossip protocol, Chubby, ZooKeeper, MapReduce, and Hadoop/HDFS.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<div class="part-divider">Part III · System Design Basics (Glossary)</div>
+
+<section class="chapter" id="characteristics">
+<h2 class="ch-title">Chapter 16 · Key Characteristics of Distributed Systems</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Five qualities define a distributed system: scalability, reliability, availability, efficiency, and
+manageability.</p>
+<h3>Scalability</h3>
+<p>The capability to grow and manage increased demand — more data, more transactions — ideally without performance
+loss. In practice performance declines with size (network distance grows; some tasks resist distribution by their
+atomic nature or design flaws, capping speed-up); a scalable architecture balances load evenly across nodes.
+<strong>Horizontal scaling</strong> adds servers to the pool (easy to do dynamically — Cassandra, MongoDB);
+<strong>vertical scaling</strong> adds CPU/RAM/storage to one server (MySQL's typical path — but bounded, and often
+requiring downtime).</p>
+<h3>Reliability</h3>
+<p>The probability the system keeps delivering service even as components fail — any failing machine is replaced by
+a healthy one. Amazon's canon: a user transaction (a shopping cart!) is never lost to a machine failure — achieved
+through redundancy of components and data, which costs money; that's the price of eliminating single points of
+failure.</p>
+<h3>Availability</h3>
+<p>The percentage of time the system is operational. An aircraft that flies many hours a month without downtime is
+highly available; when it's down for maintenance it's not. <strong>Reliability vs. availability:</strong> reliable
+⇒ available, but not conversely — a system can achieve high availability with minimal repair time and ready spares
+while still being unreliable. An online store might post 99.99% availability for two years, yet never having done
+security testing, suffer incident-driven outages (and reputational damage) in year three.</p>
+<h3>Efficiency</h3>
+<p>Two standard measures: <strong>latency</strong> (response time — delay to the first result) and
+<strong>throughput</strong> (bandwidth — items delivered per unit time), analyzed via number of messages and message
+sizes. Message-count analysis is admittedly simplistic — it ignores topology, load variation, and hardware/software
+heterogeneity — but precise cost models are impractical, so we live with rough, robust estimates.</p>
+<h3>Serviceability / Manageability</h3>
+<p>How easily the system is repaired and operated — time-to-fix directly hurts availability. Consider ease of
+diagnosis, ease of updates, and simplicity of operation; early fault detection (even systems that phone the service
+center automatically) shrinks downtime.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="loadbalancing">
+<h2 class="ch-title">Chapter 17 · Load Balancing</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>A load balancer (LB) spreads traffic across a cluster, improving responsiveness and availability, and tracks
+resource health — servers that are down, unresponsive, or error-prone stop receiving traffic. Place LBs at three
+layers: user↔web servers, web↔internal platform (app or cache servers), and platform↔database.</p>
+<h3>Benefits</h3>
+<p>Faster, uninterrupted service (requests route around busy servers); less downtime and more throughput for
+providers; easier administration; smart LBs offer predictive analytics on traffic bottlenecks; and work is spread
+over many devices instead of stressing one.</p>
+<h3>Health checks & algorithms</h3>
+<p>LBs forward only to healthy servers — regular health checks connect to each backend and pull failures from the
+pool until they respond again. Selection algorithms: <strong>Least Connection</strong> (fewest active connections —
+good for uneven persistent connections), <strong>Least Response Time</strong> (fewest connections + lowest average
+response time), <strong>Least Bandwidth</strong> (least Mbps currently served), <strong>Round Robin</strong> (cycle
+through the list — best for equal servers and short-lived connections), <strong>Weighted Round Robin</strong>
+(capacity-weighted rotation), and <strong>IP Hash</strong> (hash the client's IP to pick the server).</p>
+<h3>Redundant LBs</h3>
+<p>The LB itself can be the single point of failure — cluster two, each monitoring the other; the passive takes over
+when the active fails.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="caching">
+<h2 class="ch-title">Chapter 18 · Caching</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Load balancing scales you out; caching makes vastly better use of what you already have, exploiting
+<strong>locality of reference</strong> — recently requested data is likely to be requested again. Like short-term
+memory: small, fast, holding the most recent items; caches appear at every layer (hardware, OS, browsers, web apps)
+and work best near the front end.</p>
+<h3>Application server cache & CDN</h3>
+<p>A cache on a request node returns local data instantly (memory first, then local disk — both beat network
+storage). With many nodes behind a random LB, the same request hits different nodes and misses grow — solved by
+global or distributed caches. A <strong>CDN</strong> serves large static media: it returns content if cached
+locally, otherwise fetches from your backend, caches, and serves. Not big enough for a CDN yet? Serve static media
+from a separate subdomain (static.yourservice.com) on lightweight Nginx and flip DNS to a CDN later.</p>
+<h3>Cache invalidation — three write policies</h3>
+<ul>
+  <li><strong>Write-through:</strong> write to cache and database simultaneously — full consistency, crash-safe, but
+  every write costs double latency.</li>
+  <li><strong>Write-around:</strong> write straight to storage, bypassing cache — avoids flooding the cache with
+  never-reread data, but fresh writes always miss on first read.</li>
+  <li><strong>Write-back:</strong> write to cache only, confirm immediately, flush later — lowest latency, highest
+  throughput, but data loss risk while the only copy sits in cache.</li>
+</ul>
+<h3>Eviction policies</h3>
+<p>FIFO (evict oldest-arrived), LIFO (evict newest-arrived), <strong>LRU</strong> (evict least recently used — the
+course's workhorse), MRU (evict most recently used), LFU (evict least frequently used), and Random Replacement.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="sharding">
+<h2 class="ch-title">Chapter 19 · Sharding / Data Partitioning</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Partitioning breaks a big database into smaller parts across machines, improving manageability, performance,
+availability, and load balance — past a certain scale, adding machines beats buying beefier ones.</p>
+<h3>Partitioning methods</h3>
+<ul>
+  <li><strong>Horizontal (range-based):</strong> different rows in different tables — e.g., places with ZIP &lt; 10000
+  here, ≥ 10000 there. Careless range choices unbalance servers (Manhattan vs. its suburbs).</li>
+  <li><strong>Vertical:</strong> feature-specific tables on their own servers (profiles here, friend lists there,
+  photos on a third). Straightforward, low application impact — until one feature outgrows a single server (10B
+  photos × 140M users) and must be re-partitioned anyway.</li>
+  <li><strong>Directory-based:</strong> a lookup service maps each tuple key to its DB server, hiding the scheme from
+  application code — servers can be added or the scheme changed without touching the app.</li>
+</ul>
+<h3>Partitioning criteria</h3>
+<ul>
+  <li><strong>Key/hash-based:</strong> hash a key attribute → partition (e.g., ID % 100). Uniform, but effectively
+  fixes the server count — adding servers means rehashing and downtime; the workaround is consistent hashing.</li>
+  <li><strong>List:</strong> each partition owns a value list (Nordic-country users together).</li>
+  <li><strong>Round-robin:</strong> tuple i → partition (i mod n).</li>
+  <li><strong>Composite:</strong> combine schemes — consistent hashing is essentially hash + list partitioning.</li>
+</ul>
+<h3>Common problems</h3>
+<p>Operations spanning tables or rows now cross servers: <strong>joins</strong> become impractical (denormalize and
+accept inconsistency risks); <strong>referential integrity</strong> — cross-shard foreign keys are mostly
+unsupported, so apps enforce it in code and run SQL cleanup jobs for dangling references; <strong>rebalancing</strong>
+— uneven data or load forces scheme changes and wholesale data movement, extremely hard without downtime;
+directory-based partitioning eases it at the cost of complexity and a new single point of failure (the lookup
+service).</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="indexes">
+<h2 class="ch-title">Chapter 20 · Indexes</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Indexing is the first tool to reach for when database performance sags. An index over one or more columns speeds
+up random lookups and ordered access. Mental model: a <strong>library catalog</strong> — one copy sorted by title,
+one by writer, each pointing to where the book lives; likewise an index stores the indexed column plus a pointer to
+the full row. For terabyte-scale datasets with tiny payloads (~1 KB), spread over many physical devices, indexes
+aren't optional — they're the only way to find the right physical location in reasonable time.</p>
+<h3>The write penalty</h3>
+<p>An index speeds reads but must itself be updated on every insert, update, and delete — and it consumes space.
+Never add indexes casually; remove unused ones. If a table is written often and read rarely, indexing likely costs
+more than it earns.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="proxies">
+<h2 class="ch-title">Chapter 21 · Proxies</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>A proxy is an intermediary between clients and back-end servers, used to filter, log, or transform requests
+(headers, encryption, compression) — and its cache can answer many requests without touching the remote server when
+multiple clients want the same resource.</p>
+<h3>Types</h3>
+<ul>
+  <li><strong>Open proxy:</strong> usable by any Internet user (unlike closed, group-only proxies). Two famous kinds:
+  the <strong>anonymous proxy</strong> reveals itself as a server but hides the client's original IP; the
+  <strong>transparent proxy</strong> identifies itself <em>and</em> exposes the original IP via HTTP headers — its
+  main benefit is website caching.</li>
+  <li><strong>Reverse proxy:</strong> retrieves resources from one or more servers on the client's behalf, returning
+  them as if they originated from the proxy itself.</li>
+</ul>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="replication">
+<h2 class="ch-title">Chapter 22 · Redundancy and Replication</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p><strong>Redundancy</strong> duplicates critical components or functions to raise reliability — a backup or
+fail-safe (one copy of a file on one server means one server loss loses the file) — and removes single points of
+failure: with two service instances in production, failure of one triggers failover to the other.
+<strong>Replication</strong> shares information to keep redundant resources consistent, improving reliability,
+fault-tolerance, and accessibility. In DBMSs it's usually <strong>master-slave</strong>: the master takes all
+updates, which ripple to the slaves; each slave acknowledges receipt so subsequent updates can flow.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="sqlnosql">
+<h2 class="ch-title">Chapter 23 · SQL vs. NoSQL</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Relational databases are structured with predefined schemas — like a phone book; non-relational databases are
+unstructured and distributed with dynamic schemas — like a file folder holding everything from addresses to likes.</p>
+<h3>The families</h3>
+<p><strong>SQL:</strong> rows and columns — MySQL, Oracle, MS SQL Server, SQLite, Postgres, MariaDB.
+<strong>NoSQL:</strong> <em>key-value</em> stores (Redis, Voldemort, Dynamo); <em>document</em> databases (CouchDB,
+MongoDB — documents grouped in collections, each free-form); <em>wide-column</em> stores (Cassandra, HBase — column
+families instead of tables, columns per row can vary, great for big analytics); <em>graph</em> databases (Neo4J,
+InfiniteGraph — nodes, properties, and edges for graph-shaped data).</p>
+<h3>The differences</h3>
+<table>
+<tr><th></th><th>SQL</th><th>NoSQL</th></tr>
+<tr><td>Storage</td><td>Tables: row = entity, column = data point</td><td>Key-value, document, graph, or columnar models</td></tr>
+<tr><td>Schema</td><td>Fixed; every row conforms; altering means going offline</td><td>Dynamic; add columns on the fly; rows needn't fill every column</td></tr>
+<tr><td>Querying</td><td>SQL — very powerful</td><td>UnQL, collection-focused, syntax varies per store</td></tr>
+<tr><td>Scalability</td><td>Vertical (expensive); cross-server scaling is hard and slow</td><td>Horizontal on cheap commodity/cloud hardware, often auto-distributed</td></tr>
+<tr><td>ACID</td><td>Vast majority fully compliant</td><td>Mostly sacrificed for performance and scale</td></tr>
+</table>
+<h3>Choosing</h3>
+<p><strong>Pick SQL</strong> when you need ACID (e-commerce, finance — it prescribes exactly how transactions
+interact and protects integrity) or when data is structured, unchanging, and growth is modest.
+<strong>Pick NoSQL</strong> to store large volumes of loosely-structured data without predefined types; to exploit
+cloud economics (commodity hardware; Cassandra scales across data centers out of the box); or for rapid development
+with frequently changing data structures, where a relational schema-migration cycle would slow you down. Many
+businesses run both.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="cap">
+<h2 class="ch-title">Chapter 24 · CAP Theorem</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>No distributed system can simultaneously guarantee more than two of:
+<strong>Consistency</strong> — all nodes see the same data at the same time (achieved by updating several nodes
+before further reads); <strong>Availability</strong> — every request receives a success/failure response (achieved
+by replicating across servers); <strong>Partition tolerance</strong> — the system keeps working despite message loss
+or partial failure, surviving any network failure short of total collapse, because data is replicated across node
+and network combinations.</p>
+<p>Why the trade-off is forced: consistency demands all nodes see the same updates in the same order; under a
+network partition, updates on one side may not reach the other before a client reads stale data there. The only
+remedy is to stop serving from the out-of-date partition — surrendering 100% availability. Trading off among CAP is
+practically the first decision in any distributed design.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="consistenthashing">
+<h2 class="ch-title">Chapter 25 · Consistent Hashing</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Distributed Hash Tables map keys to storage locations via <code>index = hash(key)</code>. The intuitive
+<code>key % n</code> over n cache servers has two fatal flaws: it's not horizontally scalable (adding one host
+breaks <em>all</em> existing mappings — scheduling downtime to remap everything is a maintenance nightmare) and it
+may not balance load (real data is non-uniform: some caches run hot and saturated while others idle).</p>
+<h3>The ring</h3>
+<p>Consistent hashing minimizes reorganization when nodes come and go: on resize, only <strong>k/n</strong> keys
+remap (k keys, n servers) versus all of them under mod-hashing. Mechanics: map the hash output range (say [0, 256))
+onto a ring; hash each cache server onto the ring; to place a key, hash it and walk <strong>clockwise</strong> to
+the first cache encountered. Adding server D splits only the keys that lived on its clockwise successor; removing
+(or losing) server A moves only A's keys to the next server — nothing else shifts.</p>
+<h3>Virtual replicas</h3>
+<p>Random data still lands unevenly, so map each cache to <em>multiple</em> ring points ("virtual replicas"); with a
+well-mixing hash function, more replicas mean better key balance.</p>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+<section class="chapter" id="realtime">
+<h2 class="ch-title">Chapter 26 · Long-Polling vs. WebSockets vs. Server-Sent Events</h2>
+<div class="meta"><span class="pill core">Concept</span></div>
+<p>Baseline HTTP: the client opens a connection and asks; the server computes and responds on that request. Three
+patterns deliver more real-time behavior:</p>
+<h3>Ajax polling</h3>
+<p>The client asks at fixed intervals (e.g., every 0.5 s); no data means an empty response. Simple, but most
+responses are empty — pure HTTP overhead.</p>
+<h3>HTTP long-polling ("Hanging GET")</h3>
+<p>The client asks, expecting the server might not answer immediately; the server <em>holds</em> the request until
+data exists or a timeout fires, then sends a full response; the client immediately re-requests, so the server almost
+always has a waiting request to deliver events into. Each long-poll has a timeout, so clients reconnect
+periodically.</p>
+<h3>WebSockets</h3>
+<p>Full-duplex communication over a single TCP connection, established by the WebSocket handshake: afterwards both
+sides send data at any time, with low overhead — a standardized way for the server to push unasked, enabling a true
+two-way ongoing conversation.</p>
+<h3>Server-Sent Events (SSE)</h3>
+<p>The client opens one persistent, long-term connection over regular HTTP; the server pushes whenever news arrives;
+client→server traffic needs a different channel. Best when the server generates a stream of events toward the
+client.</p>
+<div class="key">Map them back to the case studies: Messenger and the newsfeed lean on long polling; Dropbox's sync
+notifications, Ticketmaster's waiting page, and Uber's location fan-out all pick from this same menu. Choosing the
+transport <em>is</em> a design decision — say so in the interview.</div>
+<a class="top" href="#top">↑ Back to top</a>
+</section>
+
+</main>
+<footer>Prepared as a teaching tutorial · English edition · Companion Chinese edition available</footer>
+</body>
+</html>
