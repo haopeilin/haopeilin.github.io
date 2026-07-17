@@ -130,6 +130,12 @@
             margin-bottom: 3rem;
         }
 
+        .hero-hi {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+
         .hero h1 {
             font-size: 3rem;
             font-weight: 700;
@@ -317,6 +323,120 @@
         .tag-green { background: #d1fae5; color: #065f46; }
         .tag-orange{ background: #ffedd5; color: #92400e; }
         .tag-red   { background: #fee2e2; color: #991b1b; }
+        .tag-new   { background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff; }
+
+        [data-theme="dark"] .tag-blue   { background: #1e3a8a; color: #bfdbfe; }
+        [data-theme="dark"] .tag-purple { background: #4c1d95; color: #ddd6fe; }
+        [data-theme="dark"] .tag-green  { background: #064e3b; color: #a7f3d0; }
+        [data-theme="dark"] .tag-orange { background: #78350f; color: #fed7aa; }
+        [data-theme="dark"] .tag-red    { background: #7f1d1d; color: #fecaca; }
+
+        /* Section count pill */
+        .count-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.1rem 0.55rem;
+            border-radius: 999px;
+        }
+
+        /* Featured banner */
+        .featured-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 1.75rem 2rem;
+            color: #ffffff;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-banner::after {
+            content: "🚀";
+            position: absolute;
+            right: -6px;
+            bottom: -20px;
+            font-size: 7rem;
+            opacity: 0.14;
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+
+        .featured-label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.22);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        .featured-banner h3 { font-size: 1.5rem; margin-bottom: 0.35rem; }
+        .featured-banner p { font-size: 0.95rem; opacity: 0.92; max-width: 560px; }
+
+        .featured-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-featured {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #ffffff;
+            color: #5b21b6;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-featured:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-featured.btn-outline {
+            background: transparent;
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
 
         /* Back to top */
         .back-to-top {
@@ -397,6 +517,7 @@
         .sr-title { font-weight: 600; font-size: .9rem; }
         .sr-desc { font-size: .8rem; color: var(--text-secondary); margin-top: 2px; }
         .sr-tag { font-size: .72rem; background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 999px; margin-left: 6px; }
+        [data-theme="dark"] .sr-tag { background: #1e3a8a; color: #bfdbfe; }
         .no-results { padding: 14px; text-align: center; color: var(--text-secondary); font-size:.875rem; }
 
         /* Progress Dashboard */
@@ -411,7 +532,7 @@
         .progress-card-title { font-size: .88rem; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
         .progress-check { color: #065f46; font-size: 1rem; }
         .progress-date { font-size: .75rem; color: var(--text-secondary); }
-        .progress-bar-wrap { background: #e5e7eb; border-radius: 999px; height: 5px; margin-top: 8px; }
+        .progress-bar-wrap { background: var(--border-color); border-radius: 999px; height: 5px; margin-top: 8px; }
         .progress-bar-fill { background: var(--accent-color); height: 5px; border-radius: 999px; transition: width .4s; }
         .progress-summary { font-size: .85rem; color: var(--text-secondary); margin-bottom: 1rem; }
 
@@ -448,6 +569,7 @@
                 <a href="#coding">Coding</a>
                 <a href="#sysdesign">System Design</a>
                 <a href="#writing">Writing</a>
+                <a href="#docs">Docs</a>
                 <a href="#news">News</a>
                 <a href="https://github.com/haopeilin" target="_blank"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/peilinhao/" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -468,6 +590,7 @@
 
         <!-- Hero -->
         <section class="hero" id="about">
+            <p class="hero-hi">👋 Hi there, I'm</p>
             <h1>Peilin Hao</h1>
             <p class="subtitle">Senior Software Engineer at Microsoft</p>
             <div class="hero-contact">
@@ -485,6 +608,20 @@
                 </a>
             </div>
         </section>
+
+        <!-- Featured: newest addition -->
+        <div class="featured-banner">
+            <div>
+                <span class="featured-label">✨ New · Complete Course</span>
+                <h3>System Design: The Complete Course</h3>
+                <p>28 chapters from TinyURL to the Uber backend — plus deep dives into load balancing,
+                    caching, sharding, and everything in between. Available in English and 中文.</p>
+            </div>
+            <div class="featured-actions">
+                <a href="system_design_tutorial_en.html" class="btn-featured">📖 Read in English</a>
+                <a href="system_design_tutorial_zh.html" class="btn-featured btn-outline">📖 中文版</a>
+            </div>
+        </div>
 
         <!-- About Me -->
         <section class="section">
@@ -507,49 +644,6 @@
             </div>
         </section>
 
-        <!-- Documents -->
-        <section class="section" id="docs">
-            <h2 class="section-title"><i class="fas fa-book"></i> Documents</h2>
-            <p class="section-desc">Reference PDFs and long-form documentation.</p>
-            <div class="grid">
-                <a href="grok_system_design_interview.pdf" class="resource-card">
-                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
-                    <div class="resource-content">
-                        <div class="resource-title">Grok System Design Interview (PDF)</div>
-                        <div class="resource-desc">Full reference PDF for system design interview preparation.</div>
-                        <span class="tag tag-green">PDF</span>
-                    </div>
-                </a>
-
-                <a href="grok_system_design_interview_basic.pdf" class="resource-card">
-                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
-                    <div class="resource-content">
-                        <div class="resource-title">Grok System Design Interview — Basic (PDF)</div>
-                        <div class="resource-desc">Introductory system design concepts and foundational interview topics.</div>
-                        <span class="tag tag-green">PDF</span>
-                    </div>
-                </a>
-
-                <a href="https://d2l.ai/d2l-en.pdf" target="_blank" class="resource-card">
-                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
-                    <div class="resource-content">
-                        <div class="resource-title">Dive into Deep Learning (PDF)</div>
-                        <div class="resource-desc">Full PDF of the D2L textbook — deep learning with PyTorch, NumPy, and JAX.</div>
-                        <span class="tag tag-green">PDF</span>
-                    </div>
-                </a>
-
-                <a href="md-viewer.html?file=NANOCHAT_DOCUMENTATION.md" class="resource-card">
-                    <div class="resource-icon"><i class="fas fa-file-alt"></i></div>
-                    <div class="resource-content">
-                        <div class="resource-title">NanoChat Documentation</div>
-                        <div class="resource-desc">Documentation for the NanoChat project.</div>
-                        <span class="tag tag-blue">Docs</span>
-                    </div>
-                </a>
-            </div>
-        </section>
-
         <!-- Study Progress Dashboard -->
         <section class="section progress-section" id="progress">
             <h2 class="section-title"><i class="fas fa-chart-bar"></i> Study Progress</h2>
@@ -560,7 +654,7 @@
         <!-- Coding Interview -->
         <section class="section" id="coding">
             <h2 class="section-title"><i class="fas fa-laptop-code"></i> Coding Interview</h2>
-            <p class="section-desc">Algorithm practice, OOD patterns, and company-specific coding prep.</p>
+            <p class="section-desc">Algorithm drills, OOD patterns, and company-specific prep — one problem at a time. 💪</p>
             <div class="grid">
                 <a href="leetcode.html" class="resource-card">
                     <div class="resource-icon"><i class="fas fa-terminal"></i></div>
@@ -603,8 +697,26 @@
         <!-- System Design -->
         <section class="section" id="sysdesign">
             <h2 class="section-title"><i class="fas fa-sitemap"></i> System Design</h2>
-            <p class="section-desc">Scalable architecture, distributed systems, and company-specific design questions.</p>
+            <p class="section-desc">How to build things that don't fall over — distributed systems, architecture, and interview classics. 🏗️</p>
             <div class="grid">
+                <a href="system_design_tutorial_en.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">System Design: The Complete Course</div>
+                        <div class="resource-desc">28-chapter course: TinyURL, Instagram, Uber, Ticketmaster, plus core building blocks.</div>
+                        <span class="tag tag-new">✨ New</span>
+                    </div>
+                </a>
+
+                <a href="system_design_tutorial_zh.html" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">系统设计完全教程</div>
+                        <div class="resource-desc">The complete system design course in Chinese — 28 章节，从 TinyURL 到 Uber 后端 (中文).</div>
+                        <span class="tag tag-new">✨ New</span>
+                    </div>
+                </a>
+
                 <a href="systemdesign.html" class="resource-card">
                     <div class="resource-icon"><i class="fas fa-layer-group"></i></div>
                     <div class="resource-content">
@@ -673,7 +785,7 @@
         <!-- Technical Writing -->
         <section class="section" id="writing">
             <h2 class="section-title"><i class="fas fa-pen-nib"></i> Technical Writing</h2>
-            <p class="section-desc">In-depth articles and tutorials on AI agents and software architecture.</p>
+            <p class="section-desc">Long-form deep dives on AI agents, deep learning, and software architecture. ✍️</p>
             <div class="grid">
                 <a href="openclaw-tutorial.html" class="resource-card">
                     <div class="resource-icon"><i class="fas fa-robot"></i></div>
@@ -713,10 +825,53 @@
             </div>
         </section>
 
+        <!-- Documents -->
+        <section class="section" id="docs">
+            <h2 class="section-title"><i class="fas fa-book"></i> Documents</h2>
+            <p class="section-desc">Reference PDFs and long-form documentation — great for offline reading. 📚</p>
+            <div class="grid">
+                <a href="grok_system_design_interview.pdf" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Grok System Design Interview (PDF)</div>
+                        <div class="resource-desc">Full reference PDF for system design interview preparation.</div>
+                        <span class="tag tag-green">PDF</span>
+                    </div>
+                </a>
+
+                <a href="grok_system_design_interview_basic.pdf" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Grok System Design Interview — Basic (PDF)</div>
+                        <div class="resource-desc">Introductory system design concepts and foundational interview topics.</div>
+                        <span class="tag tag-green">PDF</span>
+                    </div>
+                </a>
+
+                <a href="https://d2l.ai/d2l-en.pdf" target="_blank" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">Dive into Deep Learning (PDF)</div>
+                        <div class="resource-desc">Full PDF of the D2L textbook — deep learning with PyTorch, NumPy, and JAX.</div>
+                        <span class="tag tag-green">PDF</span>
+                    </div>
+                </a>
+
+                <a href="md-viewer.html?file=NANOCHAT_DOCUMENTATION.md" class="resource-card">
+                    <div class="resource-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="resource-content">
+                        <div class="resource-title">NanoChat Documentation</div>
+                        <div class="resource-desc">Documentation for the NanoChat project.</div>
+                        <span class="tag tag-blue">Docs</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
         <!-- News & Feeds -->
         <section class="section" id="news">
             <h2 class="section-title"><i class="fas fa-newspaper"></i> News &amp; Feeds</h2>
-            <p class="section-desc">Live news aggregators and financial market feeds.</p>
+            <p class="section-desc">Live news aggregators and market feeds — take a break from the grind. ☕</p>
             <div class="grid">
                 <a href="news-aggregator.html" class="resource-card">
                     <div class="resource-icon"><i class="fas fa-rss"></i></div>
@@ -737,6 +892,7 @@
 
     <footer class="footer">
         <p>&copy; <span id="year"></span> Peilin Hao. All Rights Reserved.</p>
+        <p style="margin-top: 0.4rem;">Built with ☕ and an unreasonable number of system design diagrams.</p>
     </footer>
 
 <script>
@@ -752,6 +908,8 @@ const SEARCH_INDEX = [
     { title: 'Meta Coding Prep',           url: 'meta_coding_interview_preparation.html', desc: 'Two Sum, Merge Intervals, Binary Search',               tag: 'Coding' },
     { title: 'Object-Oriented Design',     url: 'OODDesign.html',                        desc: 'Singleton, Factory, Observer, SOLID principles',        tag: 'Coding' },
     { title: 'Design Patterns',            url: 'designpatterns.html',                   desc: 'Creational, Structural, Behavioral patterns (GoF)',      tag: 'Coding' },
+    { title: 'System Design: The Complete Course', url: 'system_design_tutorial_en.html', desc: '28-chapter course: TinyURL, Instagram, Uber, load balancing, sharding', tag: 'System Design' },
+    { title: '系统设计完全教程 (中文)',       url: 'system_design_tutorial_zh.html',           desc: 'Complete system design course in Chinese, 28 chapters',  tag: 'System Design' },
     { title: 'System Design Fundamentals', url: 'systemdesign.html',                     desc: 'CAP theorem, load balancing, caching, databases',       tag: 'System Design' },
     { title: 'Meta System Design',         url: 'metaTop5SystemDesign.html',             desc: 'Instagram, News Feed, Messenger, URL Shortener, Uber',  tag: 'System Design' },
     { title: 'System Design Q&A',          url: 'sdq.html',                              desc: 'URL shortener, chat system, news feed walkthroughs',    tag: 'System Design' },
@@ -796,6 +954,8 @@ function closeSearch() {
 
 // ── PROGRESS DASHBOARD ───────────────────────────────────────────────────────
 const TRACKED_PAGES = [
+    { id: 'sd_course_en', title: 'SD Complete Course',          url: 'system_design_tutorial_en.html' },
+    { id: 'sd_course_zh', title: '系统设计完全教程',              url: 'system_design_tutorial_zh.html' },
     { id: 'systemdesign', title: 'System Design Fundamentals', url: 'systemdesign.html' },
     { id: 'meta_sd',      title: 'Meta System Design',         url: 'metaTop5SystemDesign.html' },
     { id: 'sdq',          title: 'System Design Q&A',          url: 'sdq.html' },
@@ -864,6 +1024,35 @@ window.addEventListener('focus', renderProgress);
     });
     btn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
+
+// ── SECTION COUNT PILLS ─────────────────────────────────────────────────────
+document.querySelectorAll('.section').forEach(section => {
+    const count = section.querySelectorAll('.grid .resource-card').length;
+    const title = section.querySelector('.section-title');
+    if (count > 0 && title) {
+        const pill = document.createElement('span');
+        pill.className = 'count-pill';
+        pill.textContent = count + (count === 1 ? ' item' : ' items');
+        title.appendChild(pill);
+    }
+});
+
+// ── SCROLL REVEAL ───────────────────────────────────────────────────────────
+(function() {
+    const targets = document.querySelectorAll('.section, .featured-banner');
+    const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    targets.forEach(t => {
+        t.classList.add('reveal');
+        observer.observe(t);
     });
 })();
 
