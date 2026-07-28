@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SWE Interview Prep — 39-week training log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#DFE4E8; --surface:#FAFBFC; --surface2:#F1F4F6;
+  --ink:#12181F; --muted:#5C6773; --rule:#C3CCD4; --rule2:#D8DFE4;
+  --accent:#1B3A6B; --signal:#C4452D;
+  --easy:#2E7D5B; --med:#B07514; --hard:#B02E24;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:15px; line-height:1.55;
+  background-image:linear-gradient(var(--rule2) 1px,transparent 1px),linear-gradient(90deg,var(--rule2) 1px,transparent 1px);
+  background-size:28px 28px; background-position:-1px -1px;
+}
+.wrap{max-width:980px;margin:0 auto;padding:28px 20px 90px}
+a{color:var(--accent)}
+
+/* ---------- masthead ---------- */
+.mast{border-top:3px solid var(--ink);padding-top:14px;margin-bottom:26px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+h1{font-family:var(--mono);font-weight:600;font-size:clamp(26px,4.6vw,40px);letter-spacing:-.03em;line-height:1.06;margin:12px 0 6px}
+h1 .thin{color:var(--muted);font-weight:400}
+.sub{color:var(--muted);max-width:62ch;margin:0}
+
+/* ---------- burn strip (signature) ---------- */
+.burn{margin:26px 0 8px;padding:16px 16px 12px;background:var(--surface);border:1px solid var(--rule)}
+.burnhead{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.grid{display:flex;gap:3px;align-items:flex-end;overflow-x:auto;padding-bottom:6px}
+.wk{display:flex;flex-direction:column-reverse;gap:2px;position:relative;flex:0 0 auto}
+.cell{width:11px;height:11px;border:1px solid var(--rule);background:transparent}
+.cell.lc.on{background:var(--accent);border-color:var(--accent)}
+.cell.video{border-radius:50%}
+.cell.video.on{background:var(--signal);border-color:var(--signal)}
+.wk.now::after{content:"";position:absolute;left:-3px;right:-3px;bottom:-7px;height:2px;background:var(--signal)}
+.wk.now .cell{border-color:var(--muted)}
+.legend{font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.swatch{display:inline-block;width:9px;height:9px;border:1px solid var(--accent);background:var(--accent);vertical-align:-1px;margin-right:5px}
+.swatch.v{border-color:var(--signal);background:var(--signal);border-radius:50%}
+.swatch.e{border-color:var(--rule);background:transparent}
+
+/* ---------- meters ---------- */
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:30px}
+.meter{background:var(--surface);padding:13px 15px}
+.meter b{display:block;font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:-.02em}
+.meter span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.bar{height:3px;background:var(--rule2);margin-top:9px}
+.bar i{display:block;height:100%;background:var(--accent)}
+
+/* ---------- controls ---------- */
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+button{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;background:var(--surface);border:1px solid var(--rule);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--ink)}
+button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- weeks ---------- */
+.week{border:1px solid var(--rule);background:var(--surface);margin-bottom:10px}
+.week[data-done="1"]{opacity:.55}
+.week>summary{list-style:none;cursor:pointer;padding:12px 15px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.week>summary::-webkit-details-marker{display:none}
+.wnum{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.06em}
+.wdate{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.wtag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-left:auto}
+.week.current{border-color:var(--signal);border-left-width:4px}
+.week.current .wtag{color:var(--signal)}
+
+.day{border-top:1px solid var(--rule2);padding:14px 15px}
+.dhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.dday{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.ddate{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.dtype{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;border:1px solid currentColor}
+.dtype.lc{color:var(--accent)}
+.dtype.video{color:var(--signal)}
+.dtype.mock{color:var(--muted)}
+.dmins{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto}
+
+ul.items{list-style:none;margin:0;padding:0}
+ul.items li{display:flex;gap:10px;align-items:flex-start;padding:5px 0;border-bottom:1px dotted var(--rule2)}
+ul.items li:last-child{border-bottom:0}
+.pnum{font-family:var(--mono);font-size:12.5px;color:var(--muted);min-width:38px;text-align:right;padding-top:2px}
+.ptitle{flex:1;min-width:0;font-size:14px}
+.ptitle a{text-decoration:none;border-bottom:1px solid var(--rule)}
+.ptitle a:hover{border-color:var(--accent)}
+.star{color:var(--signal);font-family:var(--mono);font-size:11px}
+.diff{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:1px 5px;border:1px solid currentColor;margin-left:7px;vertical-align:1px}
+.diff.E{color:var(--easy)} .diff.M{color:var(--med)} .diff.H{color:var(--hard)}
+.kind{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;margin-left:6px}
+.vlen{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px;white-space:nowrap}
+
+.mark{font-family:var(--mono);font-size:11px;width:26px;height:24px;flex:0 0 26px;padding:0;line-height:1;color:var(--muted)}
+.mark[data-s="1"]{background:var(--easy);border-color:var(--easy);color:#fff}
+.mark[data-s="2"]{background:var(--med);border-color:var(--med);color:#fff}
+li.marked .ptitle{color:var(--muted)}
+li.marked .ptitle a{text-decoration:line-through}
+
+/* ---------- review queue ---------- */
+.panel{border:1px solid var(--rule);background:var(--surface);padding:16px 17px;margin-bottom:28px}
+.panel h2{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 4px;font-weight:600}
+.panel p.note{color:var(--muted);font-size:13.5px;margin:0 0 12px}
+.rq{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.rq li a{font-family:var(--mono);font-size:12px;text-decoration:none;border:1px solid var(--rule);padding:3px 8px;display:block}
+.rq li a:hover{border-color:var(--signal)}
+.rq li.due a{border-color:var(--signal);color:var(--signal)}
+
+/* ---------- protocol ---------- */
+.proto{border:1px solid var(--rule);background:var(--surface);padding:18px 20px;margin-bottom:28px}
+.proto h2{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 14px;font-weight:600}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;padding:0 0 11px 40px;position:relative;font-size:14px}
+.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:.08em}
+.steps b{font-weight:600}
+.optlist{list-style:none;margin:10px 0 0;padding:0;font-size:13.5px;color:var(--muted)}
+.optlist li{padding:3px 0;font-family:var(--mono);font-size:12.5px}
+
+footer{font-family:var(--mono);font-size:11px;color:var(--muted);border-top:1px solid var(--rule);padding-top:12px;margin-top:30px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.saving{position:fixed;right:14px;bottom:14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--surface);padding:6px 11px;opacity:0;transition:opacity .25s}
+.saving.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:560px){
+  .wrap{padding:20px 13px 80px}
+  .pnum{min-width:32px}
+  .cell{width:9px;height:9px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="eyebrow">
+      <span>Training log &middot; Mon&ndash;Thu &middot; 1 hour</span>
+      <span id="range">27 Jul 2026 &rarr; 22 Apr 2027</span>
+    </div>
+    <h1>LeetCode 1&ndash;300<br><span class="thin">&amp; the Hello Interview channel</span></h1>
+    <p class="sub">Two tracks, one hour a day. Monday, Tuesday and Thursday work through the problem set in numeric order. Wednesday is system design. Every session is packed to roughly an hour of real work, so finishing the list means finishing the plan.</p>
+  </header>
+
+  <section class="burn" aria-label="Progress by week">
+    <div class="burnhead"><span>39 weeks &middot; 156 sessions</span><span id="burnpct">0% complete</span></div>
+    <div class="grid" id="burn"></div>
+    <div class="legend">
+      <span><i class="swatch"></i>LeetCode session</span>
+      <span><i class="swatch v"></i>System design session</span>
+      <span><i class="swatch e"></i>Not yet done</span>
+      <span id="wknow"></span>
+    </div>
+  </section>
+
+  <section class="meters">
+    <div class="meter"><span>Problems solved</span><b id="mProb">0 / 257</b><div class="bar"><i id="bProb"></i></div></div>
+    <div class="meter"><span>Videos watched</span><b id="mVid">0 / 58</b><div class="bar"><i id="bVid"></i></div></div>
+    <div class="meter"><span>Sessions logged</span><b id="mSess">0 / 156</b><div class="bar"><i id="bSess"></i></div></div>
+    <div class="meter"><span>Flagged for review</span><b id="mFlag">0</b><div class="bar"><i id="bFlag" style="background:var(--med)"></i></div></div>
+  </section>
+
+  <section class="proto">
+    <h2>How a session runs</h2>
+    <ol class="steps">
+      <li><b>Set a timer per problem</b> &mdash; 12 minutes for an easy, 25 for a medium, 38 for a hard. That budget is what the schedule is built on.</li>
+      <li><b>When the timer ends, stop guessing.</b> Read the editorial, understand the idea, close it, then write the solution yourself from scratch. Reading a solution you can't reproduce counts for nothing.</li>
+      <li><b>Mark the result.</b> Press the box once for solved clean, twice to flag it for review. Flagged problems come back below after a week.</li>
+      <li><b>Monday opens with 10 minutes of review</b> &mdash; re-solve one or two problems from the review queue before starting anything new. That's why Monday carries a lighter load.</li>
+      <li><b>On Wednesday, watch at 1.5&times;</b> and keep a notebook. Sessions are sized at 45 minutes of playback plus 10 minutes of writing. When a video is split across two weeks, the timestamps tell you where to resume.</li>
+      <li><b>End every Wednesday by drawing the design from memory</b> on a blank page &mdash; no pausing, no scrubbing back. The recall is where the learning happens.</li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2>Review queue</h2>
+    <p class="note" id="rqnote">Nothing flagged yet. Problems you mark twice land here, and turn red once they're a week old and due for a second attempt.</p>
+    <ul class="rq" id="rq"></ul>
+  </section>
+
+  <div class="controls">
+    <button id="fCurrent" class="on">This week</button>
+    <button id="fTodo">Unfinished weeks</button>
+    <button id="fAll">All 39 weeks</button>
+    <button id="reset" style="margin-left:auto">Clear all progress</button>
+  </div>
+
+  <div id="weeks"></div>
+
+  <section class="panel" style="margin-top:28px">
+    <h2>Not scheduled</h2>
+    <p class="note">Three channel videos sit outside the plan &mdash; useful listening, but not load-bearing for an IC software engineering loop. Save them for a commute.</p>
+    <ul class="optlist" id="opt"></ul>
+  </section>
+
+  <footer>
+    <span>257 problems &middot; 43 premium-locked numbers skipped &middot; 58 videos</span>
+    <span id="pace"></span>
+  </footer>
+</div>
+<div class="saving" id="saving">Saved</div>
+
+<script>
+const PLAN = {"weeks":[{"w":1,"monday":"2026-07-27","days":[{"day":"Mon","date":"2026-07-27","type":"lc","items":[{"n":1,"t":"Two Sum","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/two-sum/"},{"n":2,"t":"Add Two Numbers","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/add-two-numbers/"}],"mins":37},{"day":"Tue","date":"2026-07-28","type":"lc","items":[{"n":3,"t":"Longest Substring Without Repeating Characters","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/longest-substring-without-repeating-characters/"},{"n":4,"t":"Median of Two Sorted Arrays","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/median-of-two-sorted-arrays/"}],"mins":63},{"day":"Wed","date":"2026-07-29","type":"video","items":[{"t":"How to Prepare for System Design Interviews","m":18,"eff":12,"ph":"P0"},{"t":"Coding Interview Fundamentals: DFS and Recursion (Binary Trees)","m":21,"eff":14,"ph":"P0"},{"t":"Coding Interview Fundamentals: Post-Order Traversal","m":26,"eff":17,"ph":"P0"},{"t":"Leetcode 200: Number of Islands - Coding Walkthrough  \u2192 0:00\u20131:27","m":1,"eff":1,"ph":"P0"}],"mins":45},{"day":"Thu","date":"2026-07-30","type":"lc","items":[{"n":5,"t":"Longest Palindromic Substring","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/longest-palindromic-substring/"},{"n":6,"t":"Zigzag Conversion","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/zigzag-conversion/"}],"mins":50}]},{"w":2,"monday":"2026-08-03","days":[{"day":"Mon","date":"2026-08-03","type":"lc","items":[{"n":7,"t":"Reverse Integer","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/reverse-integer/"},{"n":8,"t":"String to Integer (atoi)","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/string-to-integer-atoi/"}],"mins":50},{"day":"Tue","date":"2026-08-04","type":"lc","items":[{"n":9,"t":"Palindrome Number","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/palindrome-number/"},{"n":10,"t":"Regular Expression Matching","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/regular-expression-matching/"}],"mins":50},{"day":"Wed","date":"2026-08-05","type":"video","items":[{"t":"Leetcode 200: Number of Islands - Coding Walkthrough  \u2192 1:27\u201324:23","m":23,"eff":15,"ph":"P0"},{"t":"Networking Essentials for System Design Interviews  \u2192 0:00\u201344:34","m":45,"eff":30,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-08-06","type":"lc","items":[{"n":11,"t":"Container With Most Water","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/container-with-most-water/"},{"n":12,"t":"Integer to Roman","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/integer-to-roman/"}],"mins":50}]},{"w":3,"monday":"2026-08-10","days":[{"day":"Mon","date":"2026-08-10","type":"lc","items":[{"n":13,"t":"Roman to Integer","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/roman-to-integer/"},{"n":14,"t":"Longest Common Prefix","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/longest-common-prefix/"},{"n":15,"t":"3Sum","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/3sum/"}],"mins":49},{"day":"Tue","date":"2026-08-11","type":"lc","items":[{"n":16,"t":"3Sum Closest","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/3sum-closest/"},{"n":17,"t":"Letter Combinations of a Phone Number","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/letter-combinations-of-a-phone-number/"}],"mins":50},{"day":"Wed","date":"2026-08-12","type":"video","items":[{"t":"Networking Essentials for System Design Interviews  \u2192 44:34\u201368:02","m":23,"eff":16,"ph":"P1"},{"t":"API Design in System Design Interviews","m":29,"eff":19,"ph":"P1"},{"t":"Data Modeling in System Design Interviews  \u2192 0:00\u201315:22","m":15,"eff":10,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-08-13","type":"lc","items":[{"n":18,"t":"4Sum","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/4sum/"},{"n":19,"t":"Remove Nth Node From End of List","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/remove-nth-node-from-end-of-list/"},{"n":20,"t":"Valid Parentheses","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/valid-parentheses/"}],"mins":62}]},{"w":4,"monday":"2026-08-17","days":[{"day":"Mon","date":"2026-08-17","type":"lc","items":[{"n":21,"t":"Merge Two Sorted Lists","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/merge-two-sorted-lists/"},{"n":22,"t":"Generate Parentheses","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/generate-parentheses/"}],"mins":37},{"day":"Tue","date":"2026-08-18","type":"lc","items":[{"n":23,"t":"Merge k Sorted Lists","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/merge-k-sorted-lists/"},{"n":24,"t":"Swap Nodes in Pairs","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/swap-nodes-in-pairs/"}],"mins":63},{"day":"Wed","date":"2026-08-19","type":"video","items":[{"t":"Data Modeling in System Design Interviews  \u2192 15:22\u201330:35","m":15,"eff":10,"ph":"P1"},{"t":"CAP Theorem in System Design Interviews","m":14,"eff":9,"ph":"P1"},{"t":"Caching in System Design Interviews","m":30,"eff":20,"ph":"P1"},{"t":"Sharding in System Design Interviews  \u2192 0:00\u20138:07","m":8,"eff":5,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-08-20","type":"lc","items":[{"n":25,"t":"Reverse Nodes in k-Group","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/reverse-nodes-in-k-group/"},{"n":26,"t":"Remove Duplicates from Sorted Array","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/remove-duplicates-from-sorted-array/"}],"mins":50}]},{"w":5,"monday":"2026-08-24","days":[{"day":"Mon","date":"2026-08-24","type":"lc","items":[{"n":27,"t":"Remove Element","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/remove-element/"},{"n":28,"t":"Find the Index of the First Occurrence in a String","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/"},{"n":29,"t":"Divide Two Integers","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/divide-two-integers/"}],"mins":49},{"day":"Tue","date":"2026-08-25","type":"lc","items":[{"n":30,"t":"Substring with Concatenation of All Words","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/substring-with-concatenation-of-all-words/"}],"mins":38},{"day":"Wed","date":"2026-08-26","type":"video","items":[{"t":"Sharding in System Design Interviews  \u2192 8:07\u201330:34","m":22,"eff":15,"ph":"P1"},{"t":"Consistent Hashing: Easy Explanation","m":7,"eff":5,"ph":"P1"},{"t":"DB Indexing - B-tree, Geospatial, Inverted Index","m":14,"eff":10,"ph":"P1"},{"t":"Object Storage in System Design Interviews","m":13,"eff":8,"ph":"P1"},{"t":"API Gateways in System Design Interviews","m":6,"eff":4,"ph":"P1"},{"t":"Message Queues in System Design Interviews  \u2192 0:00\u20134:31","m":5,"eff":3,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-08-27","type":"lc","items":[{"n":31,"t":"Next Permutation","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/next-permutation/"},{"n":32,"t":"Longest Valid Parentheses","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/longest-valid-parentheses/"}],"mins":63}]},{"w":6,"monday":"2026-08-31","days":[{"day":"Mon","date":"2026-08-31","type":"lc","items":[{"n":33,"t":"Search in Rotated Sorted Array","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/search-in-rotated-sorted-array/"},{"n":34,"t":"Find First and Last Position of Element in Sorted Array","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/"}],"mins":50},{"day":"Tue","date":"2026-09-01","type":"lc","items":[{"n":35,"t":"Search Insert Position","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/search-insert-position/"},{"n":36,"t":"Valid Sudoku","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/valid-sudoku/"}],"mins":37},{"day":"Wed","date":"2026-09-02","type":"video","items":[{"t":"Message Queues in System Design Interviews  \u2192 4:31\u201326:46","m":22,"eff":15,"ph":"P1"},{"t":"Kafka vs RabbitMQ","m":11,"eff":7,"ph":"P1"},{"t":"Data Structures for Big Data - Bloom Filters, CMS, HyperLogLog","m":26,"eff":17,"ph":"P1"},{"t":"Proximity Search & Geospatial Indexes Explained  \u2192 0:00\u20138:28","m":8,"eff":6,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-09-03","type":"lc","items":[{"n":37,"t":"Sudoku Solver","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/sudoku-solver/"},{"n":38,"t":"Count and Say","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/count-and-say/"}],"mins":63}]},{"w":7,"monday":"2026-09-07","days":[{"day":"Mon","date":"2026-09-07","type":"lc","items":[{"n":39,"t":"Combination Sum","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/combination-sum/"},{"n":40,"t":"Combination Sum II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/combination-sum-ii/"}],"mins":50},{"day":"Tue","date":"2026-09-08","type":"lc","items":[{"n":41,"t":"First Missing Positive","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/first-missing-positive/"}],"mins":38},{"day":"Wed","date":"2026-09-09","type":"video","items":[{"t":"Proximity Search & Geospatial Indexes Explained  \u2192 8:28\u201317:07","m":9,"eff":6,"ph":"P1"},{"t":"Real-Time Collaboration Explained","m":16,"eff":10,"ph":"P1"},{"t":"Distributed Transactions: 2PC vs Saga","m":15,"eff":10,"ph":"P1"},{"t":"How do Time Series Databases Work?  \u2192 0:00\u201328:29","m":28,"eff":19,"ph":"P1"}],"mins":45},{"day":"Thu","date":"2026-09-10","type":"lc","items":[{"n":42,"t":"Trapping Rain Water","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/trapping-rain-water/"},{"n":43,"t":"Multiply Strings","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/multiply-strings/"}],"mins":63}]},{"w":8,"monday":"2026-09-14","days":[{"day":"Mon","date":"2026-09-14","type":"lc","items":[{"n":44,"t":"Wildcard Matching","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/wildcard-matching/"}],"mins":38},{"day":"Tue","date":"2026-09-15","type":"lc","items":[{"n":45,"t":"Jump Game II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/jump-game-ii/"},{"n":46,"t":"Permutations","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/permutations/"}],"mins":50},{"day":"Wed","date":"2026-09-16","type":"video","items":[{"t":"How do Time Series Databases Work?  \u2192 28:29\u201337:15","m":9,"eff":6,"ph":"P1"},{"t":"Kafka System Design Deep Dive","m":44,"eff":29,"ph":"P2"},{"t":"Redis Deep Dive  \u2192 0:00\u201315:13","m":15,"eff":10,"ph":"P2"}],"mins":45},{"day":"Thu","date":"2026-09-17","type":"lc","items":[{"n":47,"t":"Permutations II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/permutations-ii/"},{"n":48,"t":"Rotate Image","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/rotate-image/"}],"mins":50}]},{"w":9,"monday":"2026-09-21","days":[{"day":"Mon","date":"2026-09-21","type":"lc","items":[{"n":49,"t":"Group Anagrams","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/group-anagrams/"},{"n":50,"t":"Pow(x, n)","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/powx-n/"}],"mins":50},{"day":"Tue","date":"2026-09-22","type":"lc","items":[{"n":51,"t":"N-Queens","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/n-queens/"}],"mins":38},{"day":"Wed","date":"2026-09-23","type":"video","items":[{"t":"Redis Deep Dive  \u2192 15:13\u201331:00","m":16,"eff":11,"ph":"P2"},{"t":"DynamoDB Deep Dive","m":23,"eff":15,"ph":"P2"},{"t":"Cassandra Deep Dive  \u2192 0:00\u201328:38","m":29,"eff":19,"ph":"P2"}],"mins":45},{"day":"Thu","date":"2026-09-24","type":"lc","items":[{"n":52,"t":"N-Queens II","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/n-queens-ii/"},{"n":53,"t":"Maximum Subarray","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/maximum-subarray/"}],"mins":63}]},{"w":10,"monday":"2026-09-28","days":[{"day":"Mon","date":"2026-09-28","type":"lc","items":[{"n":54,"t":"Spiral Matrix","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/spiral-matrix/"},{"n":55,"t":"Jump Game","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/jump-game/"}],"mins":50},{"day":"Tue","date":"2026-09-29","type":"lc","items":[{"n":56,"t":"Merge Intervals","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/merge-intervals/"},{"n":57,"t":"Insert Interval","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/insert-interval/"},{"n":58,"t":"Length of Last Word","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/length-of-last-word/"}],"mins":62},{"day":"Wed","date":"2026-09-30","type":"video","items":[{"t":"Cassandra Deep Dive  \u2192 28:38\u201329:51","m":1,"eff":1,"ph":"P2"},{"t":"Elasticsearch Deep Dive","m":44,"eff":29,"ph":"P2"},{"t":"Beginner: Design Bitly  \u2192 0:00\u201322:14","m":22,"eff":15,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-10-01","type":"lc","items":[{"n":59,"t":"Spiral Matrix II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/spiral-matrix-ii/"},{"n":60,"t":"Permutation Sequence","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/permutation-sequence/"}],"mins":63}]},{"w":11,"monday":"2026-10-05","days":[{"day":"Mon","date":"2026-10-05","type":"lc","items":[{"n":61,"t":"Rotate List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/rotate-list/"},{"n":62,"t":"Unique Paths","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/unique-paths/"}],"mins":50},{"day":"Tue","date":"2026-10-06","type":"lc","items":[{"n":63,"t":"Unique Paths II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/unique-paths-ii/"},{"n":64,"t":"Minimum Path Sum","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/minimum-path-sum/"}],"mins":50},{"day":"Wed","date":"2026-10-07","type":"video","items":[{"t":"Beginner: Design Bitly  \u2192 22:14\u201359:30","m":37,"eff":25,"ph":"P3"},{"t":"Design Twitter (walkthrough)","m":23,"eff":15,"ph":"P3"},{"t":"Design FB News Feed  \u2192 0:00\u20137:10","m":7,"eff":5,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-10-08","type":"lc","items":[{"n":65,"t":"Valid Number","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/valid-number/"},{"n":66,"t":"Plus One","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/plus-one/"},{"n":67,"t":"Add Binary","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/add-binary/"}],"mins":62}]},{"w":12,"monday":"2026-10-12","days":[{"day":"Mon","date":"2026-10-12","type":"lc","items":[{"n":68,"t":"Text Justification","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/text-justification/"},{"n":69,"t":"Sqrt(x)","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/sqrtx/"}],"mins":50},{"day":"Tue","date":"2026-10-13","type":"lc","items":[{"n":70,"t":"Climbing Stairs","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/climbing-stairs/"},{"n":71,"t":"Simplify Path","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/simplify-path/"},{"n":72,"t":"Edit Distance","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/edit-distance/"}],"mins":62},{"day":"Wed","date":"2026-10-14","type":"video","items":[{"t":"Design FB News Feed  \u2192 7:10\u201326:12","m":19,"eff":13,"ph":"P3"},{"t":"Mock: Design Yelp","m":38,"eff":25,"ph":"P3"},{"t":"Design Dropbox / Google Drive  \u2192 0:00\u201310:18","m":10,"eff":7,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-10-15","type":"lc","items":[{"n":73,"t":"Set Matrix Zeroes","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/set-matrix-zeroes/"},{"n":74,"t":"Search a 2D Matrix","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/search-a-2d-matrix/"}],"mins":50}]},{"w":13,"monday":"2026-10-19","days":[{"day":"Mon","date":"2026-10-19","type":"lc","items":[{"n":75,"t":"Sort Colors","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/sort-colors/"}],"mins":25},{"day":"Tue","date":"2026-10-20","type":"lc","items":[{"n":76,"t":"Minimum Window Substring","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/minimum-window-substring/"},{"n":77,"t":"Combinations","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/combinations/"}],"mins":63},{"day":"Wed","date":"2026-10-21","type":"video","items":[{"t":"Design Dropbox / Google Drive  \u2192 10:18\u201358:08","m":48,"eff":32,"ph":"P3"},{"t":"Design a Distributed Rate Limiter  \u2192 0:00\u201319:40","m":20,"eff":13,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-10-22","type":"lc","items":[{"n":78,"t":"Subsets","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/subsets/"},{"n":79,"t":"Word Search","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/word-search/"}],"mins":50}]},{"w":14,"monday":"2026-10-26","days":[{"day":"Mon","date":"2026-10-26","type":"lc","items":[{"n":80,"t":"Remove Duplicates from Sorted Array II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/"},{"n":81,"t":"Search in Rotated Sorted Array II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/search-in-rotated-sorted-array-ii/"}],"mins":50},{"day":"Tue","date":"2026-10-27","type":"lc","items":[{"n":82,"t":"Remove Duplicates from Sorted List II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/"},{"n":83,"t":"Remove Duplicates from Sorted List","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/remove-duplicates-from-sorted-list/"}],"mins":37},{"day":"Wed","date":"2026-10-28","type":"video","items":[{"t":"Design a Distributed Rate Limiter  \u2192 19:40\u201355:58","m":36,"eff":24,"ph":"P3"},{"t":"Design Ticketmaster  \u2192 0:00\u201331:12","m":31,"eff":21,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-10-29","type":"lc","items":[{"n":84,"t":"Largest Rectangle in Histogram","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/largest-rectangle-in-histogram/"}],"mins":38}]},{"w":15,"monday":"2026-11-02","days":[{"day":"Mon","date":"2026-11-02","type":"lc","items":[{"n":85,"t":"Maximal Rectangle","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/maximal-rectangle/"}],"mins":38},{"day":"Tue","date":"2026-11-03","type":"lc","items":[{"n":86,"t":"Partition List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/partition-list/"},{"n":87,"t":"Scramble String","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/scramble-string/"}],"mins":63},{"day":"Wed","date":"2026-11-04","type":"video","items":[{"t":"Design Ticketmaster  \u2192 31:12\u201358:39","m":27,"eff":18,"ph":"P3"},{"t":"Design Tinder  \u2192 0:00\u201340:03","m":40,"eff":27,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-11-05","type":"lc","items":[{"n":88,"t":"Merge Sorted Array","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/merge-sorted-array/"},{"n":89,"t":"Gray Code","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/gray-code/"},{"n":90,"t":"Subsets II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/subsets-ii/"}],"mins":62}]},{"w":16,"monday":"2026-11-09","days":[{"day":"Mon","date":"2026-11-09","type":"lc","items":[{"n":91,"t":"Decode Ways","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/decode-ways/"},{"n":92,"t":"Reverse Linked List II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/reverse-linked-list-ii/"}],"mins":50},{"day":"Tue","date":"2026-11-10","type":"lc","items":[{"n":93,"t":"Restore IP Addresses","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/restore-ip-addresses/"},{"n":94,"t":"Binary Tree Inorder Traversal","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/binary-tree-inorder-traversal/"},{"n":95,"t":"Unique Binary Search Trees II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/unique-binary-search-trees-ii/"}],"mins":62},{"day":"Wed","date":"2026-11-11","type":"video","items":[{"t":"Design Tinder  \u2192 40:03\u201373:22","m":33,"eff":22,"ph":"P3"},{"t":"Design WhatsApp  \u2192 0:00\u201334:11","m":34,"eff":23,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-11-12","type":"lc","items":[{"n":96,"t":"Unique Binary Search Trees","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/unique-binary-search-trees/"},{"n":97,"t":"Interleaving String","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/interleaving-string/"}],"mins":50}]},{"w":17,"monday":"2026-11-16","days":[{"day":"Mon","date":"2026-11-16","type":"lc","items":[{"n":98,"t":"Validate Binary Search Tree","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/validate-binary-search-tree/"},{"n":99,"t":"Recover Binary Search Tree","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/recover-binary-search-tree/"}],"mins":50},{"day":"Tue","date":"2026-11-17","type":"lc","items":[{"n":100,"t":"Same Tree","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/same-tree/"},{"n":101,"t":"Symmetric Tree","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/symmetric-tree/"},{"n":102,"t":"Binary Tree Level Order Traversal","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/binary-tree-level-order-traversal/"}],"mins":49},{"day":"Wed","date":"2026-11-18","type":"video","items":[{"t":"Design WhatsApp  \u2192 34:11\u201358:12","m":24,"eff":16,"ph":"P3"},{"t":"Design Live Comments  \u2192 0:00\u201343:29","m":43,"eff":29,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-11-19","type":"lc","items":[{"n":103,"t":"Binary Tree Zigzag Level Order Traversal","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/"},{"n":104,"t":"Maximum Depth of Binary Tree","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/maximum-depth-of-binary-tree/"},{"n":105,"t":"Construct Binary Tree from Preorder and Inorder Traversal","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/"}],"mins":62}]},{"w":18,"monday":"2026-11-23","days":[{"day":"Mon","date":"2026-11-23","type":"lc","items":[{"n":106,"t":"Construct Binary Tree from Inorder and Postorder Traversal","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/"},{"n":107,"t":"Binary Tree Level Order Traversal II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/binary-tree-level-order-traversal-ii/"}],"mins":50},{"day":"Tue","date":"2026-11-24","type":"lc","items":[{"n":108,"t":"Convert Sorted Array to BST","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/convert-sorted-array-to-bst/"},{"n":109,"t":"Convert Sorted List to BST","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/convert-sorted-list-to-bst/"},{"n":110,"t":"Balanced Binary Tree","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/balanced-binary-tree/"},{"n":111,"t":"Minimum Depth of Binary Tree","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/minimum-depth-of-binary-tree/"}],"mins":61},{"day":"Wed","date":"2026-11-25","type":"video","items":[{"t":"Design Live Comments  \u2192 43:29\u201356:15","m":13,"eff":9,"ph":"P3"},{"t":"Design FB Live Comments: Hello Interview Mock  \u2192 0:00\u201354:44","m":55,"eff":36,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-11-26","type":"lc","items":[{"n":112,"t":"Path Sum","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/path-sum/"},{"n":113,"t":"Path Sum II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/path-sum-ii/"},{"n":114,"t":"Flatten Binary Tree to Linked List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/flatten-binary-tree-to-linked-list/"}],"mins":62}]},{"w":19,"monday":"2026-11-30","days":[{"day":"Mon","date":"2026-11-30","type":"lc","items":[{"n":115,"t":"Distinct Subsequences","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/distinct-subsequences/"}],"mins":38},{"day":"Tue","date":"2026-12-01","type":"lc","items":[{"n":116,"t":"Populating Next Right Pointers in Each Node","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/populating-next-right-pointers-in-each-node/"},{"n":117,"t":"Populating Next Right Pointers in Each Node II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/"},{"n":118,"t":"Pascal's Triangle","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/pascals-triangle/"}],"mins":62},{"day":"Wed","date":"2026-12-02","type":"video","items":[{"t":"Design FB Live Comments: Hello Interview Mock  \u2192 54:44\u201359:50","m":5,"eff":3,"ph":"P3"},{"t":"Design LeetCode (Online Judge)  \u2192 0:00\u201362:24","m":62,"eff":42,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-12-03","type":"lc","items":[{"n":119,"t":"Pascal's Triangle II","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/pascals-triangle-ii/"},{"n":120,"t":"Triangle","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/triangle/"},{"n":121,"t":"Best Time to Buy and Sell Stock","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"}],"mins":49}]},{"w":20,"monday":"2026-12-07","days":[{"day":"Mon","date":"2026-12-07","type":"lc","items":[{"n":122,"t":"Best Time to Buy and Sell Stock II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/"}],"mins":25},{"day":"Tue","date":"2026-12-08","type":"lc","items":[{"n":123,"t":"Best Time to Buy and Sell Stock III","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/"}],"mins":38},{"day":"Wed","date":"2026-12-09","type":"video","items":[{"t":"Design LeetCode (Online Judge)  \u2192 62:24\u201363:34","m":1,"eff":1,"ph":"P3"},{"t":"Design YouTube","m":43,"eff":28,"ph":"P3"},{"t":"Top-K System Design Breakdown  \u2192 0:00\u201323:41","m":24,"eff":16,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-12-10","type":"lc","items":[{"n":124,"t":"Binary Tree Maximum Path Sum","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/binary-tree-maximum-path-sum/"},{"n":125,"t":"Valid Palindrome","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/valid-palindrome/"}],"mins":50}]},{"w":21,"monday":"2026-12-14","days":[{"day":"Mon","date":"2026-12-14","type":"lc","items":[{"n":126,"t":"Word Ladder II","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/word-ladder-ii/"}],"mins":38},{"day":"Tue","date":"2026-12-15","type":"lc","items":[{"n":127,"t":"Word Ladder","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/word-ladder/"},{"n":128,"t":"Longest Consecutive Sequence","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/longest-consecutive-sequence/"}],"mins":63},{"day":"Wed","date":"2026-12-16","type":"video","items":[{"t":"Top-K System Design Breakdown  \u2192 23:41\u201391:11","m":68,"eff":45,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-12-17","type":"lc","items":[{"n":129,"t":"Sum Root to Leaf Numbers","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/sum-root-to-leaf-numbers/"},{"n":130,"t":"Surrounded Regions","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/surrounded-regions/"}],"mins":50}]},{"w":22,"monday":"2026-12-21","days":[{"day":"Mon","date":"2026-12-21","type":"lc","items":[{"n":131,"t":"Palindrome Partitioning","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/palindrome-partitioning/"}],"mins":25},{"day":"Tue","date":"2026-12-22","type":"lc","items":[{"n":132,"t":"Palindrome Partitioning II","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/palindrome-partitioning-ii/"},{"n":133,"t":"Clone Graph","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/clone-graph/"}],"mins":63},{"day":"Wed","date":"2026-12-23","type":"video","items":[{"t":"Top-K System Design Breakdown  \u2192 91:11\u201391:38","m":0,"eff":0,"ph":"P3"},{"t":"Design a Web Crawler","m":65,"eff":43,"ph":"P3"},{"t":"Design an Ad Click Aggregator  \u2192 0:00\u20131:59","m":2,"eff":1,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-12-24","type":"lc","items":[{"n":134,"t":"Gas Station","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/gas-station/"},{"n":135,"t":"Candy","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/candy/"}],"mins":63}]},{"w":23,"monday":"2026-12-28","days":[{"day":"Mon","date":"2026-12-28","type":"lc","items":[{"n":136,"t":"Single Number","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/single-number/"},{"n":137,"t":"Single Number II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/single-number-ii/"}],"mins":37},{"day":"Tue","date":"2026-12-29","type":"lc","items":[{"n":138,"t":"Copy List with Random Pointer","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/copy-list-with-random-pointer/"},{"n":139,"t":"Word Break","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/word-break/"}],"mins":50},{"day":"Wed","date":"2026-12-30","type":"video","items":[{"t":"Design an Ad Click Aggregator  \u2192 1:59\u201362:22","m":60,"eff":40,"ph":"P3"},{"t":"Design Uber  \u2192 0:00\u20137:07","m":7,"eff":5,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2026-12-31","type":"lc","items":[{"n":140,"t":"Word Break II","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/word-break-ii/"},{"n":141,"t":"Linked List Cycle","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/linked-list-cycle/"}],"mins":50}]},{"w":24,"monday":"2027-01-04","days":[{"day":"Mon","date":"2027-01-04","type":"lc","items":[{"n":142,"t":"Linked List Cycle II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/linked-list-cycle-ii/"},{"n":143,"t":"Reorder List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/reorder-list/"}],"mins":50},{"day":"Tue","date":"2027-01-05","type":"lc","items":[{"n":144,"t":"Binary Tree Preorder Traversal","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/binary-tree-preorder-traversal/"},{"n":145,"t":"Binary Tree Postorder Traversal","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/binary-tree-postorder-traversal/"},{"n":146,"t":"LRU Cache","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/lru-cache/"}],"mins":49},{"day":"Wed","date":"2027-01-06","type":"video","items":[{"t":"Design Uber  \u2192 7:07\u201363:05","m":56,"eff":37,"ph":"P3"},{"t":"Design FB Post Search  \u2192 0:00\u201311:32","m":12,"eff":8,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2027-01-07","type":"lc","items":[{"n":147,"t":"Insertion Sort List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/insertion-sort-list/"},{"n":148,"t":"Sort List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/sort-list/"}],"mins":50}]},{"w":25,"monday":"2027-01-11","days":[{"day":"Mon","date":"2027-01-11","type":"lc","items":[{"n":149,"t":"Max Points on a Line","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/max-points-on-a-line/"}],"mins":38},{"day":"Tue","date":"2027-01-12","type":"lc","items":[{"n":150,"t":"Evaluate Reverse Polish Notation","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/evaluate-reverse-polish-notation/"},{"n":151,"t":"Reverse Words in a String","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/reverse-words-in-a-string/"}],"mins":50},{"day":"Wed","date":"2027-01-13","type":"video","items":[{"t":"Design FB Post Search  \u2192 11:32\u201368:27","m":57,"eff":38,"ph":"P3"},{"t":"Design Yelp, Meta Staff Product Architecture: Mock  \u2192 0:00\u201310:35","m":11,"eff":7,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2027-01-14","type":"lc","items":[{"n":152,"t":"Maximum Product Subarray","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/maximum-product-subarray/"},{"n":153,"t":"Find Minimum in Rotated Sorted Array","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"}],"mins":50}]},{"w":26,"monday":"2027-01-18","days":[{"day":"Mon","date":"2027-01-18","type":"lc","items":[{"n":154,"t":"Find Minimum in Rotated Sorted Array II","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/"}],"mins":38},{"day":"Tue","date":"2027-01-19","type":"lc","items":[{"n":155,"t":"Min Stack","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/min-stack/"},{"n":160,"t":"Intersection of Two Linked Lists","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/intersection-of-two-linked-lists/"},{"n":162,"t":"Find Peak Element","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/find-peak-element/"}],"mins":62},{"day":"Wed","date":"2027-01-20","type":"video","items":[{"t":"Design Yelp, Meta Staff Product Architecture: Mock  \u2192 10:35\u201363:24","m":53,"eff":35,"ph":"P3"},{"t":"Mock: Design Online Auction (OpenAI & Meta Sr/Staff)  \u2192 0:00\u201314:41","m":15,"eff":10,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2027-01-21","type":"lc","items":[{"n":164,"t":"Maximum Gap","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/maximum-gap/"},{"n":165,"t":"Compare Version Numbers","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/compare-version-numbers/"}],"mins":50}]},{"w":27,"monday":"2027-01-25","days":[{"day":"Mon","date":"2027-01-25","type":"lc","items":[{"n":166,"t":"Fraction to Recurring Decimal","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/fraction-to-recurring-decimal/"},{"n":167,"t":"Two Sum II - Input Array Is Sorted","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"}],"mins":50},{"day":"Tue","date":"2027-01-26","type":"lc","items":[{"n":168,"t":"Excel Sheet Column Title","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/excel-sheet-column-title/"},{"n":169,"t":"Majority Element","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/majority-element/"},{"n":171,"t":"Excel Sheet Column Number","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/excel-sheet-column-number/"},{"n":172,"t":"Factorial Trailing Zeroes","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/factorial-trailing-zeroes/"}],"mins":61},{"day":"Wed","date":"2027-01-27","type":"video","items":[{"t":"Mock: Design Online Auction (OpenAI & Meta Sr/Staff)  \u2192 14:41\u201362:53","m":48,"eff":32,"ph":"P3"},{"t":"Senior Mock: Design an E-commerce Platform  \u2192 0:00\u201319:18","m":19,"eff":13,"ph":"P3"}],"mins":45},{"day":"Thu","date":"2027-01-28","type":"lc","items":[{"n":173,"t":"Binary Search Tree Iterator","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/binary-search-tree-iterator/"},{"n":174,"t":"Dungeon Game","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/dungeon-game/"}],"mins":63}]},{"w":28,"monday":"2027-02-01","days":[{"day":"Mon","date":"2027-02-01","type":"lc","items":[{"n":175,"t":"Combine Two Tables","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/combine-two-tables/"},{"n":176,"t":"Second Highest Salary","d":"M","k":"sql","m":13,"s":0,"u":"https://leetcode.com/problems/second-highest-salary/"},{"n":177,"t":"Nth Highest Salary","d":"M","k":"sql","m":13,"s":0,"u":"https://leetcode.com/problems/nth-highest-salary/"},{"n":178,"t":"Rank Scores","d":"M","k":"sql","m":13,"s":0,"u":"https://leetcode.com/problems/rank-scores/"}],"mins":46},{"day":"Tue","date":"2027-02-02","type":"lc","items":[{"n":179,"t":"Largest Number","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/largest-number/"},{"n":180,"t":"Consecutive Numbers","d":"M","k":"sql","m":13,"s":0,"u":"https://leetcode.com/problems/consecutive-numbers/"},{"n":181,"t":"Employees Earning More Than Their Managers","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/employees-earning-more-than-their-managers/"},{"n":182,"t":"Duplicate Emails","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/duplicate-emails/"},{"n":183,"t":"Customers Who Never Order","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/customers-who-never-order/"}],"mins":59},{"day":"Wed","date":"2027-02-03","type":"video","items":[{"t":"Senior Mock: Design an E-commerce Platform  \u2192 19:18\u201371:33","m":52,"eff":35,"ph":"P3"},{"t":"Concurrency in Low-Level Design Interviews  \u2192 0:00\u201315:15","m":15,"eff":10,"ph":"P4"}],"mins":45},{"day":"Thu","date":"2027-02-04","type":"lc","items":[{"n":184,"t":"Department Highest Salary","d":"M","k":"sql","m":13,"s":0,"u":"https://leetcode.com/problems/department-highest-salary/"},{"n":185,"t":"Department Top Three Salaries","d":"H","k":"sql","m":18,"s":0,"u":"https://leetcode.com/problems/department-top-three-salaries/"},{"n":187,"t":"Repeated DNA Sequences","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/repeated-dna-sequences/"}],"mins":56}]},{"w":29,"monday":"2027-02-08","days":[{"day":"Mon","date":"2027-02-08","type":"lc","items":[{"n":188,"t":"Best Time to Buy and Sell Stock IV","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/"}],"mins":38},{"day":"Tue","date":"2027-02-09","type":"lc","items":[{"n":189,"t":"Rotate Array","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/rotate-array/"},{"n":190,"t":"Reverse Bits","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/reverse-bits/"},{"n":191,"t":"Number of 1 Bits","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/number-of-1-bits/"},{"n":192,"t":"Word Frequency","d":"M","k":"shell","m":13,"s":0,"u":"https://leetcode.com/problems/word-frequency/"},{"n":193,"t":"Valid Phone Numbers","d":"E","k":"shell","m":7,"s":0,"u":"https://leetcode.com/problems/valid-phone-numbers/"}],"mins":69},{"day":"Wed","date":"2027-02-10","type":"video","items":[{"t":"Concurrency in Low-Level Design Interviews  \u2192 15:15\u201322:31","m":7,"eff":5,"ph":"P4"},{"t":"LLD: Design an Elevator  \u2192 0:00\u201360:14","m":60,"eff":40,"ph":"P4"}],"mins":45},{"day":"Thu","date":"2027-02-11","type":"lc","items":[{"n":194,"t":"Transpose File","d":"M","k":"shell","m":13,"s":0,"u":"https://leetcode.com/problems/transpose-file/"},{"n":195,"t":"Tenth Line","d":"E","k":"shell","m":7,"s":0,"u":"https://leetcode.com/problems/tenth-line/"},{"n":196,"t":"Delete Duplicate Emails","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/delete-duplicate-emails/"},{"n":197,"t":"Rising Temperature","d":"E","k":"sql","m":7,"s":0,"u":"https://leetcode.com/problems/rising-temperature/"},{"n":198,"t":"House Robber","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/house-robber/"}],"mins":59}]},{"w":30,"monday":"2027-02-15","days":[{"day":"Mon","date":"2027-02-15","type":"lc","items":[{"n":199,"t":"Binary Tree Right Side View","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/binary-tree-right-side-view/"},{"n":200,"t":"Number of Islands","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/number-of-islands/"}],"mins":50},{"day":"Tue","date":"2027-02-16","type":"lc","items":[{"n":201,"t":"Bitwise AND of Numbers Range","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/bitwise-and-of-numbers-range/"},{"n":202,"t":"Happy Number","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/happy-number/"},{"n":203,"t":"Remove Linked List Elements","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/remove-linked-list-elements/"}],"mins":49},{"day":"Wed","date":"2027-02-17","type":"video","items":[{"t":"LLD: Design an Elevator  \u2192 60:14\u201361:27","m":1,"eff":1,"ph":"P4"},{"t":"LLD: Design Amazon Locker","m":51,"eff":34,"ph":"P4"},{"t":"LLD: Design Connect Four  \u2192 0:00\u201315:21","m":15,"eff":10,"ph":"P4"}],"mins":45},{"day":"Thu","date":"2027-02-18","type":"lc","items":[{"n":204,"t":"Count Primes","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/count-primes/"},{"n":205,"t":"Isomorphic Strings","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/isomorphic-strings/"},{"n":206,"t":"Reverse Linked List","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/reverse-linked-list/"}],"mins":49}]},{"w":31,"monday":"2027-02-22","days":[{"day":"Mon","date":"2027-02-22","type":"lc","items":[{"n":207,"t":"Course Schedule","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/course-schedule/"},{"n":208,"t":"Implement Trie (Prefix Tree)","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/implement-trie-prefix-tree/"}],"mins":50},{"day":"Tue","date":"2027-02-23","type":"lc","items":[{"n":209,"t":"Minimum Size Subarray Sum","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/minimum-size-subarray-sum/"},{"n":210,"t":"Course Schedule II","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/course-schedule-ii/"}],"mins":50},{"day":"Wed","date":"2027-02-24","type":"video","items":[{"t":"LLD: Design Connect Four  \u2192 15:21\u201359:50","m":44,"eff":30,"ph":"P4"},{"t":"Recommendation System Infra Basics","m":10,"eff":6,"ph":"P5"},{"t":"ML SD: Bot Detection  \u2192 0:00\u201313:17","m":13,"eff":9,"ph":"P5"}],"mins":45},{"day":"Thu","date":"2027-02-25","type":"lc","items":[{"n":211,"t":"Design Add and Search Words Data Structure","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/design-add-and-search-words-data-structure/"},{"n":212,"t":"Word Search II","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/word-search-ii/"}],"mins":63}]},{"w":32,"monday":"2027-03-01","days":[{"day":"Mon","date":"2027-03-01","type":"lc","items":[{"n":213,"t":"House Robber II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/house-robber-ii/"}],"mins":25},{"day":"Tue","date":"2027-03-02","type":"lc","items":[{"n":214,"t":"Shortest Palindrome","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/shortest-palindrome/"},{"n":215,"t":"Kth Largest Element in an Array","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/kth-largest-element-in-an-array/"}],"mins":63},{"day":"Wed","date":"2027-03-03","type":"video","items":[{"t":"ML SD: Bot Detection  \u2192 13:17\u201361:14","m":48,"eff":32,"ph":"P5"},{"t":"ML SD: Harmful Content Detection / Moderation  \u2192 0:00\u201319:33","m":20,"eff":13,"ph":"P5"}],"mins":45},{"day":"Thu","date":"2027-03-04","type":"lc","items":[{"n":216,"t":"Combination Sum III","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/combination-sum-iii/"},{"n":217,"t":"Contains Duplicate","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/contains-duplicate/"}],"mins":37}]},{"w":33,"monday":"2027-03-08","days":[{"day":"Mon","date":"2027-03-08","type":"lc","items":[{"n":218,"t":"The Skyline Problem","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/the-skyline-problem/"},{"n":219,"t":"Contains Duplicate II","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/contains-duplicate-ii/"}],"mins":50},{"day":"Tue","date":"2027-03-09","type":"lc","items":[{"n":220,"t":"Contains Duplicate III","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/contains-duplicate-iii/"},{"n":221,"t":"Maximal Square","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/maximal-square/"}],"mins":63},{"day":"Wed","date":"2027-03-10","type":"video","items":[{"t":"ML SD: Harmful Content Detection / Moderation  \u2192 19:33\u201353:35","m":34,"eff":23,"ph":"P5"},{"t":"AI Coding Interview w/ Meta Staff Engineer  \u2192 0:00\u201333:28","m":33,"eff":22,"ph":"P6"}],"mins":45},{"day":"Thu","date":"2027-03-11","type":"lc","items":[{"n":222,"t":"Count Complete Tree Nodes","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/count-complete-tree-nodes/"},{"n":223,"t":"Rectangle Area","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/rectangle-area/"}],"mins":37}]},{"w":34,"monday":"2027-03-15","days":[{"day":"Mon","date":"2027-03-15","type":"lc","items":[{"n":224,"t":"Basic Calculator","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/basic-calculator/"},{"n":225,"t":"Implement Stack using Queues","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/implement-stack-using-queues/"}],"mins":50},{"day":"Tue","date":"2027-03-16","type":"lc","items":[{"n":226,"t":"Invert Binary Tree","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/invert-binary-tree/"},{"n":227,"t":"Basic Calculator II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/basic-calculator-ii/"},{"n":228,"t":"Summary Ranges","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/summary-ranges/"}],"mins":49},{"day":"Wed","date":"2027-03-17","type":"video","items":[{"t":"AI Coding Interview w/ Meta Staff Engineer  \u2192 33:28\u201353:22","m":20,"eff":13,"ph":"P6"},{"t":"Behavioral: Common Questions Broken Down  \u2192 0:00\u201347:36","m":48,"eff":32,"ph":"P6"}],"mins":45},{"day":"Thu","date":"2027-03-18","type":"lc","items":[{"n":229,"t":"Majority Element II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/majority-element-ii/"},{"n":230,"t":"Kth Smallest Element in a BST","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/kth-smallest-element-in-a-bst/"},{"n":231,"t":"Power of Two","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/power-of-two/"}],"mins":62}]},{"w":35,"monday":"2027-03-22","days":[{"day":"Mon","date":"2027-03-22","type":"lc","items":[{"n":232,"t":"Implement Queue using Stacks","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/implement-queue-using-stacks/"},{"n":233,"t":"Number of Digit One","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/number-of-digit-one/"}],"mins":50},{"day":"Tue","date":"2027-03-23","type":"lc","items":[{"n":234,"t":"Palindrome Linked List","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/palindrome-linked-list/"},{"n":235,"t":"Lowest Common Ancestor of a Binary Search Tree","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"},{"n":236,"t":"Lowest Common Ancestor of a Binary Tree","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/"}],"mins":62},{"day":"Wed","date":"2027-03-24","type":"video","items":[{"t":"Behavioral: Common Questions Broken Down  \u2192 47:36\u201366:49","m":19,"eff":13,"ph":"P6"},{"t":"Behavioral Interview w/ Ex-Meta Hiring Committee Member","m":40,"eff":27,"ph":"P6"},{"t":"How to Learn System Design (w/ Jordan Has No Life)  \u2192 0:00\u20138:07","m":8,"eff":5,"ph":"P6"}],"mins":45},{"day":"Thu","date":"2027-03-25","type":"lc","items":[{"n":237,"t":"Delete Node in a Linked List","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/delete-node-in-a-linked-list/"},{"n":238,"t":"Product of Array Except Self","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/product-of-array-except-self/"}],"mins":50}]},{"w":36,"monday":"2027-03-29","days":[{"day":"Mon","date":"2027-03-29","type":"lc","items":[{"n":239,"t":"Sliding Window Maximum","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/sliding-window-maximum/"}],"mins":38},{"day":"Tue","date":"2027-03-30","type":"lc","items":[{"n":240,"t":"Search a 2D Matrix II","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/search-a-2d-matrix-ii/"},{"n":241,"t":"Different Ways to Add Parentheses","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/different-ways-to-add-parentheses/"},{"n":242,"t":"Valid Anagram","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/valid-anagram/"}],"mins":62},{"day":"Wed","date":"2027-03-31","type":"video","items":[{"t":"How to Learn System Design (w/ Jordan Has No Life)  \u2192 8:07\u201335:56","m":28,"eff":19,"ph":"P6"}],"mins":19},{"day":"Thu","date":"2027-04-01","type":"lc","items":[{"n":257,"t":"Binary Tree Paths","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/binary-tree-paths/"},{"n":258,"t":"Add Digits","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/add-digits/"},{"n":260,"t":"Single Number III","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/single-number-iii/"},{"n":262,"t":"Trips and Users","d":"H","k":"sql","m":18,"s":0,"u":"https://leetcode.com/problems/trips-and-users/"}],"mins":67}]},{"w":37,"monday":"2027-04-05","days":[{"day":"Mon","date":"2027-04-05","type":"lc","items":[{"n":263,"t":"Ugly Number","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/ugly-number/"},{"n":264,"t":"Ugly Number II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/ugly-number-ii/"},{"n":268,"t":"Missing Number","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/missing-number/"}],"mins":49},{"day":"Tue","date":"2027-04-06","type":"lc","items":[{"n":273,"t":"Integer to English Words","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/integer-to-english-words/"},{"n":274,"t":"H-Index","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/h-index/"}],"mins":63},{"day":"Wed","date":"2027-04-07","type":"lc","items":[{"n":275,"t":"H-Index II","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/h-index-ii/"},{"n":278,"t":"First Bad Version","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/first-bad-version/"},{"n":279,"t":"Perfect Squares","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/perfect-squares/"}],"mins":62,"catchup":true},{"day":"Thu","date":"2027-04-08","type":"lc","items":[{"n":282,"t":"Expression Add Operators","d":"H","k":"alg","m":38,"s":0,"u":"https://leetcode.com/problems/expression-add-operators/"},{"n":283,"t":"Move Zeroes","d":"E","k":"alg","m":12,"s":1,"u":"https://leetcode.com/problems/move-zeroes/"}],"mins":50}]},{"w":38,"monday":"2027-04-12","days":[{"day":"Mon","date":"2027-04-12","type":"lc","items":[{"n":284,"t":"Peeking Iterator","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/peeking-iterator/"},{"n":287,"t":"Find the Duplicate Number","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/find-the-duplicate-number/"}],"mins":50},{"day":"Tue","date":"2027-04-13","type":"lc","items":[{"n":289,"t":"Game of Life","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/game-of-life/"},{"n":290,"t":"Word Pattern","d":"E","k":"alg","m":12,"s":0,"u":"https://leetcode.com/problems/word-pattern/"},{"n":292,"t":"Nim Game","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/nim-game/"}],"mins":62},{"day":"Wed","date":"2027-04-14","type":"lc","items":[{"n":295,"t":"Find Median from Data Stream","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/find-median-from-data-stream/"}],"mins":38,"catchup":true},{"day":"Thu","date":"2027-04-15","type":"lc","items":[{"n":297,"t":"Serialize and Deserialize Binary Tree","d":"H","k":"alg","m":38,"s":1,"u":"https://leetcode.com/problems/serialize-and-deserialize-binary-tree/"},{"n":299,"t":"Bulls and Cows","d":"M","k":"alg","m":25,"s":0,"u":"https://leetcode.com/problems/bulls-and-cows/"}],"mins":63}]},{"w":39,"monday":"2027-04-19","days":[{"day":"Mon","date":"2027-04-19","type":"lc","items":[{"n":300,"t":"Longest Increasing Subsequence","d":"M","k":"alg","m":25,"s":1,"u":"https://leetcode.com/problems/longest-increasing-subsequence/"}],"mins":25},{"day":"Tue","date":"2027-04-20","type":"mock","items":[],"mins":55},{"day":"Wed","date":"2027-04-21","type":"mock","items":[],"mins":55},{"day":"Thu","date":"2027-04-22","type":"mock","items":[],"mins":55}]}],"optional":[{"t":"The Art of People Manager Interviews","m":33},{"t":"Interview with a Databricks Head of Applied AI","m":28},{"t":"Interview with a Meta EM: AI Impact, Team Match, Ramp-Up","m":45}],"stats":{"lcProblems":257,"lcSessions":117,"videos":58,"videoSessions":36}};
+const KEY = "swe-prep-v1";
+let S = {items:{}, sessions:{}};
+let filter = "current";
+
+/* ---------- storage ---------- */
+async function load(){
+  try{ const r = await window.storage.get(KEY); if(r && r.value) S = JSON.parse(r.value); }
+  catch(e){ /* first run or storage unavailable — start empty */ }
+}
+let saveTimer=null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{ await window.storage.set(KEY, JSON.stringify(S)); toast("Saved"); }
+    catch(e){ toast("Not saved — progress is session-only"); }
+  }, 350);
+}
+function toast(t){ const el=document.getElementById("saving"); el.textContent=t; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),1200); }
+
+/* ---------- helpers ---------- */
+const DAY = 86400000;
+const fmt = d => new Date(d+"T12:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short"});
+const today = new Date(); today.setHours(12,0,0,0);
+function currentWeek(){
+  for(let i=0;i<PLAN.weeks.length;i++){
+    const m = new Date(PLAN.weeks[i].monday+"T12:00:00");
+    if(today < new Date(m.getTime()+7*DAY)) return i;
+  }
+  return PLAN.weeks.length-1;
+}
+const CUR = currentWeek();
+const key = (w,d,i) => "w"+w+"d"+d+"i"+i;
+const sk  = (w,d) => "w"+w+"d"+d;
+
+/* ---------- render ---------- */
+function itemDone(w,d,i,it,type){
+  if(type==="lc"){ const r=S.items["p"+it.n]; return r && r.s>0; }
+  return !!S.items[key(w,d,i)];
+}
+
+function renderWeeks(){
+  const host = document.getElementById("weeks");
+  host.innerHTML = "";
+  PLAN.weeks.forEach((wk,wi)=>{
+    const allDone = wk.days.every((dy,di)=> S.sessions[sk(wi,di)]);
+    if(filter==="current" && wi!==CUR) return;
+    if(filter==="todo" && allDone) return;
+
+    const det = document.createElement("details");
+    det.className = "week" + (wi===CUR?" current":"");
+    det.dataset.done = allDone?"1":"0";
+    det.open = (wi===CUR) || filter==="current";
+
+    const end = new Date(new Date(wk.monday+"T12:00:00").getTime()+3*DAY).toISOString().slice(0,10);
+    det.innerHTML = `<summary>
+        <span class="wnum">WEEK ${String(wk.w).padStart(2,"0")}</span>
+        <span class="wdate">${fmt(wk.monday)} &ndash; ${fmt(end)}</span>
+        <span class="wtag">${wi===CUR?"in progress":(allDone?"complete":"")}</span>
+      </summary>`;
+
+    wk.days.forEach((dy,di)=>{
+      const box = document.createElement("div");
+      box.className = "day";
+      const done = !!S.sessions[sk(wi,di)];
+      let inner = `<div class="dhead">
+          <span class="dday">${dy.day}</span>
+          <span class="ddate">${fmt(dy.date)}</span>
+          <span class="dtype ${dy.type}">${dy.type==="lc"?(dy.catchup?"catch-up":"leetcode"):dy.type==="video"?"system design":"mock &amp; review"}</span>
+          <span class="dmins">~${dy.mins} min</span>
+          <button class="mark" data-sess="${sk(wi,di)}" data-s="${done?1:0}" title="Mark session complete">${done?"\u2713":""}</button>
+        </div>`;
+      if(dy.type==="mock"){
+        inner += `<p style="margin:0;color:var(--muted);font-size:14px">Open slot. Re-solve everything still flagged, or run a timed mock: one medium in 25 minutes, then one design question out loud against a blank page.</p>`;
+      } else {
+        inner += "<ul class='items'>";
+        dy.items.forEach((it,ii)=>{
+          if(dy.type==="lc"){
+            const rec = S.items["p"+it.n] || {s:0};
+            inner += `<li class="${rec.s?"marked":""}">
+              <button class="mark" data-p="${it.n}" data-s="${rec.s}" title="Once = solved clean, twice = flag for review">${rec.s===1?"\u2713":rec.s===2?"\u27f3":""}</button>
+              <span class="pnum">${it.n}</span>
+              <span class="ptitle">${it.s?'<span class="star" title="High-frequency problem">&#9733;</span> ':""}<a href="${it.u}" target="_blank" rel="noopener">${it.t}</a><span class="diff ${it.d}">${it.d}</span>${it.k!=="alg"?`<span class="kind">${it.k.toUpperCase()}</span>`:""}</span>
+              <span class="vlen">${it.m}m</span></li>`;
+          } else {
+            const on = !!S.items[key(wi,di,ii)];
+            inner += `<li class="${on?"marked":""}">
+              <button class="mark" data-v="${key(wi,di,ii)}" data-s="${on?1:0}">${on?"\u2713":""}</button>
+              <span class="ptitle">${it.t}</span>
+              <span class="vlen">${it.m}m &rarr; ${it.eff}m</span></li>`;
+          }
+        });
+        inner += "</ul>";
+      }
+      box.innerHTML = inner;
+      det.appendChild(box);
+    });
+    host.appendChild(det);
+  });
+}
+
+function renderBurn(){
+  const host = document.getElementById("burn");
+  host.innerHTML = "";
+  PLAN.weeks.forEach((wk,wi)=>{
+    const col = document.createElement("div");
+    col.className = "wk" + (wi===CUR?" now":"");
+    col.title = "Week "+wk.w+" · "+fmt(wk.monday);
+    wk.days.forEach((dy,di)=>{
+      const c = document.createElement("div");
+      c.className = "cell " + (dy.type==="video"?"video":"lc") + (S.sessions[sk(wi,di)]?" on":"");
+      col.appendChild(c);
+    });
+    host.appendChild(col);
+  });
+}
+
+function renderStats(){
+  let prob=0, flag=0;
+  const allP = new Set();
+  PLAN.weeks.forEach(w=>w.days.forEach(d=>{ if(d.type==="lc") d.items.forEach(i=>allP.add(i.n)); }));
+  allP.forEach(n=>{ const r=S.items["p"+n]; if(r&&r.s>0) prob++; if(r&&r.s===2) flag++; });
+
+  // a video counts as watched only when every one of its parts is checked
+  const parts = {}, partsDone = {};
+  let vidDone = 0;
+  PLAN.weeks.forEach((w,wi)=>w.days.forEach((d,di)=>{ if(d.type==="video") d.items.forEach((it,ii)=>{
+    const base = it.t.split("  \u2192")[0];
+    parts[base]=(parts[base]||0)+1;
+    if(S.items[key(wi,di,ii)]) partsDone[base]=(partsDone[base]||0)+1;
+  });}));
+  const vidTotal = Object.keys(parts).length;
+  vidDone = Object.keys(parts).filter(b=>partsDone[b]===parts[b]).length;
+
+  let sess=0, sessTotal=0;
+  PLAN.weeks.forEach((w,wi)=>w.days.forEach((d,di)=>{ sessTotal++; if(S.sessions[sk(wi,di)]) sess++; }));
+
+  const set=(id,txt)=>document.getElementById(id).textContent=txt;
+  const bar=(id,p)=>document.getElementById(id).style.width=(p*100).toFixed(1)+"%";
+  set("mProb", prob+" / "+allP.size); bar("bProb", prob/allP.size);
+  set("mVid", vidDone+" / "+vidTotal); bar("bVid", vidDone/vidTotal);
+  set("mSess", sess+" / "+sessTotal); bar("bSess", sess/sessTotal);
+  set("mFlag", String(flag)); bar("bFlag", flag/Math.max(prob,1));
+  set("burnpct", Math.round(sess/sessTotal*100)+"% complete");
+  document.getElementById("wknow").textContent = "Week "+(CUR+1)+" of "+PLAN.weeks.length;
+  const expected = (CUR)*4;
+  document.getElementById("pace").textContent = sess>=expected ? "On pace" : (expected-sess)+" sessions behind pace";
+}
+
+function renderQueue(){
+  const q = [];
+  Object.keys(S.items).forEach(k=>{
+    if(!k.startsWith("p")) return;
+    const r = S.items[k];
+    if(r && r.s===2) q.push({n:+k.slice(1), t:r.t||Date.now(), title:r.title||"", url:r.url||""});
+  });
+  q.sort((a,b)=>a.t-b.t);
+  const ul = document.getElementById("rq");
+  ul.innerHTML = q.map(x=>{
+    const due = (Date.now()-x.t) > 7*DAY;
+    return `<li class="${due?"due":""}"><a href="${x.url}" target="_blank" rel="noopener" title="${x.title}">${x.n}${due?" &middot; due":""}</a></li>`;
+  }).join("");
+  const dueN = q.filter(x=>(Date.now()-x.t)>7*DAY).length;
+  document.getElementById("rqnote").textContent = q.length
+    ? `${q.length} flagged, ${dueN} due for a second attempt. Clear the due ones during Monday's opening 10 minutes.`
+    : "Nothing flagged yet. Problems you mark twice land here, and turn red once they're a week old and due for a second attempt.";
+}
+
+function renderAll(){ renderBurn(); renderWeeks(); renderStats(); renderQueue(); }
+
+/* ---------- events ---------- */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("button.mark");
+  if(!b) return;
+  if(b.dataset.p){
+    const n = b.dataset.p;
+    const cur = (S.items["p"+n]||{s:0}).s;
+    const next = (cur+1)%3;
+    const li = b.closest("li");
+    const a = li.querySelector("a");
+    if(next===0) delete S.items["p"+n];
+    else S.items["p"+n] = {s:next, t:Date.now(), title:a?a.textContent:"", url:a?a.href:""};
+  } else if(b.dataset.v){
+    const k = b.dataset.v;
+    if(S.items[k]) delete S.items[k]; else S.items[k]=1;
+  } else if(b.dataset.sess){
+    const k = b.dataset.sess;
+    if(S.sessions[k]) delete S.sessions[k]; else S.sessions[k]=1;
+  }
+  save(); renderAll();
+});
+
+function setFilter(f){
+  filter=f;
+  ["fCurrent","fTodo","fAll"].forEach(id=>document.getElementById(id).classList.remove("on"));
+  document.getElementById({current:"fCurrent",todo:"fTodo",all:"fAll"}[f]).classList.add("on");
+  renderWeeks();
+}
+document.getElementById("fCurrent").onclick=()=>setFilter("current");
+document.getElementById("fTodo").onclick=()=>setFilter("todo");
+document.getElementById("fAll").onclick=()=>setFilter("all");
+document.getElementById("reset").onclick=()=>{
+  if(!confirm("Clear every mark and start the log over? This can't be undone.")) return;
+  S={items:{},sessions:{}}; save(); renderAll();
+};
+
+document.getElementById("opt").innerHTML = PLAN.optional.map(o=>`<li>${o.t} &middot; ${o.m}m</li>`).join("");
+document.getElementById("range").textContent =
+  fmt(PLAN.weeks[0].monday)+" 2026 \u2192 "+fmt(PLAN.weeks[PLAN.weeks.length-1].days[3].date)+" 2027";
+
+load().then(renderAll);
+</script>
+</body>
+</html>
